@@ -5,66 +5,74 @@ import {
     CreditCard,
     BarChart3,
     Bell,
+    ArrowRight
 } from 'lucide-react'
+import { Button } from '../ui/button'
 
 const features = [
     {
         title: "Agendamento Inteligente",
         description:
-            "Gerencie compromissos com facilidade. Sistema inteligente de agendamento que evita conflitos e otimiza seu tempo.",
+            "Gerencie compromissos com facilidade. Sistema inteligente que evita conflitos.",
         icon: CalendarClock,
-        gradient: "from-blue-500 to-cyan-500",
+        color: "text-blue-600",
+        bg: "bg-blue-50",
     },
     {
         title: "Gestão de Clientes",
         description:
-            "Mantenha todos os dados dos seus clientes organizados e acessíveis. Histórico completo de interações.",
+            "Mantenha todos os dados dos seus clientes organizados e acessíveis.",
         icon: Users,
-        gradient: "from-purple-500 to-pink-500",
+        color: "text-purple-600",
+        bg: "bg-purple-50",
     },
     {
         title: "Catálogo de Serviços",
         description:
-            "Organize seus serviços com preços, duração e descrições. Facilite a escolha dos seus clientes.",
+            "Organize seus serviços com preços, duração e descrições personalizadas.",
         icon: Package,
-        gradient: "from-orange-500 to-red-500",
+        color: "text-pink-600",
+        bg: "bg-pink-50",
     },
     {
         title: "Pagamentos Integrados",
         description:
-            "Receba pagamentos de forma segura e rápida. Múltiplas formas de pagamento em um só lugar.",
+            "Receba pagamentos de forma segura e rápida. Múltiplas formas em um só lugar.",
         icon: CreditCard,
-        gradient: "from-green-500 to-emerald-500",
+        color: "text-emerald-600",
+        bg: "bg-emerald-50",
     },
     {
         title: "Relatórios e Analytics",
         description:
-            "Acompanhe o desempenho do seu negócio com relatórios detalhados e insights acionáveis.",
+            "Acompanhe o desempenho do seu negócio com relatórios detalhados.",
         icon: BarChart3,
-        gradient: "from-indigo-500 to-blue-500",
+        color: "text-indigo-600",
+        bg: "bg-indigo-50",
     },
     {
         title: "Notificações Automáticas",
         description:
-            "Envie lembretes automáticos para clientes via email e SMS. Reduza faltas e no-shows.",
+            "Envie lembretes automáticos para seus clientes via email e SMS.",
         icon: Bell,
-        gradient: "from-yellow-500 to-orange-500",
+        color: "text-orange-600",
+        bg: "bg-orange-50",
     },
 ]
 
 export default function FeaturesSection() {
     return (
-        <section className="bg-white py-24 sm:py-32">
+        <section id="features" className="bg-slate-50 py-24 sm:py-32">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="text-center">
-                    <h2 className="text-base font-semibold uppercase tracking-wide text-blue-600">
-                        Recursos
+                    <h2 className="text-base font-semibold uppercase tracking-wider text-indigo-600">
+                        Poder de Execução
                     </h2>
-                    <p className="mt-2 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
-                        Tudo que você precisa para crescer
+                    <p className="mt-4 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+                        Tudo que seu negócio precisa
                     </p>
-                    <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
-                        Ferramentas poderosas e intuitivas para gerenciar seu negócio de forma profissional.
+                    <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600 outline-none">
+                        Ferramentas profissionais projetadas para simplificar sua gestão e impulsionar seu crescimento.
                     </p>
                 </div>
 
@@ -74,20 +82,24 @@ export default function FeaturesSection() {
                         return (
                             <div
                                 key={index}
-                                className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                                className="group relative rounded-3xl border border-slate-200 bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-500/10"
                             >
                                 <div
-                                    className={`mb-5 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br ${feature.gradient} text-white shadow-lg`}
+                                    className={`mb-6 inline-flex h-12 w-12 items-center justify-center rounded-2xl ${feature.bg} ${feature.color}`}
                                 >
                                     <Icon className="h-6 w-6" />
                                 </div>
 
-                                <h3 className="mb-3 text-xl font-semibold text-slate-900">
+                                <h3 className="mb-3 text-xl font-bold text-slate-900">
                                     {feature.title}
                                 </h3>
-                                <p className="text-slate-600">{feature.description}</p>
+                                <p className="mb-6 text-slate-600 leading-relaxed">
+                                    {feature.description}
+                                </p>
 
-                                <div className={`absolute bottom-0 left-0 h-1 w-0 bg-gradient-to-r ${feature.gradient} transition-all duration-300 group-hover:w-full`}></div>
+                                <button className="flex items-center text-sm font-semibold text-indigo-600 group-hover:gap-2 transition-all">
+                                    Saiba mais <ArrowRight className="ml-1 h-4 w-4 opacity-0 group-hover:opacity-100 transition-all" />
+                                </button>
                             </div>
                         );
                     })}

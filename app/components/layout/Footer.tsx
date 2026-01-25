@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const footerLinks = {
     product: [
@@ -28,6 +31,12 @@ const footerLinks = {
 };
 
 export default function Footer() {
+    const pathname = usePathname();
+
+    if (pathname === "/login" || pathname === "/register" || pathname.startsWith("/dashboard")) {
+        return null;
+    }
+
     return (
         <footer className="bg-gray-900 text-white">
             <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">

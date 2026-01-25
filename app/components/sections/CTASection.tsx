@@ -1,81 +1,60 @@
 import Link from "next/link";
+import { Button } from "../ui/button";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 export default function CTASection() {
     return (
-        <section
-            aria-labelledby="cta-heading"
-            className="bg-white py-16 sm:py-20"
-        >
+        <section id="cta" className="py-24 sm:py-32 overflow-hidden">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="relative overflow-hidden bg-white px-6 py-10 sm:px-12 sm:py-14">
-                    <div
-                        aria-hidden="true"
-                        className="pointer-events-none absolute -left-10 -top-10 hidden h-36 w-36 transform rounded-full bg-gradient-to-br from-gray-100 to-white opacity-50 blur-2xl sm:block"
-                    />
+                <div className="relative isolate overflow-hidden bg-slate-900 px-6 py-24 shadow-2xl rounded-3xl sm:px-24 xl:py-32">
+                    <h2 className="mx-auto max-w-2xl text-center text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                        Pronto para transformar seu negócio hoje?
+                    </h2>
+                    <p className="mx-auto mt-6 max-w-xl text-center text-lg leading-8 text-slate-300">
+                        Junte-se a mais de 10.000 profissionais que elevaram o nível de sua gestão com o Workly.
+                        Simples, potente e feito para você.
+                    </p>
 
-                    <div className="mx-auto max-w-3xl text-center">
-                        <h2
-                            id="cta-heading"
-                            className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl"
-                        >
-                            Pronto para transformar seu negócio?
-                        </h2>
-
-                        <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
-                            Junte-se a profissionais que usam o Workly para gerenciar clientes,
-                            agenda e pagamentos com eficiência. Simples, seguro e escalável.
-                        </p>
-
-                        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                            <Link
-                                href="/schedule"
-                                aria-label="Começar agora — ir para agendamento"
-                                className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-transform duration-150 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-                            >
-                                Começar agora
-                                <svg
-                                    className="ml-2 h-5 w-5"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                    aria-hidden="true"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M13 7l5 5m0 0l-5 5m5-5H6"
-                                    />
-                                </svg>
-                            </Link>
-
-                            <Link
-                                href="/pricing"
-                                aria-label="Ver planos e preços"
-                                className="inline-flex items-center justify-center rounded-lg px-6 py-3 text-base font-medium text-gray-700 transition-colors duration-150 hover:text-gray-900"
-                            >
-                                Ver planos
-                            </Link>
-                        </div>
-
-                        <div className="mt-10 grid grid-cols-2 gap-6 sm:grid-cols-4">
-                            <Stat number="10k+" label="Usuários ativos" />
-                            <Stat number="50k+" label="Agendamentos/mês" />
-                            <Stat number="99.9%" label="Uptime" />
-                            <Stat number="4.8/5" label="Avaliação média" />
-                        </div>
+                    <div className="mt-10 flex items-center justify-center gap-x-6">
+                        <Button size="lg" className="bg-white text-slate-800! hover:bg-slate-100 shadow-none" href="/register">
+                            Começar agora <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                        <Button size="lg" variant="ghost" className="text-white hover:text-white  hover:bg-white/10" href="/pricing">
+                            Ver planos
+                        </Button>
                     </div>
+
+                    <dl className="mt-16 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+                        <Stat label="Usuários ativos" value="10k+" />
+                        <Stat label="Agendamentos/mês" value="50k+" />
+                        <Stat label="Uptime garantido" value="99.9%" />
+                        <Stat label="Satisfação" value="4.8/5" />
+                    </dl>
+
+                    <svg
+                        viewBox="0 0 1024 1024"
+                        className="absolute left-1/2 top-1/2 -z-10 h-256 w-5xl -translate-x-1/2 mask-[radial-gradient(closest-side,white,transparent)]"
+                        aria-hidden="true"
+                    >
+                        <circle cx="512" cy="512" r="512" fill="url(#gradient)" fillOpacity="0.7" />
+                        <defs>
+                            <radialGradient id="gradient">
+                                <stop stopColor="#6366f1" />
+                                <stop offset={1} stopColor="#a855f7" />
+                            </radialGradient>
+                        </defs>
+                    </svg>
                 </div>
             </div>
         </section>
     );
 }
 
-function Stat({ number, label }: { number: string; label: string }) {
+function Stat({ label, value }: { label: string; value: string }) {
     return (
-        <div className="text-center">
-            <div className="text-2xl font-semibold text-gray-900 sm:text-3xl">{number}</div>
-            <div className="mt-1 text-sm text-gray-500">{label}</div>
+        <div className="flex flex-col items-center gap-y-1">
+            <dt className="text-sm leading-6 text-slate-400">{label}</dt>
+            <dd className="order-first text-3xl font-semibold tracking-tight text-white">{value}</dd>
         </div>
     );
 }
