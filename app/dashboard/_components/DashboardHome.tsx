@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
     MoreHorizontal,
     Calendar,
@@ -124,10 +125,10 @@ export function DashboardHome() {
                                 <CalendarClock className="mb-2 h-5 w-5 text-indigo-600" />
                                 <span className="text-[10px] font-medium text-slate-600 text-center">Novo Agendamento</span>
                             </button>
-                            <button className="flex flex-col items-center justify-center rounded-lg border border-slate-100 bg-slate-50/50 p-3 transition-colors hover:bg-slate-100">
+                            <Link href="/dashboard/clientes" className="flex flex-col items-center justify-center rounded-lg border border-slate-100 bg-slate-50/50 p-3 transition-colors hover:bg-slate-100">
                                 <UserPlus className="mb-2 h-5 w-5 text-indigo-600" />
                                 <span className="text-[10px] font-medium text-slate-600 text-center">Novo Cliente</span>
-                            </button>
+                            </Link>
                             <button className="flex flex-col items-center justify-center rounded-lg border border-slate-100 bg-slate-50/50 p-3 transition-colors hover:bg-slate-100">
                                 <PlusCircle className="mb-2 h-5 w-5 text-indigo-600" />
                                 <span className="text-[10px] font-medium text-slate-600 text-center">Novo Serviço</span>
