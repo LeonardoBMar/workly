@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Check, ArrowRight, PlayCircle } from "lucide-react";
 import { Button } from "../ui/button";
 
-const DASHBOARD_IMAGE = "/workly_dashboard.png";
+const DASHBOARD_IMAGE = "/workly_dashboard_image.png";
 
 export default function HeroSection() {
     return (
