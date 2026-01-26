@@ -42,12 +42,22 @@ O Workly surge para centralizar agenda, clientes e pagamentos em uma única plat
 
 ## 🗺️ Roadmap
 
-- [x] Autenticação (Login/Register)
-- [x] Dashboard de Gestão
-- [x] CRUD de Serviços
-- [ ] Sistema de pagamentos integrado
-- [ ] Lembretes automáticos via WhatsApp/E-mail
-- [ ] Aplicativo Mobile (PWA)
+### Já Implementado ✅
+- [x] **Landing Page Premium**: Design moderno, responsiva e otimizada.
+- [x] **Autenticação Completa**: Login, Registro e Proteção de rotas com Better Auth.
+- [x] **Dashboard Administrativo**: Interface intuitiva para gestão do negócio.
+- [x] **Gestão de Serviços (CRUD)**: Criação, listagem e exclusão de serviços.
+- [x] **Integração com Banco de Dados**: Persistência escalável com Neon PostgreSQL + Drizzle.
+- [x] **Arquitetura Escalável**: Uso de Server Actions e clean code com Next.js 15.
+
+### Em Desenvolvimento / Futuro 🚀
+- [ ] **Sistema de Agendamentos**: Calendário interativo para clientes e profissionais.
+- [ ] **Gestão de Clientes (CRM)**: Base de dados de clientes com histórico de atendimentos.
+- [ ] **Pagamentos Integrados**: Receba via PIX e Cartão de Crédito direto na plataforma.
+- [ ] **Lembretes Automáticos**: Notificações via WhatsApp e E-mail para reduzir faltas.
+- [ ] **Relatórios Financeiros**: Gráficos de faturamento, lucro e serviços mais realizados.
+- [ ] **App Mobile (PWA)**: Atalho no celular para acesso rápido.
+- [ ] **Multi-agendamento**: Suporte para equipes e múltiplos profissionais.
 
 ## 🏁 Começando
 
