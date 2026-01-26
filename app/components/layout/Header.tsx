@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
-import { LayoutDashboard, User, LogOut, Loader2 } from "lucide-react";
+import { LayoutDashboard, LogOut, Loader2, Menu, X } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
@@ -20,6 +20,8 @@ export default function Header() {
     if (pathname.startsWith("/dashboard")) {
         return null;
     }
+
+    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
     return (
         <header className="fixed top-0 z-50 w-full border-b border-white/10 glass">
@@ -87,8 +89,53 @@ export default function Header() {
                             </Link>
                         </>
                     )}
+
+                    {/* Mobile Menu Button */}
+                    <button
+                        onClick={toggleMenu}
+                        className="flex h-10 w-10 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 md:hidden"
+                        aria-label="Abrir menu"
+                    >
+                        {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                    </button>
                 </div>
             </div>
+
+            {/* Mobile Menu Dropdown */}
+            {isMenuOpen && (
+                <div className="absolute top-16 left-0 w-full bg-white border-b border-slate-100 p-4 md:hidden animate-in slide-in-from-top-2 duration-200">
+                    <nav className="flex flex-col gap-4">
+                        {navItems.map((item) => (
+                            <Link
+                                key={item.href}
+                                href={item.href}
+                                onClick={() => setIsMenuOpen(false)}
+                                className="text-base font-medium text-slate-700 hover:text-indigo-600 px-2 py-1"
+                            >
+                                {item.label}
+                            </Link>
+                        ))}
+                        {!session && (
+                            <div className="mt-2 border-t border-slate-100 pt-4 flex flex-col gap-2">
+                                <Link
+                                    href="/login"
+                                    onClick={() => setIsMenuOpen(false)}
+                                    className="flex w-full items-center justify-center rounded-xl border border-slate-200 py-3 text-base font-medium text-slate-700 hover:bg-slate-50"
+                                >
+                                    Entrar
+                                </Link>
+                                <Link
+                                    href="/register"
+                                    onClick={() => setIsMenuOpen(false)}
+                                    className="flex w-full items-center justify-center rounded-xl bg-indigo-600 py-3 text-base font-medium text-white hover:bg-indigo-700"
+                                >
+                                    Começar grátis
+                                </Link>
+                            </div>
+                        )}
+                    </nav>
+                </div>
+            )}
         </header>
     );
 }
