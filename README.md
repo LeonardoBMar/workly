@@ -4,7 +4,7 @@
 
 Plataforma open-source para prestadores de serviço gerenciarem agenda, clientes e cobranças em um só lugar. O Workly foi desenhado para ser simples, rápido e focado no que realmente importa: o crescimento do seu negócio.
 
-![Workly Preview](/workly_dashboard_image.png)
+![Workly Preview](public/workly_dashboard_image.png)
 
 ## ❓ Por que o Workly existe?
 
