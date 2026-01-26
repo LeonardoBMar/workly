@@ -30,16 +30,11 @@ Workly é uma plataforma de gestão moderna pensada para profissionais brasileir
 - NPM, Yarn, PNPM ou Bun
 - Uma conta no [Neon.tech](https://neon.tech/) para o banco de dados
 
-### Instalação
-
-1. Clone o repositório:
-```bash
-git clone https://github.com/seu-usuario/workly.git
+git clone https://github.com/LeonardoBMar/workly.git
 cd workly
 ```
 
 2. Instale as dependências:
-```bash
 npm install
 ```
 
