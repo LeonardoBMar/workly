@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💼 Workly - Gerencie seu negócio com inteligência
 
-## Getting Started
+Workly é uma plataforma de gestão moderna pensada para profissionais brasileiros que buscam produtividade e excelência no atendimento. Organize seus agendamentos, automatize cobranças e ofereça uma experiência premium para seus clientes.
 
-First, run the development server:
+![Workly Preview](/workly_dashboard_image.png)
 
+## 🚀 Funcionalidades
+
+- **Dashboard Inteligente**: Tenha uma visão clara do seu negócio em tempo real.
+- **Gestão de Serviços**: Cadastre e gerencie seus serviços de forma simples e intuitiva.
+- **Autenticação Segura**: Fluxo completo de login e registro utilizando Better Auth.
+- **Design Premium**: Interface moderna, responsiva e otimizada para a melhor experiência do usuário.
+- **Banco de Dados Cloud**: Persistência de dados escalável com Neon PostgreSQL.
+
+## 🛠️ Stack Tecnológica
+
+- **Framework**: [Next.js 15+](https://nextjs.org/) (App Router)
+- **Estilização**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **Autenticação**: [Better Auth](https://www.better-auth.com/)
+- **ORM**: [Drizzle ORM](https://orm.drizzle.team/)
+- **Banco de Dados**: [Neon (PostgreSQL)](https://neon.tech/)
+- **Ícones**: [Lucide React](https://lucide.dev/)
+- **Linguagem**: [TypeScript](https://www.typescriptlang.org/)
+
+## 🏁 Começando
+
+### Pré-requisitos
+
+- Node.js (versão 18 ou superior)
+- NPM, Yarn, PNPM ou Bun
+- Uma conta no [Neon.tech](https://neon.tech/) para o banco de dados
+
+### Instalação
+
+1. Clone o repositório:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/seu-usuario/workly.git
+cd workly
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Instale as dependências:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Configure as variáveis de ambiente:
+Crie um arquivo `.env` na raiz do projeto e adicione as seguintes chaves:
+```env
+DATABASE_URL=seu_link_do_neon_db
+BETTER_AUTH_SECRET=sua_chave_secreta
+BETTER_AUTH_URL=http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Execute as migrações do banco de dados:
+```bash
+npx drizzle-kit push
+```
 
-## Learn More
+5. Inicie o servidor de desenvolvimento:
+```bash
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Abra [http://localhost:3000](http://localhost:3000) no seu navegador para ver o resultado.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📱 Estrutura do Projeto
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `/app`: Rotas e componentes de página (Next.js App Router)
+- `/components`: Componentes React reutilizáveis (UI, Layout, Seções)
+- `/lib`: Configurações de banco de dados, autenticação e utilitários
+- `/public`: Ativos estáticos (imagens, ícones)
 
-## Deploy on Vercel
+## 📝 Licença
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+Desenvolvido com ❤️ por Leonardo Bozola.
