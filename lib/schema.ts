@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, boolean, integer, decimal } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
     id: text("id").primaryKey(),
@@ -48,4 +48,49 @@ export const verification = pgTable("verification", {
     expiresAt: timestamp("expiresAt").notNull(),
     createdAt: timestamp("createdAt"),
     updatedAt: timestamp("updatedAt"),
+});
+
+export const clients = pgTable("clients", {
+    id: text("id").primaryKey(),
+    userId: text("userId")
+        .notNull()
+        .references(() => user.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    email: text("email"),
+    phone: text("phone"),
+    notes: text("notes"),
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+    updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+});
+
+export const services = pgTable("services", {
+    id: text("id").primaryKey(),
+    userId: text("userId")
+        .notNull()
+        .references(() => user.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    description: text("description"),
+    price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+    duration: integer("duration").notNull(),
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+    updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+});
+
+export const appointments = pgTable("appointments", {
+    id: text("id").primaryKey(),
+    userId: text("userId")
+        .notNull()
+        .references(() => user.id, { onDelete: "cascade" }),
+    clientId: text("clientId")
+        .notNull()
+        .references(() => clients.id, { onDelete: "cascade" }),
+    serviceId: text("serviceId")
+        .notNull()
+        .references(() => services.id, { onDelete: "cascade" }),
+    startTime: timestamp("startTime").notNull(),
+    endTime: timestamp("endTime").notNull(),
+    status: text("status").notNull().default("pending"),
+    notes: text("notes"),
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+    updatedAt: timestamp("updatedAt").notNull().defaultNow(),
 });
