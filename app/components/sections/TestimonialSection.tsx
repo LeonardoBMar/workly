@@ -14,6 +14,14 @@ const testimonials = [
     },
     {
         id: 2,
+        quote: "O Workly mudou minha rotina no salão. Agora minhas clientes agendam pelo link e eu não perco mais tempo. Consigo focar no que amo: deixar as unhas impecáveis.",
+        author: "Beatriz Oliveira",
+        role: "Manicure e Nail Designer",
+        stat: "Redução de 80% no tempo gasto com agendamentos manuais.",
+        source: "Relatório Mensal de Eficiência",
+    },
+    {
+        id: 3,
         quote: "A organização que o Workly trouxe para o nosso time foi impressionante. Conseguimos centralizar todas as demandas e o fluxo de trabalho ficou muito mais fluido e transparente para todos.",
         author: "Ricardo Santos",
         role: "Proprietário do TechFlow",
@@ -21,21 +29,14 @@ const testimonials = [
         source: "Relatório de Impacto ao Cliente 2025",
     },
     {
-        id: 3,
+        id: 4,
         quote: "O que mais me surpreendeu foi a interface intuitiva. Minha equipe adotou a ferramenta em um único dia e os resultados na entrega de projetos foram imediatos.",
         author: "Juliana Mendes",
         role: "Gerente de Projetos na Nexa Design",
         stat: "Aumento de 40% na velocidade de entrega de projetos complexos.",
         source: "Estudo de Caso Nexa 2024",
     },
-    {
-        id: 4,
-        quote: "Finalmente conseguimos eliminar as planilhas confusas. O Workly nos dá uma clareza que nunca tivemos antes, permitindo escalar nosso atendimento sem perder a qualidade.",
-        author: "Marcos Oliveira",
-        role: "Fundador da GrowUp Consultoria",
-        stat: "Capacidade de atendimento ampliada em 2x sem novas contratações.",
-        source: "Análise de ROI GrowUp",
-    }
+
 ];
 
 export default function TestimonialSection() {
