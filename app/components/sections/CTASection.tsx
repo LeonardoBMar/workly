@@ -1,60 +1,100 @@
-import Link from "next/link";
+"use client";
+
 import { Button } from "../ui/button";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, CheckCircle2, Star, Zap, ShieldCheck, Users2 } from "lucide-react";
 
 export default function CTASection() {
     return (
-        <section id="cta" className="py-24 sm:py-32 overflow-hidden">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="relative isolate overflow-hidden bg-slate-900 px-6 py-24 shadow-2xl rounded-3xl sm:px-24 xl:py-32">
-                    <h2 className="mx-auto max-w-2xl text-center text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                        Pronto para transformar seu negócio hoje?
-                    </h2>
-                    <p className="mx-auto mt-6 max-w-xl text-center text-lg leading-8 text-slate-300">
-                        Junte-se a mais de 10.000 profissionais que elevaram o nível de sua gestão com o Workly.
-                        Simples, potente e feito para você.
-                    </p>
+        <section id="cta" className="relative py-24 sm:py-32 overflow-hidden bg-slate-50/50">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl px-4 sm:px-6 lg:px-8 -z-10">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-radial from-indigo-100/40 via-transparent to-transparent opacity-50"></div>
+            </div>
 
-                    <div className="mt-10 flex items-center justify-center gap-x-6">
-                        <Button size="lg" className="bg-white text-slate-800! hover:bg-slate-100 shadow-none" href="/register">
-                            Começar agora <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                        <Button size="lg" variant="ghost" className="text-white hover:text-white  hover:bg-white/10" href="/pricing">
-                            Ver planos
-                        </Button>
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div className="relative isolate overflow-hidden bg-white px-6 py-20 shadow-[0_20px_50px_rgba(0,0,0,0.05)] rounded-3xl sm:px-24 xl:py-32 border border-slate-200">
+                    <div className="absolute -top-24 -right-24 h-96 w-96 animate-blob rounded-full bg-indigo-50/50 blur-3xl"></div>
+                    <div className="absolute -bottom-24 -left-24 h-96 w-96 animate-blob animation-delay-4000 rounded-full bg-purple-50/50 blur-3xl"></div>
+
+                    <div className="absolute inset-0 -z-10 opacity-[0.03] mask-[radial-gradient(ellipse_at_center,black,transparent)]">
+                        <svg className="h-full w-full" aria-hidden="true">
+                            <defs>
+                                <pattern
+                                    id="grid-pattern-light"
+                                    width="40"
+                                    height="40"
+                                    patternUnits="userSpaceOnUse"
+                                >
+                                    <path d="M0 40V.5H40" fill="none" stroke="currentColor" />
+                                </pattern>
+                            </defs>
+                            <rect width="100%" height="100%" fill="url(#grid-pattern-light)" className="text-slate-900" />
+                        </svg>
                     </div>
 
-                    <dl className="mt-16 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-                        <Stat label="Usuários ativos" value="10k+" />
-                        <Stat label="Agendamentos/mês" value="50k+" />
-                        <Stat label="Uptime garantido" value="99.9%" />
-                        <Stat label="Satisfação" value="4.8/5" />
-                    </dl>
+                    <div className="relative z-10 text-center">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-600 text-xs font-semibold tracking-wider uppercase mb-6">
+                            <Zap className="w-3.5 h-3.5 fill-indigo-600/20" />
+                            Comece hoje mesmo
+                        </div>
 
-                    <svg
-                        viewBox="0 0 1024 1024"
-                        className="absolute left-1/2 top-1/2 -z-10 h-256 w-5xl -translate-x-1/2 mask-[radial-gradient(closest-side,white,transparent)]"
-                        aria-hidden="true"
-                    >
-                        <circle cx="512" cy="512" r="512" fill="url(#gradient)" fillOpacity="0.7" />
-                        <defs>
-                            <radialGradient id="gradient">
-                                <stop stopColor="#6366f1" />
-                                <stop offset={1} stopColor="#a855f7" />
-                            </radialGradient>
-                        </defs>
-                    </svg>
+                        <h2 className="mx-auto max-w-3xl text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl leading-[1.1]">
+                            Pronto para elevar sua <span className="text-indigo-600">produtividade</span> ao próximo nível?
+                        </h2>
+
+                        <p className="mx-auto mt-8 max-w-xl text-lg leading-relaxed text-slate-600">
+                            Junte-se a milhares de profissionais que já transformaram seus negócios com o Workly. Gestão inteligente para quem busca excelência.
+                        </p>
+
+                        <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                            <Button size="lg" className="h-14 px-8 text-base bg-indigo-600 text-white! hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition-all hover:scale-105" href="/register">
+                                Criar conta gratuita <ArrowRight className="ml-2 h-5 w-5" />
+                            </Button>
+                            <Button size="lg" variant="outline" className="h-14 px-8 text-base border-slate-200 text-slate-700 hover:bg-slate-50" href="/pricing">
+                                Falar com especialista
+                            </Button>
+                        </div>
+
+                        <div className="mt-20 border-t border-slate-200 pt-16">
+                            <div className="grid grid-cols-2 gap-x-8 gap-y-12 sm:grid-cols-4">
+                                <StatItem
+                                    icon={<Users2 className="w-5 h-5 text-indigo-600" />}
+                                    label="Usuários Ativos"
+                                    value="10k+"
+                                />
+                                <StatItem
+                                    icon={<CheckCircle2 className="w-5 h-5 text-emerald-600" />}
+                                    label="Taxa de Sucesso"
+                                    value="99.9%"
+                                />
+                                <StatItem
+                                    icon={<Star className="w-5 h-5 text-amber-500" />}
+                                    label="Avaliação Média"
+                                    value="4.9/5"
+                                />
+                                <StatItem
+                                    icon={<ShieldCheck className="w-5 h-5 text-blue-600" />}
+                                    label="Segurança"
+                                    value="Enterprise"
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
     );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+function StatItem({ label, value, icon }: { label: string; value: string; icon: React.ReactNode }) {
     return (
-        <div className="flex flex-col items-center gap-y-1">
-            <dt className="text-sm leading-6 text-slate-400">{label}</dt>
-            <dd className="order-first text-3xl font-semibold tracking-tight text-white">{value}</dd>
+        <div className="flex flex-col items-center gap-y-3">
+            <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 shadow-sm">
+                {icon}
+            </div>
+            <div className="text-center">
+                <dd className="text-2xl font-bold tracking-tight text-slate-900 mb-1">{value}</dd>
+                <dt className="text-sm font-medium text-slate-500">{label}</dt>
+            </div>
         </div>
     );
 }
