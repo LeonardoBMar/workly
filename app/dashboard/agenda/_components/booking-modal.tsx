@@ -6,6 +6,7 @@ import { X, Trash2, Clock, FileText, Calendar } from "lucide-react"
 import type { Booking } from "../types"
 import { ClientSelect } from "./client-select"
 import { useServices, useClients, type Client, type Service } from "../_hooks"
+import Link from "next/link"
 
 interface BookingModalProps {
     isOpen: boolean
@@ -140,8 +141,11 @@ export function BookingModal({
                         {servicesLoading ? (
                             <div className="text-sm text-muted-foreground">Carregando serviços...</div>
                         ) : services.length === 0 ? (
-                            <div className="text-sm text-muted-foreground">
+                            <div className="text-sm text-muted-foreground flex flex-col gap-2">
                                 Nenhum serviço cadastrado. Cadastre serviços primeiro.
+                                <Link href="/dashboard/servicos" className="text-sm border text-center text-blue-400 border-blue-400 max-w-[200px] rounded-md p-2">
+                                    Cadastrar
+                                </Link>
                             </div>
                         ) : (
                             <div className="grid grid-cols-2 gap-2">
