@@ -1,4 +1,5 @@
 import { pgTable, text, timestamp, boolean, integer, decimal } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 
 export const user = pgTable("user", {
     id: text("id").primaryKey(),
@@ -63,6 +64,10 @@ export const clients = pgTable("clients", {
     updatedAt: timestamp("updatedAt").notNull().defaultNow(),
 });
 
+export const clientsRelations = relations(clients, ({ many }) => ({
+    appointments: many(appointments),
+}));
+
 export const services = pgTable("services", {
     id: text("id").primaryKey(),
     userId: text("userId")
@@ -75,6 +80,10 @@ export const services = pgTable("services", {
     createdAt: timestamp("createdAt").notNull().defaultNow(),
     updatedAt: timestamp("updatedAt").notNull().defaultNow(),
 });
+
+export const servicesRelations = relations(services, ({ many }) => ({
+    appointments: many(appointments),
+}));
 
 export const appointments = pgTable("appointments", {
     id: text("id").primaryKey(),
@@ -94,3 +103,14 @@ export const appointments = pgTable("appointments", {
     createdAt: timestamp("createdAt").notNull().defaultNow(),
     updatedAt: timestamp("updatedAt").notNull().defaultNow(),
 });
+
+export const appointmentsRelations = relations(appointments, ({ one }) => ({
+    client: one(clients, {
+        fields: [appointments.clientId],
+        references: [clients.id],
+    }),
+    service: one(services, {
+        fields: [appointments.serviceId],
+        references: [services.id],
+    }),
+}));

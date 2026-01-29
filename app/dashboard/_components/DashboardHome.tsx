@@ -12,8 +12,31 @@ import {
     UserPlus,
     PlusCircle,
     Settings,
-    Check
+    Check,
+
 } from "lucide-react";
+
+const AvisoPaginaEmDesenvolvimento = () => {
+    return (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 shadow-sm">
+            <div className="flex items-start gap-3">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-100">
+                    <Info className="h-4 w-4 text-amber-600" />
+                </div>
+
+                <div>
+                    <p className="text-sm font-semibold text-amber-900">
+                        Página em desenvolvimento
+                    </p>
+
+                    <p className="mt-1 text-xs text-amber-700">
+                        Algumas funcionalidades nessa pagina ainda não estão disponíveis.
+                    </p>
+                </div>
+            </div>
+        </div>
+    )
+}
 
 export function DashboardHome() {
     return (
@@ -21,6 +44,8 @@ export function DashboardHome() {
             <header className="flex items-center justify-between">
                 <h1 className="text-xl sm:text-2xl font-semibold text-slate-900">Hoje</h1>
             </header>
+
+            <AvisoPaginaEmDesenvolvimento />
 
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
                 <div className="lg:col-span-2">

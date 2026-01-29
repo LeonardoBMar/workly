@@ -56,7 +56,6 @@ export default function TestimonialSection() {
         <section className="py-24 bg-slate-50/50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-                {/* Navigation Controls */}
                 <div className="flex justify-end items-center gap-4 mb-8">
                     <div className="flex gap-2 mr-4">
                         {testimonials.map((_, idx) => (
@@ -87,10 +86,8 @@ export default function TestimonialSection() {
                     </div>
                 </div>
 
-                {/* Main Card */}
                 <div className="relative overflow-hidden rounded-3xl bg-white shadow-2xl shadow-indigo-100/50 flex flex-col md:flex-row min-h-[400px]">
 
-                    {/* Left Side: Testimonial Content */}
                     <div className="flex-1 p-8 md:p-16 flex flex-col justify-between relative">
                         <Quote className="absolute top-8 left-8 w-12 h-12 text-indigo-50 opacity-10" />
 
@@ -119,9 +116,7 @@ export default function TestimonialSection() {
                         </div>
                     </div>
 
-                    {/* Right Side: Statistic Card */}
                     <div className="w-full md:w-[40%] bg-indigo-600 p-8 md:p-16 flex flex-col justify-between text-white relative overflow-hidden">
-                        {/* Abstract Background Design */}
                         <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-64 h-64 bg-indigo-500 rounded-full opacity-20 blur-3xl" />
                         <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-64 h-64 bg-purple-500 rounded-full opacity-20 blur-3xl" />
 

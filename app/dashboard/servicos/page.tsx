@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Package, Clock, DollarSign, Loader2, MoreVertical, Trash2, Edit2, Search, X } from "lucide-react";
+import { Plus, Package, Clock, DollarSign, Loader2, MoreVertical, Trash2, Search, X } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
 import { createService, getServices, deleteService } from "@/app/actions";
-import { useRouter } from "next/navigation";
 
 export default function ServicesPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
