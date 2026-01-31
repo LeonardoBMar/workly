@@ -30,7 +30,7 @@ const AvisoPaginaEmDesenvolvimento = () => {
                     </p>
 
                     <p className="mt-1 text-xs text-amber-700">
-                        Algumas funcionalidades nessa pagina ainda não estão disponíveis.
+                        As funcionalidades dessa página ainda não estão disponíveis.
                     </p>
                 </div>
             </div>
