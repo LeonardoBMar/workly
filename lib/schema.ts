@@ -1,5 +1,6 @@
-import { pgTable, text, timestamp, boolean, integer, decimal } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, boolean, integer, decimal, json } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import { InferSelectModel } from "drizzle-orm"
 
 export const user = pgTable("user", {
     id: text("id").primaryKey(),
@@ -114,3 +115,26 @@ export const appointmentsRelations = relations(appointments, ({ one }) => ({
         references: [services.id],
     }),
 }));
+
+
+type ShopperLink = {
+    id: string
+    title: string
+    url: string
+}
+
+export const shopper = pgTable("shopper", {
+    id: text("id").primaryKey(),
+    slug: text("slug").notNull().unique(),
+    userId: text("userId")
+        .notNull()
+        .references(() => user.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    description: text("description"),
+    bannerUrl: text("bannerUrl").notNull(),
+    links: json("links").$type<ShopperLink[]>().notNull(),
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+    updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+});
+
+export type Shopper = InferSelectModel<typeof shopper>

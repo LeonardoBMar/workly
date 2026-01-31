@@ -9,7 +9,7 @@ import type { EventClickArg, DateSelectArg, EventDropArg } from "@fullcalendar/c
 import type { EventResizeDoneArg } from "@fullcalendar/interaction"
 import ptBrLocale from "@fullcalendar/core/locales/pt-br"
 import type { Booking } from "../types"
-import type { Service } from "../_hooks"
+import type { Service } from "../_actions"
 
 interface CalendarProps {
     bookings: Booking[]

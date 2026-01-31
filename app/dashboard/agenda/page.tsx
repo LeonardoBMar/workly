@@ -3,7 +3,7 @@
 import { Calendar } from "./_components/calendar"
 import { BookingModal } from "./_components/booking-modal"
 import { Sidebar } from "./_components/sidebar"
-import { useAppointments, useAgendaUI, useAgendaHandlers, useServices } from "./_hooks"
+import { useAppointments, useAgendaUI, useAgendaHandlers, useServices } from "./_actions"
 
 export default function AgendaPage() {
     const { services, isLoading: isLoadingServices } = useServices()

@@ -1,6 +1,6 @@
 import { CalendarDays, Clock, Users, Plus } from "lucide-react"
 import type { Booking } from "../types"
-import type { Service } from "../_hooks"
+import type { Service } from "../_actions"
 
 interface SidebarProps {
     bookings: Booking[]

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { Search, Plus, User, Phone, Mail, ChevronDown } from "lucide-react"
-import type { Client } from "../_hooks/use-clients"
+import type { Client } from "../_actions/use-clients"
 
 interface ClientSelectProps {
     value: Client | null

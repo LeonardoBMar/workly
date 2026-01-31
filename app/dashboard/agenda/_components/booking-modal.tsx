@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 import { X, Trash2, Clock, FileText, Calendar } from "lucide-react"
 import type { Booking } from "../types"
 import { ClientSelect } from "./client-select"
-import { useServices, useClients, type Client, type Service } from "../_hooks"
+import { useServices, useClients, type Client, type Service } from "../_actions"
 import Link from "next/link"
 
 interface BookingModalProps {
