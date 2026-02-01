@@ -3,11 +3,16 @@ import { getShopperBySlug } from "@/app/b/_actions/get-shopper"
 import { Button } from "@/app/components/ui/button"
 import { Card } from "@/app/components/ui/card"
 import SimpleHeader from "@/app/b/_components/SimpleHeader"
+import { getShopperServicesByUserId } from "@/app/b/_actions/get-shopper-services"
 
 export default async function Page(props: { params: Promise<{ slug: string }> }) {
     const { slug } = await props.params
 
     const shopper = await getShopperBySlug(slug)
+    const shopperServices = await getShopperServicesByUserId(shopper?.userId ?? "")
+    console.log("shopper", shopper)
+    console.log("shopper.userId", shopper?.userId)
+    console.log("shopperServices", shopperServices)
     if (!shopper) notFound()
 
     return (

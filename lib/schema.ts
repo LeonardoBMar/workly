@@ -82,6 +82,8 @@ export const services = pgTable("services", {
     updatedAt: timestamp("updatedAt").notNull().defaultNow(),
 });
 
+export type Service = InferSelectModel<typeof services>
+
 export const servicesRelations = relations(services, ({ many }) => ({
     appointments: many(appointments),
 }));

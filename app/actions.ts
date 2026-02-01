@@ -60,6 +60,41 @@ export async function createService(formData: {
     }
 }
 
+export async function updateService(id: string, formData: {
+    name?: string;
+    description?: string;
+    price?: string;
+    duration?: number;
+}) {
+    try {
+        const session = await auth.api.getSession({
+            headers: await headers()
+        });
+
+        if (!session?.user) {
+            return { error: "Não autorizado" };
+        }
+
+        await db
+            .update(services)
+            .set({
+                ...formData,
+                updatedAt: new Date(),
+            })
+            .where(
+                and(
+                    eq(services.id, id),
+                    eq(services.userId, session.user.id)
+                )
+            );
+
+        return { success: true };
+    } catch (error) {
+        console.error("Error updating service:", error);
+        return { error: "Erro ao atualizar serviço" };
+    }
+}
+
 export async function deleteService(id: string) {
     try {
         const session = await auth.api.getSession({
