@@ -37,6 +37,7 @@ O Workly surge para centralizar agenda, clientes e pagamentos em uma única plat
 - **Autenticação**: [Better Auth](https://www.better-auth.com/)
 - **ORM**: [Drizzle ORM](https://orm.drizzle.team/)
 - **Banco de Dados**: [Neon (PostgreSQL)](https://neon.tech/)
+- **Uploads**: [UploadThing](https://uploadthing.com/)
 - **Ícones**: [Lucide React](https://lucide.dev/)
 - **Linguagem**: [TypeScript](https://www.typescriptlang.org/)
 
@@ -49,6 +50,8 @@ O Workly surge para centralizar agenda, clientes e pagamentos em uma única plat
 - [x] **Gestão de Serviços (CRUD)**: Criação, listagem e exclusão de serviços.
 - [x] **Integração com Banco de Dados**: Persistência escalável com Neon PostgreSQL + Drizzle.
 - [x] **Arquitetura Escalável**: Uso de Server Actions e clean code com Next.js 15.
+- [x] **Página de Link Profissional**: Sistema de rota dinâmica `/b/[slug]` para perfil público.
+- [x] **Gestão de Imagens**: Upload de logo e banner integrado com UploadThing.
 
 ### Em Desenvolvimento / Futuro 🚀
 - [ ] **Sistema de Agendamentos**: Calendário interativo para clientes e profissionais.
@@ -86,6 +89,8 @@ Crie um arquivo `.env` na raiz do projeto e adicione:
 DATABASE_URL=seu_link_do_neon_db
 BETTER_AUTH_SECRET=sua_chave_secreta
 BETTER_AUTH_URL=http://localhost:3000
+UPLOADTHING_SECRET=sua_secret_do_uploadthing
+UPLOADTHING_APP_ID=seu_app_id_do_uploadthing
 ```
 
 4. **Prepare o banco de dados:**
