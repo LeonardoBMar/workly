@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import { getShopperBySlug } from "@/app/b/_actions/get-shopper"
 import { Button } from "@/app/components/ui/button"
 import SimpleHeader from "@/app/b/_components/SimpleHeader"
+import ServiceCard from "@/app/b/_components/ServiceCard"
 import { getShopperServicesByUserId } from "@/app/b/_actions/get-shopper-services"
 
 
@@ -59,32 +60,7 @@ export default async function Page(props: { params: Promise<{ slug: string }> })
                 {shopperServices && (
                     <div className="w-full flex flex-col gap-4 mt-4">
                         {shopperServices.map(service => (
-                            <div
-                                key={service.id}
-                                className="w-full max-w-md rounded-xl border border-neutral-200 bg-white p-4 shadow-sm hover:shadow-md transition"
-                            >
-                                <div className="flex flex-col gap-1">
-                                    <h2 className="text-base font-semibold text-neutral-900">
-                                        {service.name}
-                                    </h2>
-
-                                    {service.description && (
-                                        <p className="text-sm text-neutral-500">
-                                            {service.description}
-                                        </p>
-                                    )}
-                                </div>
-
-                                <div className="flex items-center justify-between mt-4">
-                                    <span className="text-lg font-bold text-neutral-900">
-                                        R$ {service.price}
-                                    </span>
-
-                                    <Button size="sm">
-                                        Agendar
-                                    </Button>
-                                </div>
-                            </div>
+                            <ServiceCard key={service.id} service={service} shopperId={shopper.userId} />
                         ))}
                     </div>
                 )}

@@ -22,7 +22,6 @@ export async function getMyShopper() {
             .where(eq(shopper.userId, session.user.id))
             .limit(1);
 
-
         return { data: result[0] || null };
     } catch (error) {
         console.error("Error fetching shopper:", error);
