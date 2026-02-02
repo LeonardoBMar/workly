@@ -22,6 +22,7 @@ export async function getMyShopper() {
             .where(eq(shopper.userId, session.user.id))
             .limit(1);
 
+
         return { data: result[0] || null };
     } catch (error) {
         console.error("Error fetching shopper:", error);
@@ -34,8 +35,11 @@ export async function upsertShopper(formData: {
     name: string;
     description?: string;
     bannerUrl?: string;
+    logoUrl?: string;
 }) {
     try {
+
+
         const session = await auth.api.getSession({
             headers: await headers()
         });
@@ -63,6 +67,10 @@ export async function upsertShopper(formData: {
         }
 
         const bannerUrl = formData.bannerUrl || "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&h=400&fit=crop";
+        const logoUrl = formData.logoUrl || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop";
+
+
+
 
         if (isMyShopper) {
             await db
@@ -72,6 +80,7 @@ export async function upsertShopper(formData: {
                     name: formData.name,
                     description: formData.description,
                     bannerUrl: bannerUrl,
+                    logoUrl: logoUrl,
                     updatedAt: new Date(),
                 })
                 .where(eq(shopper.id, isMyShopper.id));
@@ -84,6 +93,7 @@ export async function upsertShopper(formData: {
                 name: formData.name,
                 description: formData.description,
                 bannerUrl: bannerUrl,
+                logoUrl: logoUrl,
                 links: [],
             });
         }

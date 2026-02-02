@@ -1,18 +1,16 @@
 import { notFound } from "next/navigation"
 import { getShopperBySlug } from "@/app/b/_actions/get-shopper"
 import { Button } from "@/app/components/ui/button"
-import { Card } from "@/app/components/ui/card"
 import SimpleHeader from "@/app/b/_components/SimpleHeader"
 import { getShopperServicesByUserId } from "@/app/b/_actions/get-shopper-services"
+
 
 export default async function Page(props: { params: Promise<{ slug: string }> }) {
     const { slug } = await props.params
 
     const shopper = await getShopperBySlug(slug)
     const shopperServices = await getShopperServicesByUserId(shopper?.userId ?? "")
-    console.log("shopper", shopper)
-    console.log("shopper.userId", shopper?.userId)
-    console.log("shopperServices", shopperServices)
+
     if (!shopper) notFound()
 
     return (
@@ -27,7 +25,7 @@ export default async function Page(props: { params: Promise<{ slug: string }> })
 
                     <div className="absolute left-1/2 bottom-0 translate-x-[-50%] translate-y-[50%]">
                         <img
-                            src={shopper.bannerUrl}
+                            src={shopper.logoUrl || shopper.bannerUrl}
                             className="w-32 h-32 rounded-full border-4 border-neutral-950 object-cover bg-neutral-950"
                         />
                     </div>
@@ -58,9 +56,39 @@ export default async function Page(props: { params: Promise<{ slug: string }> })
                     ))}
                 </div>
 
-                <Button className="w-full max-w-md mt-6">
-                    Agendar horário
-                </Button>
+                {shopperServices && (
+                    <div className="w-full flex flex-col gap-4 mt-4">
+                        {shopperServices.map(service => (
+                            <div
+                                key={service.id}
+                                className="w-full max-w-md rounded-xl border border-neutral-200 bg-white p-4 shadow-sm hover:shadow-md transition"
+                            >
+                                <div className="flex flex-col gap-1">
+                                    <h2 className="text-base font-semibold text-neutral-900">
+                                        {service.name}
+                                    </h2>
+
+                                    {service.description && (
+                                        <p className="text-sm text-neutral-500">
+                                            {service.description}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div className="flex items-center justify-between mt-4">
+                                    <span className="text-lg font-bold text-neutral-900">
+                                        R$ {service.price}
+                                    </span>
+
+                                    <Button size="sm">
+                                        Agendar
+                                    </Button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
             </div>
         </main>
     )

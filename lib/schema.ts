@@ -134,6 +134,7 @@ export const shopper = pgTable("shopper", {
     name: text("name").notNull(),
     description: text("description"),
     bannerUrl: text("bannerUrl").notNull(),
+    logoUrl: text("logoUrl"),
     links: json("links").$type<ShopperLink[]>().notNull(),
     createdAt: timestamp("createdAt").notNull().defaultNow(),
     updatedAt: timestamp("updatedAt").notNull().defaultNow(),

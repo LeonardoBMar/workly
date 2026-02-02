@@ -12,7 +12,8 @@ import {
     Settings,
     HelpCircle,
     ChevronDown,
-    Calendar
+    Calendar,
+    Link as LinkIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
@@ -22,6 +23,7 @@ const menuItems = [
     { icon: Calendar, label: "Agenda", href: "/dashboard/agenda" },
     { icon: Users, label: "Clientes", href: "/dashboard/clientes" },
     { icon: Package, label: "Serviços", href: "/dashboard/servicos" },
+    { icon: LinkIcon, label: "Sua Pagina", href: "/dashboard/link" },
 ];
 
 const productItems = [
