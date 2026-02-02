@@ -89,8 +89,7 @@ Crie um arquivo `.env` na raiz do projeto e adicione:
 DATABASE_URL=seu_link_do_neon_db
 BETTER_AUTH_SECRET=sua_chave_secreta
 BETTER_AUTH_URL=http://localhost:3000
-UPLOADTHING_SECRET=sua_secret_do_uploadthing
-UPLOADTHING_APP_ID=seu_app_id_do_uploadthing
+UPLOADTHING_TOKEN=sua_secret_do_uploadthing
 ```
 
 4. **Prepare o banco de dados:**
