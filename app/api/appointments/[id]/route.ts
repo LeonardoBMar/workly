@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { appointments } from "@/lib/schema";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { getRequiredSessionForAPI } from "@/lib/get-session";
 import { eq, and } from "drizzle-orm";
 
 export async function PATCH(
@@ -10,13 +9,8 @@ export async function PATCH(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const session = await auth.api.getSession({
-            headers: await headers(),
-        });
-
-        if (!session?.user?.id) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-        }
+        const user = await getRequiredSessionForAPI();
+        if (user instanceof NextResponse) return user;
 
         const { id } = await params;
         const body = await request.json();
@@ -39,7 +33,7 @@ export async function PATCH(
             .where(
                 and(
                     eq(appointments.id, id),
-                    eq(appointments.userId, session.user.id)
+                    eq(appointments.userId, user.id)
                 )
             )
             .returning();
@@ -66,13 +60,8 @@ export async function DELETE(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const session = await auth.api.getSession({
-            headers: await headers(),
-        });
-
-        if (!session?.user?.id) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-        }
+        const user = await getRequiredSessionForAPI();
+        if (user instanceof NextResponse) return user;
 
         const { id } = await params;
 
@@ -81,7 +70,7 @@ export async function DELETE(
             .where(
                 and(
                     eq(appointments.id, id),
-                    eq(appointments.userId, session.user.id)
+                    eq(appointments.userId, user.id)
                 )
             )
             .returning();

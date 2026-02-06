@@ -3,29 +3,22 @@
 import { db } from "@/lib/db";
 import { shopper } from "@/lib/schema";
 import { eq } from "drizzle-orm";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { getRequiredSession } from "@/lib/get-session";
 
 export async function getMyShopper() {
     try {
-        const session = await auth.api.getSession({
-            headers: await headers()
-        });
-
-        if (!session?.user) {
-            return { error: "Não autorizado" };
-        }
+        const user = await getRequiredSession();
 
         const result = await db
             .select()
             .from(shopper)
-            .where(eq(shopper.userId, session.user.id))
+            .where(eq(shopper.userId, user.id))
             .limit(1);
 
         return { data: result[0] || null };
     } catch (error) {
         console.error("Error fetching shopper:", error);
-        return { error: "Erro ao buscar dados" };
+        return { error: error instanceof Error ? error.message : "Erro ao buscar dados" };
     }
 }
 
@@ -37,15 +30,7 @@ export async function upsertShopper(formData: {
     logoUrl?: string;
 }) {
     try {
-
-
-        const session = await auth.api.getSession({
-            headers: await headers()
-        });
-
-        if (!session?.user) {
-            return { error: "Não autorizado" };
-        }
+        const user = await getRequiredSession();
 
         const existingSlug = await db
             .select()
@@ -56,7 +41,7 @@ export async function upsertShopper(formData: {
         const currentShopper = await db
             .select()
             .from(shopper)
-            .where(eq(shopper.userId, session.user.id))
+            .where(eq(shopper.userId, user.id))
             .limit(1);
 
         const isMyShopper = currentShopper[0];
@@ -87,7 +72,7 @@ export async function upsertShopper(formData: {
             const id = crypto.randomUUID();
             await db.insert(shopper).values({
                 id,
-                userId: session.user.id,
+                userId: user.id,
                 slug: formData.slug,
                 name: formData.name,
                 description: formData.description,
@@ -100,6 +85,6 @@ export async function upsertShopper(formData: {
         return { success: true };
     } catch (error) {
         console.error("Error saving shopper:", error);
-        return { error: "Erro ao salvar informações" };
+        return { error: error instanceof Error ? error.message : "Erro ao salvar informações" };
     }
 }

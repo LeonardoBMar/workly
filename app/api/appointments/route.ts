@@ -1,25 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { appointments, clients } from "@/lib/schema";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { getRequiredSessionForAPI } from "@/lib/get-session";
 import { eq, and, gte, lte } from "drizzle-orm";
 
 export async function GET(request: NextRequest) {
     try {
-        const session = await auth.api.getSession({
-            headers: await headers(),
-        });
-
-        if (!session?.user?.id) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-        }
+        const user = await getRequiredSessionForAPI();
+        if (user instanceof NextResponse) return user;
 
         const { searchParams } = new URL(request.url);
         const startDate = searchParams.get("startDate");
         const endDate = searchParams.get("endDate");
 
-        let whereConditions = [eq(appointments.userId, session.user.id)];
+        let whereConditions = [eq(appointments.userId, user.id)];
 
         if (startDate && endDate) {
             whereConditions.push(
@@ -56,13 +50,8 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
     try {
-        const session = await auth.api.getSession({
-            headers: await headers(),
-        });
-
-        if (!session?.user?.id) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-        }
+        const user = await getRequiredSessionForAPI();
+        if (user instanceof NextResponse) return user;
 
         const body = await request.json();
         const { clientId, serviceId, startTime, endTime, notes } = body;
@@ -78,7 +67,7 @@ export async function POST(request: NextRequest) {
             .insert(appointments)
             .values({
                 id: crypto.randomUUID(),
-                userId: session.user.id,
+                userId: user.id,
                 clientId,
                 serviceId,
                 startTime: new Date(startTime),

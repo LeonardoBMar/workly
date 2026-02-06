@@ -1,24 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { services } from "@/lib/schema";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { getRequiredSessionForAPI } from "@/lib/get-session";
 import { eq } from "drizzle-orm";
 
 export async function GET(request: NextRequest) {
     try {
-        const session = await auth.api.getSession({
-            headers: await headers(),
-        });
-
-        if (!session?.user?.id) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-        }
+        const user = await getRequiredSessionForAPI();
+        if (user instanceof NextResponse) return user;
 
         const result = await db
             .select()
             .from(services)
-            .where(eq(services.userId, session.user.id));
+            .where(eq(services.userId, user.id));
 
         return NextResponse.json(result);
     } catch (error) {
@@ -32,13 +26,8 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
     try {
-        const session = await auth.api.getSession({
-            headers: await headers(),
-        });
-
-        if (!session?.user?.id) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-        }
+        const user = await getRequiredSessionForAPI();
+        if (user instanceof NextResponse) return user;
 
         const body = await request.json();
         const { name, description, price, duration } = body;
@@ -54,7 +43,7 @@ export async function POST(request: NextRequest) {
             .insert(services)
             .values({
                 id: crypto.randomUUID(),
-                userId: session.user.id,
+                userId: user.id,
                 name,
                 description,
                 price: price.toString(),

@@ -2,6 +2,7 @@ import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 import { auth as betterAuth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { NextResponse } from "next/server";
 
 const f = createUploadthing();
 
