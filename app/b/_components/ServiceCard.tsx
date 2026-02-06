@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/app/components/ui/button"
+import ScheduleModal from "./ScheduleModal"
 import type { Service } from "@/lib/schema"
 
 interface ServiceCardProps {
@@ -32,6 +33,13 @@ export default function ServiceCard({ service, shopperId }: ServiceCardProps) {
                     </Button>
                 </div>
             </div>
+
+            <ScheduleModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                shopperId={shopperId}
+                serviceId={service.id}
+            />
         </>
     )
 }
