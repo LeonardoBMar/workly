@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Button } from "@/app/components/ui/button";
 import { DollarSign, Clock, Loader2, Package, Save, FileText, ArrowRight } from "lucide-react"
-import { createService, updateService } from "@/app/actions";
+import { createService, updateService } from "@/app/actions/services";
 import { Service } from "@/lib/schema";
 import { Input } from "@/app/components/ui/input";
 import { Textarea } from "@/app/components/ui/textarea";

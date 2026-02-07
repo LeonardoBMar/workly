@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getClients, deleteClient } from "@/app/actions";
+import { getClients, deleteClient } from "@/app/actions/clients";
 import { User, Phone, Mail, MoreVertical, Trash2, Edit2, Search, Loader2 } from "lucide-react";
 import { Input } from "@/app/components/ui/input";
 

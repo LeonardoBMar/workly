@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getServices, deleteService } from "@/app/actions";
+import { getServices, deleteService } from "@/app/actions/services";
 import { Package, Clock, Trash2, Edit2, Search, Loader2 } from "lucide-react";
 import { Input } from "@/app/components/ui/input";
 import { Service } from "@/lib/schema";

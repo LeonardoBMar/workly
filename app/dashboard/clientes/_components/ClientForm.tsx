@@ -5,7 +5,7 @@ import { User, Mail, Phone, FileText, ArrowRight, Loader2, Check } from "lucide-
 import { Input } from "@/app/components/ui/input";
 import { Textarea } from "@/app/components/ui/textarea";
 import { Button } from "@/app/components/ui/button";
-import { createClient, updateClient } from "@/app/actions";
+import { createClient, updateClient } from "@/app/actions/clients";
 import { useRouter } from "next/navigation";
 import { notifyError, notifySuccess } from "@/lib/toast";
 
