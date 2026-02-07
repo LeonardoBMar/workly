@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import type { Booking } from "../types";
+import { notifyError, notifySuccess } from "@/lib/toast";
 
 interface UseAgendaHandlersProps {
     updateAppointment: (id: string, data: Partial<Booking>) => Promise<Booking>;
@@ -39,9 +40,10 @@ export function useAgendaHandlers({
                     start: updatedBooking.start,
                     end: updatedBooking.end,
                 });
+                notifySuccess("Agendamento atualizado!");
             } catch (error) {
                 console.error("Error updating appointment:", error);
-                // TODO: Show error toast
+                notifyError("Erro ao atualizar agendamento.");
             }
         },
         [updateAppointment]
@@ -54,9 +56,10 @@ export function useAgendaHandlers({
                     start: updatedBooking.start,
                     end: updatedBooking.end,
                 });
+                notifySuccess("Duração do agendamento atualizada!");
             } catch (error) {
                 console.error("Error resizing appointment:", error);
-                // TODO: Show error toast
+                notifyError("Erro ao redimensionar agendamento.");
             }
         },
         [updateAppointment]
@@ -67,13 +70,15 @@ export function useAgendaHandlers({
             try {
                 if (existingBookingId) {
                     await updateAppointment(existingBookingId, bookingData);
+                    notifySuccess("Agendamento atualizado com sucesso!");
                 } else {
                     await createAppointment(bookingData);
+                    notifySuccess("Agendamento criado com sucesso!");
                 }
                 closeModal();
             } catch (error) {
                 console.error("Error saving appointment:", error);
-                // TODO: Show error toast
+                notifyError("Erro ao salvar agendamento.");
                 throw error;
             }
         },
@@ -84,10 +89,11 @@ export function useAgendaHandlers({
         async (bookingId: string) => {
             try {
                 await deleteAppointment(bookingId);
+                notifySuccess("Agendamento excluído com sucesso!");
                 closeModal();
             } catch (error) {
                 console.error("Error deleting appointment:", error);
-                // TODO: Show error toast
+                notifyError("Erro ao excluir agendamento.");
                 throw error;
             }
         },

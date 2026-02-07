@@ -5,6 +5,7 @@ import { createService, updateService } from "@/app/actions";
 import { Service } from "@/lib/schema";
 import { Input } from "@/app/components/ui/input";
 import { Textarea } from "@/app/components/ui/textarea";
+import { notifyError, notifySuccess } from "@/lib/toast";
 
 interface ServiceFormProps {
     initialData?: Service | null;
@@ -48,12 +49,13 @@ export function ServiceForm({ initialData, onSuccess }: ServiceFormProps) {
                 : await createService(data);
 
             if (res.success) {
+                notifySuccess(isEditing ? "Serviço atualizado com sucesso!" : "Serviço criado com sucesso!");
                 onSuccess?.();
             } else {
-                alert(res.error || "Erro ao salvar serviço");
+                notifyError(res.error || "Erro ao salvar serviço");
             }
         } catch (error) {
-            alert(`Ocorreu um erro ao ${isEditing ? 'atualizar' : 'salvar'} o serviço`);
+            notifyError(`Ocorreu um erro ao ${isEditing ? 'atualizar' : 'salvar'} o serviço`);
             console.error(error);
         } finally {
             setIsLoading(false);

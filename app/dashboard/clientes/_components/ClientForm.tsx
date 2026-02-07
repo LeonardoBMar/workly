@@ -7,6 +7,7 @@ import { Textarea } from "@/app/components/ui/textarea";
 import { Button } from "@/app/components/ui/button";
 import { createClient, updateClient } from "@/app/actions";
 import { useRouter } from "next/navigation";
+import { notifyError, notifySuccess } from "@/lib/toast";
 
 interface ClientFormProps {
     onSuccess?: () => void;
@@ -22,14 +23,11 @@ interface ClientFormProps {
 export function ClientForm({ onSuccess, initialData }: ClientFormProps) {
     const isEditing = !!initialData;
     const [isLoading, setIsLoading] = useState(false);
-    const [isSuccess, setIsSuccess] = useState(false);
-    const [error, setError] = useState<string | null>(null);
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsLoading(true);
-        setError(null);
 
         const formData = new FormData(e.currentTarget);
         const name = formData.get("name") as string;
@@ -50,21 +48,18 @@ export function ClientForm({ onSuccess, initialData }: ClientFormProps) {
                 : await createClient(data);
 
             if (result.error) {
-                setError(result.error);
+                notifyError(result.error);
             } else {
-                setIsSuccess(true);
-                setTimeout(() => {
-                    setIsSuccess(false);
-                    if (onSuccess) {
-                        onSuccess();
-                    } else {
-                        router.push("/dashboard");
-                    }
-                    router.refresh();
-                }, 2000);
+                notifySuccess(isEditing ? "Cliente atualizado com sucesso!" : "Cliente criado com sucesso!");
+                if (onSuccess) {
+                    onSuccess();
+                } else {
+                    router.push("/dashboard");
+                }
+                router.refresh();
             }
         } catch (error) {
-            setError(`Ocorreu um erro ao ${isEditing ? 'atualizar' : 'salvar'} o cliente`);
+            notifyError(`Ocorreu um erro ao ${isEditing ? 'atualizar' : 'salvar'} o cliente`);
             console.error(error);
         } finally {
             setIsLoading(false);
@@ -86,29 +81,15 @@ export function ClientForm({ onSuccess, initialData }: ClientFormProps) {
                         </p>
                     </div>
 
-                    {isSuccess ? (
-                        <div className="flex flex-col items-center gap-2 animate-in zoom-in duration-300">
-                            <div className="h-20 w-20 rounded-2xl bg-emerald-50 border-2 border-emerald-100 flex items-center justify-center text-emerald-500 shadow-sm shadow-emerald-100">
-                                <Check className="h-8 w-8" />
-                            </div>
-                            <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Sucesso!</span>
+                    <div className="flex flex-col items-center gap-2">
+                        <div className="h-20 w-20 rounded-2xl bg-indigo-50 border-2 border-dashed border-indigo-200 flex items-center justify-center text-indigo-400 hover:bg-indigo-100 hover:border-indigo-300 transition-all cursor-pointer group">
+                            <User className="h-8 w-8 transition-transform group-hover:scale-110" />
                         </div>
-                    ) : (
-                        <div className="flex flex-col items-center gap-2">
-                            <div className="h-20 w-20 rounded-2xl bg-indigo-50 border-2 border-dashed border-indigo-200 flex items-center justify-center text-indigo-400 hover:bg-indigo-100 hover:border-indigo-300 transition-all cursor-pointer group">
-                                <User className="h-8 w-8 transition-transform group-hover:scale-110" />
-                            </div>
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Adicionar Foto</span>
-                        </div>
-                    )}
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Adicionar Foto</span>
+                    </div>
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-8 space-y-6">
-                    {error && (
-                        <div className="p-4 rounded-xl bg-red-50 border border-red-100 text-sm text-red-600 animate-in fade-in">
-                            {error}
-                        </div>
-                    )}
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="md:col-span-2">
@@ -154,7 +135,7 @@ export function ClientForm({ onSuccess, initialData }: ClientFormProps) {
                         <Button variant="ghost" type="button" disabled={isLoading} onClick={() => router.back()}>
                             Cancelar
                         </Button>
-                        <Button type="submit" className="gap-2" disabled={isLoading || isSuccess}>
+                        <Button type="submit" className="gap-2" disabled={isLoading}>
                             {isLoading ? (
                                 <>
                                     <Loader2 className="h-4 w-4 animate-spin" />

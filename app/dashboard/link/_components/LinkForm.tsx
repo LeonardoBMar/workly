@@ -5,6 +5,7 @@ import { Button } from "@/app/components/ui/button";
 import { upsertShopper } from "../_actions/manage-link";
 import { Loader2, ExternalLink, Save, Upload, Image as ImageIcon, Plus } from "lucide-react";
 import { useUploadThing } from "@/lib/uploadthing";
+import { notifyError, notifySuccess } from "@/lib/toast";
 
 interface LinkFormProps {
     initialData?: {
@@ -18,7 +19,6 @@ interface LinkFormProps {
 
 export function LinkForm({ initialData }: LinkFormProps) {
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState("");
     const [success, setSuccess] = useState(false);
     const [formData, setFormData] = useState({
         slug: initialData?.slug || "",
@@ -39,7 +39,6 @@ export function LinkForm({ initialData }: LinkFormProps) {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        setError("");
         setSuccess(false);
 
         try {
@@ -70,12 +69,13 @@ export function LinkForm({ initialData }: LinkFormProps) {
 
 
             if (result.error) {
-                setError(result.error);
+                notifyError(result.error);
             } else {
+                notifySuccess("Configurações salvas com sucesso!");
                 setSuccess(true);
             }
         } catch (err) {
-            setError("Ocorreu um erro inesperado.");
+            notifyError("Ocorreu um erro inesperado.");
         } finally {
             setIsLoading(false);
         }
@@ -238,12 +238,6 @@ export function LinkForm({ initialData }: LinkFormProps) {
                         />
                     </div>
                 </div>
-
-                {error && (
-                    <div className="p-3 bg-red-50 text-red-600 text-sm rounded-md border border-red-100">
-                        {error}
-                    </div>
-                )}
 
                 {success && (
                     <div className="p-3 bg-green-50 text-green-600 text-sm rounded-md border border-green-100 flex items-center justify-between">

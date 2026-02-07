@@ -6,6 +6,7 @@ import Header from "./components/layout/Header";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,12 +25,6 @@ export default function RootLayout({
     <html lang="pt-BR">
       <body className={inter.className}>
         <NextSSRPlugin
-          /**
-           * The `extractRouterConfig` will extract **only** the route configs
-           * from the router to prevent additional information from being
-           * leaked to the client. The data passed to the client is the same
-           * as if you were to fetch `/api/uploadthing` directly.
-           */
           routerConfig={extractRouterConfig(ourFileRouter)}
         />
         <div className="flex flex-col min-h-screen">
@@ -37,6 +32,7 @@ export default function RootLayout({
             {children}
           </main>
         </div>
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   );
