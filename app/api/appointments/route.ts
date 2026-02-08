@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { appointments, clients } from "@/lib/schema";
+import { appointments, clients, services } from "@/lib/schema";
 import { getRequiredSessionForAPI } from "@/lib/get-session";
 import { eq, and, gte, lte } from "drizzle-orm";
+import { appointmentStatusSchema } from "@/lib/validation";
 
 export async function GET(request: NextRequest) {
     try {
@@ -13,14 +14,17 @@ export async function GET(request: NextRequest) {
         const startDate = searchParams.get("startDate");
         const endDate = searchParams.get("endDate");
 
-        let whereConditions = [eq(appointments.userId, user.id)];
+        const dateRangeCondition =
+            startDate && endDate
+                ? and(
+                    gte(appointments.startTime, new Date(startDate)),
+                    lte(appointments.endTime, new Date(endDate))
+                )
+                : undefined;
 
-        if (startDate && endDate) {
-            whereConditions.push(
-                gte(appointments.startTime, new Date(startDate)),
-                lte(appointments.endTime, new Date(endDate))
-            );
-        }
+        const whereCondition = dateRangeCondition
+            ? and(eq(appointments.userId, user.id), dateRangeCondition)
+            : eq(appointments.userId, user.id);
 
         const result = await db
             .select({
@@ -36,7 +40,7 @@ export async function GET(request: NextRequest) {
             })
             .from(appointments)
             .leftJoin(clients, eq(appointments.clientId, clients.id))
-            .where(and(...whereConditions));
+            .where(whereCondition);
 
         return NextResponse.json(result);
     } catch (error) {
@@ -54,11 +58,39 @@ export async function POST(request: NextRequest) {
         if (user instanceof NextResponse) return user;
 
         const body = await request.json();
-        const { clientId, serviceId, startTime, endTime, notes } = body;
+        const { clientId, serviceId, startTime, endTime, notes, status } = body;
 
         if (!clientId || !serviceId || !startTime || !endTime) {
             return NextResponse.json(
                 { error: "Missing required fields" },
+                { status: 400 }
+            );
+        }
+
+        const [ownedClient, ownedService] = await Promise.all([
+            db
+                .select({ id: clients.id })
+                .from(clients)
+                .where(and(eq(clients.id, clientId), eq(clients.userId, user.id)))
+                .limit(1),
+            db
+                .select({ id: services.id })
+                .from(services)
+                .where(and(eq(services.id, serviceId), eq(services.userId, user.id)))
+                .limit(1),
+        ]);
+
+        if (!ownedClient[0] || !ownedService[0]) {
+            return NextResponse.json(
+                { error: "Client or service does not belong to the authenticated user" },
+                { status: 403 }
+            );
+        }
+
+        const parsedStatus = appointmentStatusSchema.safeParse(status ?? "pending");
+        if (!parsedStatus.success) {
+            return NextResponse.json(
+                { error: "Invalid appointment status" },
                 { status: 400 }
             );
         }
@@ -72,7 +104,7 @@ export async function POST(request: NextRequest) {
                 serviceId,
                 startTime: new Date(startTime),
                 endTime: new Date(endTime),
-                status: "pending",
+                status: parsedStatus.data,
                 notes,
                 createdAt: new Date(),
                 updatedAt: new Date(),

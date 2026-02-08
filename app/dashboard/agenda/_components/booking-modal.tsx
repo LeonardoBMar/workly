@@ -5,8 +5,9 @@ import { useState, useEffect } from "react"
 import { X, Trash2, Clock, FileText, Calendar } from "lucide-react"
 import type { Booking } from "../types"
 import { ClientSelect } from "./client-select"
-import { useServices, useClients, type Client, type Service } from "../_actions"
+import { useServices, useClients, type Client } from "../_actions"
 import Link from "next/link"
+import type { AppointmentStatus } from "@/lib/validation"
 
 interface BookingModalProps {
     isOpen: boolean
@@ -30,40 +31,9 @@ export function BookingModal({
     const [serviceId, setServiceId] = useState("")
     const [selectedClient, setSelectedClient] = useState<Client | null>(null)
     const [notes, setNotes] = useState("")
+    const [status, setStatus] = useState<AppointmentStatus>("pending")
     const [startTime, setStartTime] = useState("")
     const [date, setDate] = useState("")
-
-    useEffect(() => {
-        if (services.length > 0 && !serviceId) {
-            setServiceId(services[0].id)
-        }
-    }, [services, serviceId])
-
-    useEffect(() => {
-        if (booking) {
-            setServiceId(booking.serviceId)
-            setSelectedClient(
-                booking.clientName
-                    ? {
-                        id: "temp",
-                        name: booking.clientName,
-                        phone: booking.clientPhone,
-                    }
-                    : null
-            )
-            setNotes(booking.notes || "")
-            setStartTime(formatTime(booking.start))
-            setDate(formatDate(booking.start))
-        } else if (selectedSlot) {
-            if (services.length > 0) {
-                setServiceId(services[0].id)
-            }
-            setSelectedClient(null)
-            setNotes("")
-            setStartTime(formatTime(selectedSlot.start))
-            setDate(formatDate(selectedSlot.start))
-        }
-    }, [booking, selectedSlot, services])
 
     const formatTime = (date: Date) => {
         return date.toTimeString().slice(0, 5)
@@ -72,6 +42,48 @@ export function BookingModal({
     const formatDate = (date: Date) => {
         return date.toISOString().split("T")[0]
     }
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (services.length > 0 && !serviceId) {
+                setServiceId(services[0].id)
+            }
+        }, 0)
+
+        return () => clearTimeout(timer)
+    }, [services, serviceId])
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (booking) {
+                setServiceId(booking.serviceId)
+                setSelectedClient(
+                    booking.clientName
+                        ? {
+                            id: "temp",
+                            name: booking.clientName,
+                            phone: booking.clientPhone,
+                        }
+                        : null
+                )
+                setNotes(booking.notes || "")
+                setStatus(booking.status ?? "pending")
+                setStartTime(formatTime(booking.start))
+                setDate(formatDate(booking.start))
+            } else if (selectedSlot) {
+                if (services.length > 0) {
+                    setServiceId(services[0].id)
+                }
+                setSelectedClient(null)
+                setNotes("")
+                setStatus("pending")
+                setStartTime(formatTime(selectedSlot.start))
+                setDate(formatDate(selectedSlot.start))
+            }
+        }, 0)
+
+        return () => clearTimeout(timer)
+    }, [booking, selectedSlot, services])
 
     const formatDateDisplay = (dateStr: string) => {
         const date = new Date(dateStr + "T00:00:00")
@@ -110,6 +122,7 @@ export function BookingModal({
             clientName: selectedClient.name,
             clientPhone: selectedClient.phone,
             notes,
+            status,
         })
     }
 
@@ -222,6 +235,21 @@ export function BookingModal({
                         onCreateClient={createClient}
                         onSearchClients={searchClients}
                     />
+
+                    <div>
+                        <label className="block text-sm font-medium text-muted-foreground mb-2">
+                            Status inicial
+                        </label>
+                        <select
+                            value={status}
+                            onChange={(e) => setStatus(e.target.value as AppointmentStatus)}
+                            className="w-full px-3 py-2 border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-ring text-sm bg-transparent"
+                        >
+                            <option value="pending">Pendente</option>
+                            <option value="confirmed">Confirmado</option>
+                            <option value="cancelled">Cancelado</option>
+                        </select>
+                    </div>
 
                     <div>
                         <label className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground mb-2">

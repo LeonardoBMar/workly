@@ -4,6 +4,11 @@ import { clients } from "@/lib/schema";
 import { eq, and, desc } from "drizzle-orm";
 import { getRequiredSession } from "@/lib/get-session";
 import { revalidatePath } from "next/cache";
+import {
+    createClientInputSchema,
+    getValidationErrorMessage,
+    updateClientInputSchema,
+} from "@/lib/validation";
 
 export async function getClients() {
     try {
@@ -29,6 +34,11 @@ export async function createClient(formData: {
     notes?: string;
 }) {
     try {
+        const parsed = createClientInputSchema.safeParse(formData);
+        if (!parsed.success) {
+            return { error: getValidationErrorMessage(parsed.error) };
+        }
+
         const user = await getRequiredSession();
 
         const id = crypto.randomUUID();
@@ -36,10 +46,10 @@ export async function createClient(formData: {
         await db.insert(clients).values({
             id,
             userId: user.id,
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            notes: formData.notes,
+            name: parsed.data.name,
+            email: parsed.data.email,
+            phone: parsed.data.phone,
+            notes: parsed.data.notes,
         });
 
         revalidatePath("/dashboard/clientes");
@@ -57,12 +67,17 @@ export async function updateClient(id: string, formData: {
     notes?: string;
 }) {
     try {
+        const parsed = updateClientInputSchema.safeParse(formData);
+        if (!parsed.success) {
+            return { error: getValidationErrorMessage(parsed.error) };
+        }
+
         const user = await getRequiredSession();
 
         await db
             .update(clients)
             .set({
-                ...formData,
+                ...parsed.data,
                 updatedAt: new Date(),
             })
             .where(

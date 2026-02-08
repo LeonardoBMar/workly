@@ -19,7 +19,11 @@ export function ServicesList({ onEdit }: { onEdit?: (service: Service) => void }
     };
 
     useEffect(() => {
-        fetchServices();
+        const timer = setTimeout(() => {
+            void fetchServices();
+        }, 0);
+
+        return () => clearTimeout(timer);
     }, []);
 
     const handleDelete = async (id: string) => {

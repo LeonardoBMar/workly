@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import type { Booking } from "../types";
+import type { AppointmentStatus } from "@/lib/validation";
 
 interface UseAppointmentsOptions {
     startDate?: Date;
@@ -13,7 +14,7 @@ interface AppointmentData {
     serviceId: string;
     startTime: string;
     endTime: string;
-    status: string;
+    status: AppointmentStatus;
     notes?: string;
     clientName?: string;
     clientPhone?: string;
@@ -35,6 +36,7 @@ export function useAppointments(options: UseAppointmentsOptions = {}) {
             clientName: appointment.clientName,
             clientPhone: appointment.clientPhone,
             notes: appointment.notes,
+            status: appointment.status,
         };
     };
 
@@ -85,6 +87,7 @@ export function useAppointments(options: UseAppointmentsOptions = {}) {
                         startTime: bookingData.start.toISOString(),
                         endTime: bookingData.end.toISOString(),
                         notes: bookingData.notes,
+                        status: bookingData.status,
                     }),
                 });
 
@@ -112,11 +115,12 @@ export function useAppointments(options: UseAppointmentsOptions = {}) {
         setError(null);
 
         try {
-            const updatePayload: any = {};
+            const updatePayload: Record<string, string> = {};
             if (bookingData.start) updatePayload.startTime = bookingData.start.toISOString();
             if (bookingData.end) updatePayload.endTime = bookingData.end.toISOString();
             if (bookingData.serviceId) updatePayload.serviceId = bookingData.serviceId;
             if (bookingData.notes !== undefined) updatePayload.notes = bookingData.notes;
+            if (bookingData.status) updatePayload.status = bookingData.status;
 
             const response = await fetch(`/api/appointments/${id}`, {
                 method: "PATCH",

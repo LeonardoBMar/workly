@@ -1,9 +1,13 @@
 "use server";
 import { db } from "@/lib/db";
-import { appointments } from "@/lib/schema";
+import { appointments, clients, services } from "@/lib/schema";
 import { eq, and } from "drizzle-orm";
 import { getRequiredSession } from "@/lib/get-session";
 import { revalidatePath } from "next/cache";
+import {
+    appointmentStatusSchema,
+    type AppointmentStatus,
+} from "@/lib/validation";
 
 export async function getAppointments(date: Date) {
     try {
@@ -41,9 +45,31 @@ export async function createAppointment(formData: {
     startTime: Date;
     endTime: Date;
     notes?: string;
+    status?: AppointmentStatus;
 }) {
     try {
         const user = await getRequiredSession();
+        const parsedStatus = appointmentStatusSchema.safeParse(formData.status ?? "pending");
+        if (!parsedStatus.success) {
+            return { error: "Status de agendamento inválido." };
+        }
+
+        const [ownedClient, ownedService] = await Promise.all([
+            db
+                .select({ id: clients.id })
+                .from(clients)
+                .where(and(eq(clients.id, formData.clientId), eq(clients.userId, user.id)))
+                .limit(1),
+            db
+                .select({ id: services.id })
+                .from(services)
+                .where(and(eq(services.id, formData.serviceId), eq(services.userId, user.id)))
+                .limit(1),
+        ]);
+
+        if (!ownedClient[0] || !ownedService[0]) {
+            return { error: "Cliente ou serviço inválido para este usuário." };
+        }
 
         const id = crypto.randomUUID();
 
@@ -55,7 +81,7 @@ export async function createAppointment(formData: {
             startTime: formData.startTime,
             endTime: formData.endTime,
             notes: formData.notes,
-            status: "confirmed", // ---- TROCAR -----
+            status: parsedStatus.data,
         });
 
         revalidatePath("/dashboard/agenda");
@@ -69,9 +95,13 @@ export async function createAppointment(formData: {
 export async function updateAppointmentStatus(id: string, status: string) {
     try {
         const user = await getRequiredSession();
+        const parsedStatus = appointmentStatusSchema.safeParse(status);
+        if (!parsedStatus.success) {
+            return { error: "Status de agendamento inválido." };
+        }
 
         await db.update(appointments)
-            .set({ status })
+            .set({ status: parsedStatus.data })
             .where(and(eq(appointments.id, id), eq(appointments.userId, user.id)));
 
         revalidatePath("/dashboard/agenda");

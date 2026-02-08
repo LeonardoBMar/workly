@@ -69,6 +69,8 @@ export const clientsRelations = relations(clients, ({ many }) => ({
     appointments: many(appointments),
 }));
 
+export type Client = InferSelectModel<typeof clients>
+
 export const services = pgTable("services", {
     id: text("id").primaryKey(),
     userId: text("userId")

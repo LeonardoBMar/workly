@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { clients } from "@/lib/schema";
 import { getRequiredSessionForAPI } from "@/lib/get-session";
 import { eq, or, ilike, and } from "drizzle-orm";
+import { createClientInputSchema, getValidationErrorMessage } from "@/lib/validation";
 
 export async function GET(request: NextRequest) {
     try {
@@ -10,24 +11,24 @@ export async function GET(request: NextRequest) {
         if (user instanceof NextResponse) return user;
 
         const { searchParams } = new URL(request.url);
-        const search = searchParams.get("search");
+        const search = searchParams.get("search")?.trim();
 
-        let whereConditions = [eq(clients.userId, user.id)];
+        const searchCondition = search
+            ? or(
+                ilike(clients.name, `%${search}%`),
+                ilike(clients.phone, `%${search}%`),
+                ilike(clients.email, `%${search}%`)
+            )
+            : undefined;
 
-        if (search) {
-            whereConditions.push(
-                or(
-                    ilike(clients.name, `%${search}%`),
-                    ilike(clients.phone, `%${search}%`),
-                    ilike(clients.email, `%${search}%`)
-                ) as any
-            );
-        }
+        const whereCondition = searchCondition
+            ? and(eq(clients.userId, user.id), searchCondition)
+            : eq(clients.userId, user.id);
 
         const result = await db
             .select()
             .from(clients)
-            .where(and(...whereConditions));
+            .where(whereCondition);
 
         return NextResponse.json(result);
     } catch (error) {
@@ -45,11 +46,10 @@ export async function POST(request: NextRequest) {
         if (user instanceof NextResponse) return user;
 
         const body = await request.json();
-        const { name, email, phone, notes } = body;
-
-        if (!name) {
+        const parsed = createClientInputSchema.safeParse(body);
+        if (!parsed.success) {
             return NextResponse.json(
-                { error: "Name is required" },
+                { error: getValidationErrorMessage(parsed.error) },
                 { status: 400 }
             );
         }
@@ -59,10 +59,10 @@ export async function POST(request: NextRequest) {
             .values({
                 id: crypto.randomUUID(),
                 userId: user.id,
-                name,
-                email,
-                phone,
-                notes,
+                name: parsed.data.name,
+                email: parsed.data.email,
+                phone: parsed.data.phone,
+                notes: parsed.data.notes,
                 createdAt: new Date(),
                 updatedAt: new Date(),
             })

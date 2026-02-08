@@ -1,23 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { User, Mail, Phone, FileText, ArrowRight, Loader2, Check } from "lucide-react";
+import { User, Mail, Phone, FileText, ArrowRight, Loader2 } from "lucide-react";
 import { Input } from "@/app/components/ui/input";
 import { Textarea } from "@/app/components/ui/textarea";
 import { Button } from "@/app/components/ui/button";
 import { createClient, updateClient } from "@/app/actions/clients";
 import { useRouter } from "next/navigation";
 import { notifyError, notifySuccess } from "@/lib/toast";
+import { Client } from "@/lib/schema";
 
 interface ClientFormProps {
     onSuccess?: () => void;
-    initialData?: {
-        id: string;
-        name: string;
-        email?: string | null;
-        phone?: string | null;
-        notes?: string | null;
-    };
+    initialData?: Client | null;
 }
 
 export function ClientForm({ onSuccess, initialData }: ClientFormProps) {

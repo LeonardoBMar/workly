@@ -6,12 +6,13 @@ import { ArrowLeft, Plus, Users } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/app/components/ui/button";
+import { Client } from "@/lib/schema";
 
 export function ClientesClient() {
     const [view, setView] = useState<"list" | "create">("list");
-    const [editingClient, setEditingClient] = useState<any>(null);
+    const [editingClient, setEditingClient] = useState<Client | null>(null);
 
-    const handleEdit = (client: any) => {
+    const handleEdit = (client: Client) => {
         setEditingClient(client);
         setView("create");
     };

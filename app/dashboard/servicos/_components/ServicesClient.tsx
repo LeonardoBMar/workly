@@ -4,14 +4,15 @@ import { useState } from "react";
 import { ServiceForm } from "./ServiceForm";
 import { ServicesList } from "./ServicesList";
 import { Button } from "@/app/components/ui/button";
-import { Users, Plus, ArrowLeft, Package } from "lucide-react";
+import { Plus, ArrowLeft, Package } from "lucide-react";
 import Link from "next/link";
+import { Service } from "@/lib/schema";
 
 export function ServicesClient() {
     const [view, setView] = useState<"list" | "create">("list");
-    const [editingService, setEditingService] = useState<any>(null);
+    const [editingService, setEditingService] = useState<Service | null>(null);
 
-    const handleEdit = (service: any) => {
+    const handleEdit = (service: Service) => {
         setEditingService(service);
         setView("create");
     };

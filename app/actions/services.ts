@@ -4,6 +4,11 @@ import { services } from "@/lib/schema";
 import { eq, and } from "drizzle-orm";
 import { getRequiredSession } from "@/lib/get-session";
 import { revalidatePath } from "next/cache";
+import {
+    createServiceInputSchema,
+    getValidationErrorMessage,
+    updateServiceInputSchema,
+} from "@/lib/validation";
 
 export async function getServices() {
     try {
@@ -23,11 +28,16 @@ export async function getServices() {
 
 export async function createService(formData: {
     name: string;
-    description: string;
-    price: string;
-    duration: number;
+    description?: string;
+    price: string | number;
+    duration: number | string;
 }) {
     try {
+        const parsed = createServiceInputSchema.safeParse(formData);
+        if (!parsed.success) {
+            return { error: getValidationErrorMessage(parsed.error) };
+        }
+
         const user = await getRequiredSession();
 
         const id = crypto.randomUUID();
@@ -35,10 +45,10 @@ export async function createService(formData: {
         await db.insert(services).values({
             id,
             userId: user.id,
-            name: formData.name,
-            description: formData.description,
-            price: formData.price,
-            duration: formData.duration,
+            name: parsed.data.name,
+            description: parsed.data.description,
+            price: parsed.data.price,
+            duration: parsed.data.duration,
         });
 
         revalidatePath("/dashboard/servicos");
@@ -52,16 +62,21 @@ export async function createService(formData: {
 export async function updateService(id: string, formData: {
     name?: string;
     description?: string;
-    price?: string;
-    duration?: number;
+    price?: string | number;
+    duration?: number | string;
 }) {
     try {
+        const parsed = updateServiceInputSchema.safeParse(formData);
+        if (!parsed.success) {
+            return { error: getValidationErrorMessage(parsed.error) };
+        }
+
         const user = await getRequiredSession();
 
         await db
             .update(services)
             .set({
-                ...formData,
+                ...parsed.data,
                 updatedAt: new Date(),
             })
             .where(

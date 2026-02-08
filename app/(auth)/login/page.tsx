@@ -5,6 +5,7 @@ import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { LogIn, Mail, Lock, Loader2, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { authSignInInputSchema, getValidationErrorMessage } from "@/lib/validation";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -20,15 +21,24 @@ export default function LoginPage() {
         setError("");
 
         try {
+            const parsed = authSignInInputSchema.safeParse({ email, password });
+            if (!parsed.success) {
+                setError(getValidationErrorMessage(parsed.error));
+                return;
+            }
+
             const { error } = await authClient.signIn.email({
-                email,
-                password,
+                email: parsed.data.email,
+                password: parsed.data.password,
             });
 
             if (error) {
                 setError(error.message || "Falha ao entrar. Verifique suas credenciais.");
+                return;
             }
+
             router.push("/dashboard");
+            router.refresh();
         } catch {
             setError("Erro inesperado. Tente novamente.");
         } finally {

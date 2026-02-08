@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { getClients, deleteClient } from "@/app/actions/clients";
-import { User, Phone, Mail, MoreVertical, Trash2, Edit2, Search, Loader2 } from "lucide-react";
+import { User, Phone, Mail, Trash2, Edit2, Search, Loader2 } from "lucide-react";
 import { Input } from "@/app/components/ui/input";
+import { Client } from "@/lib/schema";
 
-export function ClientList({ onEdit }: { onEdit?: (client: any) => void }) {
-    const [clients, setClients] = useState<any[]>([]);
+export function ClientList({ onEdit }: { onEdit?: (client: Client) => void }) {
+    const [clients, setClients] = useState<Client[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
 
@@ -20,7 +21,11 @@ export function ClientList({ onEdit }: { onEdit?: (client: any) => void }) {
     };
 
     useEffect(() => {
-        fetchClients();
+        const timer = setTimeout(() => {
+            void fetchClients();
+        }, 0);
+
+        return () => clearTimeout(timer);
     }, []);
 
     const handleDelete = async (id: string) => {

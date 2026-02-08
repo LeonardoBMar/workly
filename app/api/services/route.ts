@@ -3,8 +3,9 @@ import { db } from "@/lib/db";
 import { services } from "@/lib/schema";
 import { getRequiredSessionForAPI } from "@/lib/get-session";
 import { eq } from "drizzle-orm";
+import { createServiceInputSchema, getValidationErrorMessage } from "@/lib/validation";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
     try {
         const user = await getRequiredSessionForAPI();
         if (user instanceof NextResponse) return user;
@@ -30,11 +31,10 @@ export async function POST(request: NextRequest) {
         if (user instanceof NextResponse) return user;
 
         const body = await request.json();
-        const { name, description, price, duration } = body;
-
-        if (!name || !price || !duration) {
+        const parsed = createServiceInputSchema.safeParse(body);
+        if (!parsed.success) {
             return NextResponse.json(
-                { error: "Missing required fields" },
+                { error: getValidationErrorMessage(parsed.error) },
                 { status: 400 }
             );
         }
@@ -44,10 +44,10 @@ export async function POST(request: NextRequest) {
             .values({
                 id: crypto.randomUUID(),
                 userId: user.id,
-                name,
-                description,
-                price: price.toString(),
-                duration,
+                name: parsed.data.name,
+                description: parsed.data.description,
+                price: parsed.data.price,
+                duration: parsed.data.duration,
                 createdAt: new Date(),
                 updatedAt: new Date(),
             })

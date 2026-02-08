@@ -5,6 +5,7 @@ import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { UserPlus, Mail, Lock, User, Loader2, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { authSignUpInputSchema, getValidationErrorMessage } from "@/lib/validation";
 
 export default function RegisterPage() {
     const [name, setName] = useState("");
@@ -21,17 +22,25 @@ export default function RegisterPage() {
         setError("");
 
         try {
+            const parsed = authSignUpInputSchema.safeParse({ name, email, password });
+            if (!parsed.success) {
+                setError(getValidationErrorMessage(parsed.error));
+                return;
+            }
+
             const { error } = await authClient.signUp.email({
-                email,
-                password,
-                name,
+                email: parsed.data.email,
+                password: parsed.data.password,
+                name: parsed.data.name,
             });
 
             if (error) {
                 setError(error.message || "Falha ao criar conta. Tente novamente.");
+                return;
             }
 
             router.push("/dashboard");
+            router.refresh();
         } catch {
             setError("Erro inesperado. Tente novamente.");
         } finally {
