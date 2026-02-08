@@ -96,6 +96,28 @@ export const updateClientInputSchema = z
         { message: "Informe ao menos um campo para atualização" }
     );
 
+const slugSchema = z
+    .string()
+    .trim()
+    .transform((value) => value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))
+    .transform((value) => value.replace(/-{2,}/g, "-").replace(/^-|-$/g, ""))
+    .refine((value) => value.length >= 3, "Slug deve ter no minimo 3 caracteres")
+    .refine((value) => value.length <= 60, "Slug deve ter no maximo 60 caracteres")
+    .refine((value) => /^[a-z0-9-]+$/.test(value), "Use apenas letras minusculas, numeros e hifens");
+
+const optionalUrlSchema = z.preprocess(
+    emptyStringToUndefined,
+    z.string().trim().url("URL invalida").optional()
+);
+
+export const upsertShopperInputSchema = z.object({
+    slug: slugSchema,
+    name: requiredTrimmedString("Nome", 120),
+    description: optionalTrimmedString(500),
+    bannerUrl: optionalUrlSchema,
+    logoUrl: optionalUrlSchema,
+});
+
 export const authSignInInputSchema = z.object({
     email: z.string().trim().email("E-mail inválido"),
     password: z.string().min(1, "Senha é obrigatória"),

@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { shopper } from "@/lib/schema";
 import { eq } from "drizzle-orm";
 import { getRequiredSession } from "@/lib/get-session";
+import { getValidationErrorMessage, upsertShopperInputSchema } from "@/lib/validation";
 
 export async function getMyShopper() {
     try {
@@ -30,12 +31,18 @@ export async function upsertShopper(formData: {
     logoUrl?: string;
 }) {
     try {
+        const parsed = upsertShopperInputSchema.safeParse(formData);
+        if (!parsed.success) {
+            return { error: getValidationErrorMessage(parsed.error) };
+        }
+
+        const data = parsed.data;
         const user = await getRequiredSession();
 
         const existingSlug = await db
             .select()
             .from(shopper)
-            .where(eq(shopper.slug, formData.slug))
+            .where(eq(shopper.slug, data.slug))
             .limit(1);
 
         const currentShopper = await db
@@ -50,8 +57,8 @@ export async function upsertShopper(formData: {
             return { error: "Este link já está em uso." };
         }
 
-        const bannerUrl = formData.bannerUrl || "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&h=400&fit=crop";
-        const logoUrl = formData.logoUrl || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop";
+        const bannerUrl = data.bannerUrl || "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&h=400&fit=crop";
+        const logoUrl = data.logoUrl || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop";
 
 
 
@@ -60,9 +67,9 @@ export async function upsertShopper(formData: {
             await db
                 .update(shopper)
                 .set({
-                    slug: formData.slug,
-                    name: formData.name,
-                    description: formData.description,
+                    slug: data.slug,
+                    name: data.name,
+                    description: data.description,
                     bannerUrl: bannerUrl,
                     logoUrl: logoUrl,
                     updatedAt: new Date(),
@@ -73,9 +80,9 @@ export async function upsertShopper(formData: {
             await db.insert(shopper).values({
                 id,
                 userId: user.id,
-                slug: formData.slug,
-                name: formData.name,
-                description: formData.description,
+                slug: data.slug,
+                name: data.name,
+                description: data.description,
                 bannerUrl: bannerUrl,
                 logoUrl: logoUrl,
                 links: [],

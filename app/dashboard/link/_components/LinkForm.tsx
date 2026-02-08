@@ -1,11 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SubmitHandler, useForm, useWatch } from "react-hook-form";
+import { z } from "zod";
 import { Button } from "@/app/components/ui/button";
 import { upsertShopper } from "../_actions/manage-link";
-import { Loader2, ExternalLink, Save, Upload, Image as ImageIcon, Plus } from "lucide-react";
+import { Loader2, ExternalLink, Save, Upload, Image as ImageIcon } from "lucide-react";
 import { useUploadThing } from "@/lib/uploadthing";
 import { notifyError, notifySuccess } from "@/lib/toast";
+import { upsertShopperInputSchema } from "@/lib/validation";
 
 interface LinkFormProps {
     initialData?: {
@@ -17,80 +21,127 @@ interface LinkFormProps {
     } | null;
 }
 
-export function LinkForm({ initialData }: LinkFormProps) {
-    const [isLoading, setIsLoading] = useState(false);
-    const [success, setSuccess] = useState(false);
-    const [formData, setFormData] = useState({
-        slug: initialData?.slug || "",
-        name: initialData?.name || "",
+type LinkFormInputValues = z.input<typeof upsertShopperInputSchema>;
+type LinkFormOutputValues = z.output<typeof upsertShopperInputSchema>;
+
+function sanitizeSlug(value: string): string {
+    return value
+        .toLowerCase()
+        .replace(/[^a-z0-9-]/g, "-")
+        .replace(/-{2,}/g, "-")
+        .replace(/^-|-$/g, "");
+}
+
+function getDefaultValues(initialData?: LinkFormProps["initialData"]): LinkFormInputValues {
+    return {
+        slug: initialData?.slug ?? "",
+        name: initialData?.name ?? "",
         description: initialData?.description || "",
         bannerUrl: initialData?.bannerUrl || "",
         logoUrl: initialData?.logoUrl || "",
-    });
+    };
+}
 
+export function LinkForm({ initialData }: LinkFormProps) {
+    const [success, setSuccess] = useState(false);
     const [logoFile, setLogoFile] = useState<File | null>(null);
-    const [logoPreview, setLogoPreview] = useState<string>(initialData?.logoUrl || "");
-
     const [bannerFile, setBannerFile] = useState<File | null>(null);
-    const [bannerPreview, setBannerPreview] = useState<string>(initialData?.bannerUrl || "");
 
     const { startUpload } = useUploadThing("imageUploader");
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsLoading(true);
+    const {
+        register,
+        handleSubmit,
+        control,
+        reset,
+        formState: { errors, isSubmitting },
+    } = useForm<LinkFormInputValues, unknown, LinkFormOutputValues>({
+        resolver: zodResolver(upsertShopperInputSchema),
+        defaultValues: useMemo(() => getDefaultValues(initialData), [initialData]),
+        mode: "onBlur",
+    });
+
+    useEffect(() => {
+        reset(getDefaultValues(initialData));
+    }, [initialData, reset]);
+
+    const watchedSlug = useWatch({ control, name: "slug" });
+    const slugPreview = sanitizeSlug(watchedSlug ?? "");
+
+    const logoPreview = useMemo(() => {
+        return logoFile ? URL.createObjectURL(logoFile) : initialData?.logoUrl || "";
+    }, [initialData?.logoUrl, logoFile]);
+
+    const bannerPreview = useMemo(() => {
+        return bannerFile ? URL.createObjectURL(bannerFile) : initialData?.bannerUrl || "";
+    }, [bannerFile, initialData?.bannerUrl]);
+
+    useEffect(() => {
+        return () => {
+            if (logoFile && logoPreview.startsWith("blob:")) {
+                URL.revokeObjectURL(logoPreview);
+            }
+        };
+    }, [logoFile, logoPreview]);
+
+    useEffect(() => {
+        return () => {
+            if (bannerFile && bannerPreview.startsWith("blob:")) {
+                URL.revokeObjectURL(bannerPreview);
+            }
+        };
+    }, [bannerFile, bannerPreview]);
+
+    const onSubmit: SubmitHandler<LinkFormOutputValues> = async (values) => {
         setSuccess(false);
 
         try {
-            let currentLogoUrl = formData.logoUrl;
-            let currentBannerUrl = formData.bannerUrl;
+            let currentLogoUrl = initialData?.logoUrl || "";
+            let currentBannerUrl = initialData?.bannerUrl || "";
 
             if (logoFile) {
                 const uploadRes = await startUpload([logoFile]);
-                if (uploadRes && uploadRes[0]) {
+                if (uploadRes?.[0]?.url) {
                     currentLogoUrl = uploadRes[0].url;
                 }
             }
 
             if (bannerFile) {
                 const uploadRes = await startUpload([bannerFile]);
-                if (uploadRes && uploadRes[0]) {
+                if (uploadRes?.[0]?.url) {
                     currentBannerUrl = uploadRes[0].url;
                 }
             }
 
             const result = await upsertShopper({
-                slug: formData.slug,
-                name: formData.name,
-                description: formData.description,
-                bannerUrl: currentBannerUrl || "",
-                logoUrl: currentLogoUrl || "",
+                slug: values.slug,
+                name: values.name,
+                description: values.description,
+                bannerUrl: currentBannerUrl,
+                logoUrl: currentLogoUrl,
             });
-
 
             if (result.error) {
                 notifyError(result.error);
-            } else {
-                notifySuccess("Configurações salvas com sucesso!");
-                setSuccess(true);
+                return;
             }
-        } catch (err) {
+
+            notifySuccess("Configuracoes salvas com sucesso!");
+            setSuccess(true);
+        } catch {
             notifyError("Ocorreu um erro inesperado.");
-        } finally {
-            setIsLoading(false);
         }
     };
 
-    const linkUrl = typeof window !== "undefined"
-        ? `${window.location.origin}/b/${formData.slug}`
-        : `/b/${formData.slug}`;
-
     return (
-        <form onSubmit={handleSubmit} className="bg-white rounded-3xl border border-slate-200/60 shadow-sm overflow-hidden transition-all hover:shadow-md p-6">
+        <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="bg-white rounded-3xl border border-slate-200/60 shadow-sm overflow-hidden transition-all hover:shadow-md p-6"
+        >
             <div className="space-y-2">
                 <h2 className="text-xl font-semibold text-slate-900">Configurar seu Link</h2>
                 <p className="text-sm text-slate-500">
-                    Crie um link personalizado para compartilhar seus serviços e produtos com seus clientes.
+                    Crie um link personalizado para compartilhar seus servicos e produtos com seus clientes.
                 </p>
             </div>
 
@@ -111,7 +162,6 @@ export function LinkForm({ initialData }: LinkFormProps) {
                                     const file = e.target.files?.[0];
                                     if (!file) return;
                                     setLogoFile(file);
-                                    setLogoPreview(URL.createObjectURL(file));
                                 }}
                             />
 
@@ -127,7 +177,10 @@ export function LinkForm({ initialData }: LinkFormProps) {
                                     </div>
                                 </label>
                             ) : (
-                                <label htmlFor="logo-upload" className="w-24 h-24 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center mb-4 cursor-pointer hover:bg-slate-200 transition-colors">
+                                <label
+                                    htmlFor="logo-upload"
+                                    className="w-24 h-24 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center mb-4 cursor-pointer hover:bg-slate-200 transition-colors"
+                                >
                                     <ImageIcon className="h-8 w-8 text-slate-400" />
                                 </label>
                             )}
@@ -145,7 +198,7 @@ export function LinkForm({ initialData }: LinkFormProps) {
                     <div className="space-y-3">
                         <label className="text-sm font-medium text-slate-900 flex items-center gap-2">
                             <ImageIcon className="h-4 w-4 text-indigo-600" />
-                            Banner da Página
+                            Banner da Pagina
                         </label>
                         <div className="flex flex-col items-center p-4 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50/50 transition-colors hover:bg-slate-50">
                             <input
@@ -157,7 +210,6 @@ export function LinkForm({ initialData }: LinkFormProps) {
                                     const file = e.target.files?.[0];
                                     if (!file) return;
                                     setBannerFile(file);
-                                    setBannerPreview(URL.createObjectURL(file));
                                 }}
                             />
 
@@ -173,7 +225,10 @@ export function LinkForm({ initialData }: LinkFormProps) {
                                     </div>
                                 </label>
                             ) : (
-                                <label htmlFor="banner-upload" className="w-full h-24 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center mb-4 cursor-pointer hover:bg-slate-200 transition-colors">
+                                <label
+                                    htmlFor="banner-upload"
+                                    className="w-full h-24 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center mb-4 cursor-pointer hover:bg-slate-200 transition-colors"
+                                >
                                     <ImageIcon className="h-8 w-8 text-slate-400" />
                                 </label>
                             )}
@@ -191,76 +246,73 @@ export function LinkForm({ initialData }: LinkFormProps) {
 
                 <div className="space-y-4 pt-4 border-t border-slate-100">
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-900">
-                            Link Personalizado (Slug)
-                        </label>
+                        <label className="text-sm font-medium text-slate-900">Link Personalizado (Slug)</label>
                         <div className="flex items-center">
                             <span className="flex items-center px-3 h-10 border border-r-0 border-slate-200 bg-slate-50 text-slate-500 text-sm rounded-l-md">
                                 workly.com/b/
                             </span>
                             <input
                                 type="text"
-                                required
-                                value={formData.slug}
-                                onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-') }))}
+                                {...register("slug")}
+                                onInput={(e) => {
+                                    const sanitized = sanitizeSlug(e.currentTarget.value);
+                                    e.currentTarget.value = sanitized;
+                                }}
                                 className="flex-1 h-10 px-3 rounded-r-md border border-slate-200 bg-transparent text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all"
                                 placeholder="minha-loja"
                             />
                         </div>
-                        <p className="text-xs text-slate-500">
-                            Este será o link que você enviará para seus clientes. Use apenas letras, números e hífens.
-                        </p>
+                        {errors.slug?.message ? (
+                            <p className="text-xs text-red-500">{errors.slug.message}</p>
+                        ) : (
+                            <p className="text-xs text-slate-500">
+                                Este sera o link que voce enviara para seus clientes. Use apenas letras, numeros e hifens.
+                            </p>
+                        )}
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-900">
-                            Nome do Negócio / Profissional
-                        </label>
+                        <label className="text-sm font-medium text-slate-900">Nome do Negocio / Profissional</label>
                         <input
                             type="text"
-                            required
-                            value={formData.name}
-                            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                            {...register("name")}
                             className="w-full h-10 px-3 rounded-md border border-slate-200 bg-white text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all"
-                            placeholder="Ex: Espaço Beleza, Dr. João Silva"
+                            placeholder="Ex: Espaco Beleza, Dr. Joao Silva"
                         />
+                        {errors.name?.message ? <p className="text-xs text-red-500">{errors.name.message}</p> : null}
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-900">
-                            Descrição (Opcional)
-                        </label>
+                        <label className="text-sm font-medium text-slate-900">Descricao (Opcional)</label>
                         <textarea
-                            value={formData.description}
-                            onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                            {...register("description")}
                             className="w-full min-h-[80px] p-3 rounded-md border border-slate-200 bg-white text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all resize-y"
-                            placeholder="Uma breve descrição sobre o que você oferece..."
+                            placeholder="Uma breve descricao sobre o que voce oferece..."
                         />
+                        {errors.description?.message ? (
+                            <p className="text-xs text-red-500">{errors.description.message}</p>
+                        ) : null}
                     </div>
                 </div>
 
                 {success && (
                     <div className="p-3 bg-green-50 text-green-600 text-sm rounded-md border border-green-100 flex items-center justify-between">
-                        <span>Configurações salvas com sucesso!</span>
-                        <a href={`/b/${formData.slug}`} target="_blank" className="flex items-center gap-1 text-xs font-semibold hover:underline">
-                            Ver página <ExternalLink className="h-3 w-3" />
+                        <span>Configuracoes salvas com sucesso!</span>
+                        <a href={`/b/${slugPreview}`} target="_blank" className="flex items-center gap-1 text-xs font-semibold hover:underline">
+                            Ver pagina <ExternalLink className="h-3 w-3" />
                         </a>
                     </div>
                 )}
 
                 <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
-                    {formData.slug && (
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => window.open(`/b/${formData.slug}`, '_blank')}
-                        >
+                    {slugPreview ? (
+                        <Button type="button" variant="outline" onClick={() => window.open(`/b/${slugPreview}`, "_blank")}>
                             <ExternalLink className="mr-2 h-4 w-4" />
                             Visualizar
                         </Button>
-                    )}
-                    <Button type="submit" disabled={isLoading} className="min-w-[120px]">
-                        {isLoading ? (
+                    ) : null}
+                    <Button type="submit" disabled={isSubmitting} className="min-w-[120px]">
+                        {isSubmitting ? (
                             <>
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                 Salvando...
@@ -268,7 +320,7 @@ export function LinkForm({ initialData }: LinkFormProps) {
                         ) : (
                             <>
                                 <Save className="mr-2 h-4 w-4" />
-                                Salvar Alterações
+                                Salvar Alteracoes
                             </>
                         )}
                     </Button>
