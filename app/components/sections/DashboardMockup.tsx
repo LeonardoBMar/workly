@@ -14,7 +14,7 @@ import {
 
 export function DashboardMockup() {
     return (
-        <div className="flex h-[600px] w-full bg-white text-slate-900 rounded-b-3xl overflow-hidden shadow-2xl">
+        <div className="flex h-[600px] w-full bg-white text-slate-900 rounded-b-3xl overflow-hidden shadow-2xl select-none">
             <div className="hidden md:flex w-64 flex-col border-r border-slate-100 bg-slate-50/30 p-4">
                 <div className="flex items-center gap-2 mb-8 px-2">
                     <div className="h-6 w-6 rounded bg-indigo-600 flex items-center justify-center">
