@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
-import { Check, ArrowRight, PlayCircle, Star, ShieldCheck, Users } from "lucide-react";
+import { DashboardMockup } from "./DashboardMockup";
+import { Check, ArrowRight, PlayCircle, ShieldCheck, Users } from "lucide-react";
 import { Button } from "../ui/button";
 
-const DASHBOARD_IMAGE = "/workly_dashboard_image.png";
 
 export default function HeroSection() {
     return (
@@ -103,14 +102,8 @@ export default function HeroSection() {
                                 <div className="ml-4 h-4 w-1/3 rounded bg-slate-100"></div>
                             </div>
 
-                            <Image
-                                src={DASHBOARD_IMAGE}
-                                alt="Workly Dashboard Mockup"
-                                width={1200}
-                                height={675}
-                                className="w-full h-auto brightness-[0.98] transition-all group-hover:brightness-100"
-                                priority
-                            />
+                            <DashboardMockup />
+
                         </div>
                     </div>
 
