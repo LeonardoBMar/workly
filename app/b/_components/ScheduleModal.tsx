@@ -52,9 +52,17 @@ export default function ScheduleModal({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
             <div className="bg-white rounded-2xl p-6 w-full max-w-xl space-y-4">
 
+
                 <div className="flex justify-between">
                     <h2 className="text-lg font-semibold">Agendar serviço</h2>
                     <button onClick={onClose}>✕</button>
+                </div>
+
+
+                <div className="bg-amber-50 border border-amber-200 p-3 rounded-lg">
+                    <p className="text-sm text-amber-800">
+                        <strong>Aviso:</strong> O agendamento ainda não possui funcionalidade e está em desenvolvimento.
+                    </p>
                 </div>
 
                 <FullCalendar

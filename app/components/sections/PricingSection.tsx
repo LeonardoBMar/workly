@@ -3,9 +3,15 @@
 import { Check, Info, Sparkles } from "lucide-react";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
+import { createCheckoutSession } from "@/app/actions/stripe";
+import { notifyError } from "@/lib/toast";
 
 const plans = [
     {
+        id: "free",
         name: "Gratuito",
         price: "0",
         description: "Para quem está começando e quer organizar o básico.",
@@ -20,6 +26,7 @@ const plans = [
         highlight: false,
     },
     {
+        id: "solo",
         name: "Solo (Fundador)",
         price: "19,90",
         originalPrice: "29,90",
@@ -37,6 +44,7 @@ const plans = [
         tag: "Oferta Limitada: 15 Vagas",
     },
     {
+        id: "business",
         name: "Business",
         price: "59,90",
         description: "Gestão completa para quem já tem um pequeno negócio.",
@@ -54,6 +62,34 @@ const plans = [
 ];
 
 export default function PricingSection() {
+    const { data: session } = authClient.useSession();
+    const router = useRouter();
+    const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+
+    const handlePlanClick = async (plan: typeof plans[0]) => {
+        if (!session) {
+            router.push("/register");
+            return;
+        }
+
+        if (plan.id === "free") {
+            router.push("/dashboard");
+            return;
+        }
+
+        setLoadingPlan(plan.id);
+        try {
+            const { url } = await createCheckoutSession(plan.id);
+            if (url) {
+                window.location.href = url;
+            }
+        } catch (error: any) {
+            notifyError(error.message || "Erro ao iniciar checkout");
+        } finally {
+            setLoadingPlan(null);
+        }
+    };
+
     return (
         <section id="pricing" className="bg-white  py-24 sm:py-32 overflow-hidden">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ">
@@ -121,16 +157,23 @@ export default function PricingSection() {
                                 ))}
                             </ul>
 
-                            <Link href="/register">
-                                <Button
-                                    className={`w-full py-6 rounded-2xl font-bold transition-all ${plan.highlight
-                                        ? "bg-indigo-600! hover:bg-indigo-700! text-white! shadow-lg! shadow-indigo-500/20!"
-                                        : "bg-slate-50! hover:bg-slate-100! text-slate-900! border! border-slate-200!"
-                                        }`}
-                                >
-                                    {plan.buttonText}
-                                </Button>
-                            </Link>
+                            <Button
+                                onClick={() => handlePlanClick(plan)}
+                                disabled={loadingPlan === plan.id}
+                                className={`w-full py-6 rounded-2xl font-bold transition-all cursor-pointer ${plan.highlight
+                                    ? "bg-indigo-600! hover:bg-indigo-700! text-white! shadow-lg! shadow-indigo-500/20!"
+                                    : "bg-slate-50! hover:bg-slate-100! text-slate-900! border! border-slate-200!"
+                                    }`}
+                            >
+                                {loadingPlan === plan.id ? (
+                                    <div className="flex items-center gap-2">
+                                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                                        Processando...
+                                    </div>
+                                ) : (
+                                    plan.buttonText
+                                )}
+                            </Button>
 
                             {plan.highlight && (
                                 <div className="mt-6 flex items-center justify-center gap-2 text-xs text-indigo-400 font-medium">

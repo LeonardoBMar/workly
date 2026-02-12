@@ -24,6 +24,7 @@ const menuItems = [
     { icon: Users, label: "Clientes", href: "/dashboard/clientes" },
     { icon: Package, label: "Serviços", href: "/dashboard/servicos" },
     { icon: LinkIcon, label: "Sua Pagina", href: "/dashboard/link" },
+    { icon: CreditCard, label: "Plano e Faturamento", href: "/dashboard/billing" },
 ];
 
 const productItems = [
