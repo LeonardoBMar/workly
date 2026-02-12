@@ -2,7 +2,7 @@
 
 > Plataforma open-source para profissionais de serviços organizarem agenda, clientes e pagamentos em minutos.
 
-Plataforma open-source para prestadores de serviço gerenciarem agenda, clientes e cobranças em um só lugar. O Workly foi desenhado para ser simples, rápido e focado no que realmente importa: o crescimento do seu negócio.
+O Workly foi desenhado para ser simples, rápido e focado no que realmente importa: o crescimento do seu negócio. Centralize agenda, clientes e pagamentos em uma única plataforma, eliminando o trabalho manual e profissionalizando o atendimento.
 
 ![Workly Preview](public/workly_dashboard_image.png)
 
@@ -10,29 +10,31 @@ Plataforma open-source para prestadores de serviço gerenciarem agenda, clientes
 
 A maioria dos profissionais hoje ainda depende de uma mistura caótica de mensagens no WhatsApp, planilhas manuais e a própria memória para gerir seus clientes. 
 
-O Workly surge para centralizar agenda, clientes e pagamentos em uma única plataforma simples, eliminando o trabalho manual e profissionalizando o atendimento desde o primeiro contato.
+O Workly surge para profissionalizar essa gestão, automatizando cobranças e organizando o fluxo de trabalho desde o primeiro contato até o pagamento final.
 
 ## 🎯 Para quem é
 
-- ✂️ **Barbeiros**
-- 💅 **Manicures**
+- ✂️ **Barbeiros e Cabeleireiros**
+- 💅 **Manicures e Esteticistas**
 - 💉 **Tatuadores**
-- 💄 **Esteticistas**
-- 🏋️ **Personal trainers**
+- 🏋️ **Personal Trainers**
 - 💻 **Freelancers**
-- 🛠️ **Pequenos prestadores de serviço**
+- 🛠️ **Pequenos Prestadores de Serviço**
 
 ## 🚀 Funcionalidades
 
-- **Dashboard Inteligente**: Tenha uma visão clara do seu negócio e faturamento em tempo real.
-- **Gestão de Serviços**: Cadastre e gerencie seus serviços com preços e durações personalizadas.
-- **Autenticação Segura**: Fluxo de segurança robusto utilizando Better Auth.
-- **Design Premium**: Interface moderna, 100% responsiva e otimizada para conversão.
-- **Banco de Dados Cloud**: Persistência de dados escalável com Neon PostgreSQL.
+- **Dashboard Inteligente**: Visão clara do seu negócio e faturamento em tempo real.
+- **Gestão de Assinaturas**: Sistema de planos (Solo, Business) integrado com Stripe.
+- **Página de Link Profissional**: Perfil público dinâmico para agendamentos (`/b/[slug]`).
+- **Gestão de Clientes (CRM)**: Histórico completo e organização de base de clientes.
+- **Gestão de Serviços**: Controle de preços, durações e descrições.
+- **Autenticação Segura**: Fluxo robusto utilizando Better Auth.
+- **Design Premium**: Interface moderna, pensada na experiência do usuário e 100% responsiva.
 
 ## 🛠️ Stack Tecnológica
 
 - **Framework**: [Next.js 15+](https://nextjs.org/) (App Router)
+- **Pagamentos**: [Stripe](https://stripe.com/) (Checkout & Portais)
 - **Estilização**: [Tailwind CSS v4](https://tailwindcss.com/)
 - **Autenticação**: [Better Auth](https://www.better-auth.com/)
 - **ORM**: [Drizzle ORM](https://orm.drizzle.team/)
@@ -44,23 +46,20 @@ O Workly surge para centralizar agenda, clientes e pagamentos em uma única plat
 ## 🗺️ Roadmap
 
 ### Já Implementado ✅
-- [x] **Landing Page Premium**: Design moderno, responsiva e otimizada.
 - [x] **Autenticação Completa**: Login, Registro e Proteção de rotas com Better Auth.
-- [x] **Dashboard Administrativo**: Interface intuitiva para gestão do negócio.
-- [x] **Gestão de Serviços (CRUD)**: Criação, listagem e exclusão de serviços.
-- [x] **Integração com Banco de Dados**: Persistência escalável com Neon PostgreSQL + Drizzle.
-- [x] **Arquitetura Escalável**: Uso de Server Actions e clean code com Next.js 15.
-- [x] **Página de Link Profissional**: Sistema de rota dinâmica `/b/[slug]` para perfil público.
-- [x] **Gestão de Imagens**: Upload de logo e banner integrado com UploadThing.
+- [x] **Gestão de Clientes (CRM)**: Cadastro e organização de clientes.
+- [x] **Gestão de Serviços (CRUD)**: Criação e controle de catálogo de serviços.
+- [x] **Pagamentos & Assinaturas**: Integração total com Stripe (Checkout, Webhooks e Portal de faturamento).
+- [x] **Página de Link Profissional**: Sistema de perfil público dinâmico.
+- [x] **Gestão de Imagens**: Upload de logo e banner via UploadThing.
+- [x] **Dashboard Administrativo**: Visão geral e estatísticas básicas.
 
 ### Em Desenvolvimento / Futuro 🚀
-- [ ] **Sistema de Agendamentos**: Calendário interativo para clientes e profissionais.
-- [ ] **Gestão de Clientes (CRM)**: Base de dados de clientes com histórico de atendimentos.
-- [ ] **Pagamentos Integrados**: Receba via PIX e Cartão de Crédito direto na plataforma.
-- [ ] **Lembretes Automáticos**: Notificações via WhatsApp e E-mail para reduzir faltas.
-- [ ] **Relatórios Financeiros**: Gráficos de faturamento, lucro e serviços mais realizados.
-- [ ] **App Mobile (PWA)**: Atalho no celular para acesso rápido.
-- [ ] **Multi-agendamento**: Suporte para equipes e múltiplos profissionais.
+- [ ] **Sistema de Agendamentos**: Calendário interativo para clientes (em andamento).
+- [ ] **Lembretes Automáticos**: Notificações via WhatsApp e E-mail.
+- [ ] **Relatórios Financeiros Avançados**: Gráficos de lucro e performance de serviços.
+- [ ] **App Mobile (PWA)**: Atalho para acesso rápido.
+- [ ] **Multi-profissionais**: Suporte para equipes e salões.
 
 ## 🏁 Começando
 
@@ -68,54 +67,51 @@ O Workly surge para centralizar agenda, clientes e pagamentos em uma única plat
 
 - Node.js (versão 18 ou superior)
 - NPM, Yarn, PNPM ou Bun
-- Uma conta no [Neon.tech](https://neon.tech/) para o banco de dados
+- Contas no Neon.tech (DB), Stripe (Pagamentos) e UploadThing (Imagens).
+
+### Configuração das Variáveis de Ambiente
+
+Crie um arquivo `.env` na raiz do projeto:
+
+```env
+# Banco de Dados
+DATABASE_URL=seu_link_do_neon_db
+
+# Autenticação (Better Auth)
+BETTER_AUTH_SECRET=sua_chave_secreta
+BETTER_AUTH_URL=http://localhost:3000
+
+# Arquivos (UploadThing)
+UPLOADTHING_TOKEN=seu_token
+
+# Pagamentos (Stripe)
+STRIPE_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_SOLO_PRICE_ID=price_...
+STRIPE_BUSINESS_PRICE_ID=price_...
+
+# App
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
 
 ### Instalação
 
-1. **Clone o repositório:**
-```bash
-git clone https://github.com/LeonardoBMar/workly.git
-cd workly
-```
-
-2. **Instale as dependências:**
+1. **Clone e Instale:**
 ```bash
 npm install
 ```
 
-3. **Configure as variáveis de ambiente:**
-Crie um arquivo `.env` na raiz do projeto e adicione:
-```env
-DATABASE_URL=seu_link_do_neon_db
-BETTER_AUTH_SECRET=sua_chave_secreta
-BETTER_AUTH_URL=http://localhost:3000
-UPLOADTHING_TOKEN=sua_secret_do_uploadthing
-```
-
-4. **Prepare o banco de dados:**
+2. **Prepare o banco de dados:**
 ```bash
 npx drizzle-kit push
 ```
 
-5. **Inicie o servidor de desenvolvimento:**
+3. **Inicie o servidor:**
 ```bash
 npm run dev
 ```
 
-Abra [http://localhost:3000](http://localhost:3000) no seu navegador para ver o resultado.
-
-## 📱 Estrutura do Projeto
-
-- `/app`: Rotas e componentes de página (Next.js App Router).
-- `/components`: Componentes UI, Layout e Seções reutilizáveis.
-- `/lib`: Configurações de banco (Drizzle), Auth e utilitários.
-- `/public`: Ativos estáticos e imagens.
-
-## 📝 Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
-
 ---
-
 
 Desenvolvido por **Leonardo Bozola**.
