@@ -62,35 +62,37 @@ export default function HeroSection() {
                 </div>
 
                 <div className="mt-24 relative lg:mt-32">
-                    <div className="absolute -top-12 -right-12 z-20 hidden lg:block animate-float">
-                        <div className="glass rounded-2xl p-4 shadow-2xl border border-white/50">
-                            <div className="flex items-center gap-3">
-                                <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
-                                    <ShieldCheck className="h-6 w-6" />
-                                </div>
-                                <div className="text-left">
-                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Status do Pagamento</p>
-                                    <p className="text-sm font-bold text-slate-900">Recebido: R$ 1.250,00</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div className="absolute -bottom-8 -left-12 z-20 hidden lg:block animate-float animation-delay-2000">
-                        <div className="glass rounded-2xl p-4 shadow-2xl border border-white/50">
-                            <div className="flex items-center gap-3">
-                                <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
-                                    <Users className="h-6 w-6" />
-                                </div>
-                                <div className="text-left">
-                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Novo Cliente</p>
-                                    <p className="text-sm font-bold text-slate-900">Mariana Silva agendou 14:30</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <div className="relative animate-float mx-auto max-w-6xl">
+                        <div className="absolute -top-12 -right-12 z-20 hidden lg:block">
+                            <div className="glass rounded-2xl p-4 shadow-2xl border border-white/50">
+                                <div className="flex items-center gap-3">
+                                    <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                                        <ShieldCheck className="h-6 w-6" />
+                                    </div>
+                                    <div className="text-left">
+                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Status do Pagamento</p>
+                                        <p className="text-sm font-bold text-slate-900">Recebido: R$ 1.250,00</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="absolute -bottom-8 -left-12 z-20 hidden lg:block animation-delay-2000">
+                            <div className="glass rounded-2xl p-4 shadow-2xl border border-white/50">
+                                <div className="flex items-center gap-3">
+                                    <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                                        <Users className="h-6 w-6" />
+                                    </div>
+                                    <div className="text-left">
+                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Novo Cliente</p>
+                                        <p className="text-sm font-bold text-slate-900">Mariana Silva agendou 14:30</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div className="absolute -inset-1 rounded-[2.5rem] bg-linear-to-r from-indigo-500 to-purple-400 opacity-20 blur-3xl"></div>
 
                         <div className="relative overflow-hidden rounded-4xl border border-slate-200 bg-white shadow-[0_0_100px_-20px_rgba(0,0,0,0.1)] transition-all hover:border-indigo-200 hover:shadow-[0_0_120px_-20px_rgba(99,102,241,0.15)]">
