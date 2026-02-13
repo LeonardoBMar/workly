@@ -41,6 +41,7 @@ O Workly surge para profissionalizar essa gestão, automatizando cobranças e or
 - **Banco de Dados**: [Neon (PostgreSQL)](https://neon.tech/)
 - **Uploads**: [UploadThing](https://uploadthing.com/)
 - **Ícones**: [Lucide React](https://lucide.dev/)
+- **Animações**: [GSAP](https://gsap.com/)
 - **Linguagem**: [TypeScript](https://www.typescriptlang.org/)
 
 ## 🗺️ Roadmap
