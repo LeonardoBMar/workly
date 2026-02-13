@@ -1,17 +1,22 @@
 "use client";
 
+import { useRef } from "react";
 import { Button } from "../ui/button";
 import { ArrowRight, CheckCircle2, Star, Zap, ShieldCheck, Users2 } from "lucide-react";
+import { useScrollAnimation } from "@/app/animations/scrollAnimations";
 
 export default function CTASection() {
+    const containerRef = useRef(null);
+    useScrollAnimation(containerRef);
+
     return (
-        <section id="cta" className="relative py-24 sm:py-32 overflow-hidden bg-slate-50/50">
+        <section ref={containerRef} id="cta" className="relative py-24 sm:py-32 overflow-hidden bg-slate-50/50">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl px-4 sm:px-6 lg:px-8 -z-10">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-radial from-indigo-100/40 via-transparent to-transparent opacity-50"></div>
             </div>
 
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="relative isolate overflow-hidden bg-white px-6 py-20 shadow-[0_20px_50px_rgba(0,0,0,0.05)] rounded-3xl sm:px-24 xl:py-32 border border-slate-200">
+                <div className="reveal-on-scroll relative isolate overflow-hidden bg-white px-6 py-20 shadow-[0_20px_50px_rgba(0,0,0,0.05)] rounded-3xl sm:px-24 xl:py-32 border border-slate-200">
                     <div className="absolute -top-24 -right-24 h-96 w-96 animate-blob rounded-full bg-indigo-50/50 blur-3xl"></div>
                     <div className="absolute -bottom-24 -left-24 h-96 w-96 animate-blob animation-delay-4000 rounded-full bg-purple-50/50 blur-3xl"></div>
 

@@ -1,3 +1,5 @@
+"use client";
+
 import {
     CalendarClock,
     Users,
@@ -7,7 +9,9 @@ import {
     Bell,
     ArrowRight
 } from 'lucide-react'
-import { Button } from '../ui/button'
+import { Button } from "../ui/button";
+import { useRef } from 'react';
+import { useScrollAnimation } from '@/app/animations/scrollAnimations';
 
 const features = [
     {
@@ -61,10 +65,13 @@ const features = [
 ]
 
 export default function FeaturesSection() {
+    const containerRef = useRef(null);
+    useScrollAnimation(containerRef);
+
     return (
-        <section id="features" className="bg-slate-50 py-24 sm:py-32">
+        <section ref={containerRef} id="features" className="bg-slate-50 py-24 sm:py-32">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="text-center">
+                <div className="reveal-on-scroll text-center">
                     <h2 className="text-base font-semibold uppercase tracking-wider text-indigo-600">
                         Poder de Execução
                     </h2>
@@ -76,7 +83,7 @@ export default function FeaturesSection() {
                     </p>
                 </div>
 
-                <div className="mt-20 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="reveal-on-scroll mt-20 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
                     {features.map((feature, index) => {
                         const Icon = feature.icon;
                         return (

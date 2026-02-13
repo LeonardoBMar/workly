@@ -1,13 +1,18 @@
 "use client";
 
+import { useRef } from "react";
 import { DashboardMockup } from "./DashboardMockup";
 import { Check, ArrowRight, PlayCircle, ShieldCheck, Users } from "lucide-react";
 import { Button } from "../ui/button";
+import { useHeroAnimations } from "@/app/animations/heroAnimations";
 
 
 export default function HeroSection() {
+    const containerRef = useRef(null);
+    useHeroAnimations(containerRef);
+
     return (
-        <section className="relative overflow-hidden pt-32 pb-20 lg:pt-48 lg:pb-32">
+        <section ref={containerRef} className="relative overflow-hidden pt-32 pb-20 lg:pt-48 lg:pb-32">
             <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-indigo-50/50 via-white to-white"></div>
 
             <div className="absolute inset-0 -z-10 h-full w-full bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-size-[14px_24px]"></div>
@@ -20,7 +25,7 @@ export default function HeroSection() {
 
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="relative z-10 text-center">
-                    <div className="mb-10 inline-flex items-center gap-3 rounded-full border border-indigo-200/50 bg-white/50 px-4 py-2 text-sm font-medium backdrop-blur-md shadow-sm">
+                    <div className="hero-badge mb-10 inline-flex items-center gap-3 rounded-full border border-indigo-200/50 bg-white/50 px-4 py-2 text-sm font-medium backdrop-blur-md shadow-sm">
                         <span className="flex h-2 w-2 items-center justify-center">
                             <span className="absolute h-2 w-2 animate-ping rounded-full bg-indigo-400 opacity-75"></span>
                             <span className="relative h-1.5 w-1.5 rounded-full bg-indigo-600"></span>
@@ -31,18 +36,18 @@ export default function HeroSection() {
                         <ArrowRight className="h-3.5 w-3.5 text-indigo-400" />
                     </div>
 
-                    <h1 className="mx-auto max-w-5xl text-5xl font-extrabold tracking-tight text-slate-900 sm:text-7xl lg:text-8xl">
+                    <h1 className="hero-title mx-auto max-w-5xl text-5xl font-extrabold tracking-tight text-slate-900 sm:text-7xl lg:text-8xl">
                         Gerencie seu negócio
                         {" "}
                         <span className="text-gradient">com inteligência</span>
                     </h1>
 
-                    <p className="mx-auto mt-10 max-w-2xl text-lg leading-relaxed text-slate-600 sm:text-xl lg:text-2xl">
+                    <p className="hero-desc mx-auto mt-10 max-w-2xl text-lg leading-relaxed text-slate-600 sm:text-xl lg:text-2xl">
                         Organize agendamentos, automatize cobranças e encante seus clientes
                         com uma experiência premium pensada para o seu crescimento.
                     </p>
 
-                    <div className="mt-12 flex flex-col items-center justify-center gap-5 sm:flex-row">
+                    <div className="hero-buttons mt-12 flex flex-col items-center justify-center gap-5 sm:flex-row">
                         <Button size="lg" className="group h-14 px-10 text-lg shadow-xl shadow-indigo-500/20" href="/register">
                             Começar agora gratuito
                             <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -53,14 +58,14 @@ export default function HeroSection() {
                         </Button>
                     </div>
 
-                    <div className="mt-12 flex flex-wrap items-center justify-center gap-8 text-sm font-semibold text-slate-500">
+                    <div className="hero-features mt-12 flex flex-wrap items-center justify-center gap-8 text-sm font-semibold text-slate-500">
                         <HeroCheck label="14 dias grátis" />
                         <HeroCheck label="Configuração em 2 min" />
                         <HeroCheck label="Sem cartão necessário" />
                     </div>
                 </div>
 
-                <div className="mt-24 relative lg:mt-32">
+                <div className="hero-visual mt-24 relative lg:mt-32">
 
 
                     <div className="relative animate-float mx-auto max-w-6xl">
@@ -107,7 +112,7 @@ export default function HeroSection() {
                         </div>
                     </div>
 
-                    <div className="mt-20 text-center lg:mt-24">
+                    <div className="hero-used-by mt-20 text-center lg:mt-24">
                         <p className="text-sm font-semibold text-slate-400 uppercase tracking-[0.2em] mb-8">Utilizado por profissionais de</p>
                         <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-40 grayscale transition-all hover:grayscale-0 hover:opacity-100">
                             <TrustLogo name="Gestão" />

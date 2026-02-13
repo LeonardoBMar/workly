@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
+import { useScrollAnimation } from "@/app/animations/scrollAnimations";
 
 const testimonials = [
     {
@@ -41,6 +42,8 @@ const testimonials = [
 
 export default function TestimonialSection() {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const containerRef = useRef(null);
+    useScrollAnimation(containerRef);
 
     const next = () => {
         setCurrentIndex((prev) => (prev + 1) % testimonials.length);
@@ -53,10 +56,10 @@ export default function TestimonialSection() {
     const currentTestimonial = testimonials[currentIndex];
 
     return (
-        <section className="py-24 bg-slate-50/50">
+        <section ref={containerRef} className="py-24 bg-slate-50/50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-                <div className="flex justify-end items-center gap-4 mb-8">
+                <div className="reveal-on-scroll flex justify-end items-center gap-4 mb-8">
                     <div className="flex gap-2 mr-4">
                         {testimonials.map((_, idx) => (
                             <button
@@ -86,7 +89,7 @@ export default function TestimonialSection() {
                     </div>
                 </div>
 
-                <div className="relative overflow-hidden rounded-3xl bg-white shadow-2xl shadow-indigo-100/50 flex flex-col md:flex-row min-h-[400px]">
+                <div className="reveal-on-scroll relative overflow-hidden rounded-3xl bg-white shadow-2xl shadow-indigo-100/50 flex flex-col md:flex-row min-h-[400px]">
 
                     <div className="flex-1 p-8 md:p-16 flex flex-col justify-between relative">
                         <Quote className="absolute top-8 left-8 w-12 h-12 text-indigo-50 opacity-10" />

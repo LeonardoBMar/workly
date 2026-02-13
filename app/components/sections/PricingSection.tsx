@@ -3,11 +3,12 @@
 import { Check, Info, Sparkles } from "lucide-react";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { createCheckoutSession } from "@/app/actions/stripe";
 import { notifyError } from "@/lib/toast";
+import { useScrollAnimation } from "@/app/animations/scrollAnimations";
 
 const plans = [
     {
@@ -65,6 +66,8 @@ export default function PricingSection() {
     const { data: session } = authClient.useSession();
     const router = useRouter();
     const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+    const containerRef = useRef(null);
+    useScrollAnimation(containerRef);
 
     const handlePlanClick = async (plan: typeof plans[0]) => {
         if (!session) {
@@ -91,9 +94,9 @@ export default function PricingSection() {
     };
 
     return (
-        <section id="pricing" className="bg-white  py-24 sm:py-32 overflow-hidden">
+        <section ref={containerRef} id="pricing" className="bg-white  py-24 sm:py-32 overflow-hidden">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ">
-                <div className="text-center">
+                <div className="reveal-on-scroll text-center">
                     <h2 className="text-base font-semibold uppercase tracking-wider text-indigo-600">
                         Preços e Planos
                     </h2>
@@ -105,7 +108,7 @@ export default function PricingSection() {
                     </p>
                 </div>
 
-                <div className="mt-20 grid grid-cols-1 gap-8 lg:grid-cols-3">
+                <div className="reveal-on-scroll mt-20 grid grid-cols-1 gap-8 lg:grid-cols-3">
                     {plans.map((plan, index) => (
                         <div
                             key={index}
