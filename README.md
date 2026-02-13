@@ -25,15 +25,16 @@ O Workly surge para profissionalizar essa gestão, automatizando cobranças e or
 
 - **Dashboard Inteligente**: Visão clara do seu negócio e faturamento em tempo real.
 - **Gestão de Assinaturas**: Sistema de planos (Solo, Business) integrado com Stripe.
-- **Página de Link Profissional**: Perfil público dinâmico para agendamentos (`/b/[slug]`).
-- **Gestão de Clientes (CRM)**: Histórico completo e organização de base de clientes.
-- **Gestão de Serviços**: Controle de preços, durações e descrições.
+- **Página de Link Profissional**: Perfil público dinâmico para agendamentos (`/b/[slug]`) com suporte a banner, logo e links personalizados.
+- **Gestão de Clientes (CRM)**: Histórico completo, dados de contato e notas sobre cada cliente.
+- **Gestão de Serviços**: Controle total sobre catálogo de serviços, incluindo preços, duração e descrições.
+- **Agenda Interativa**: Visualização de agendamentos, status (pendente, confirmado, finalizado) e organização diária.
 - **Autenticação Segura**: Fluxo robusto utilizando Better Auth.
 - **Design Premium**: Interface moderna, pensada na experiência do usuário e 100% responsiva.
 
 ## 🛠️ Stack
 
-- **Framework**: [Next.js 15+](https://nextjs.org/) (App Router)
+- **Framework**: [Next.js 16+](https://nextjs.org/) (App Router)
 - **Pagamentos**: [Stripe](https://stripe.com/) (Checkout & Portais)
 - **Estilização**: [Tailwind CSS v4](https://tailwindcss.com/)
 - **Autenticação**: [Better Auth](https://www.better-auth.com/)
@@ -43,6 +44,26 @@ O Workly surge para profissionalizar essa gestão, automatizando cobranças e or
 - **Ícones**: [Lucide React](https://lucide.dev/)
 - **Animações**: [GSAP](https://gsap.com/)
 - **Linguagem**: [TypeScript](https://www.typescriptlang.org/)
+
+## 📂 Estrutura do Projeto
+
+```
+/
+├── app/                # Rotas e Páginas (App Router)
+│   ├── (auth)/         # Rotas de Autenticação
+│   ├── dashboard/      # Painel Administrativo (Protegido)
+│   ├── api/            # API Routes & Webhooks
+│   └── layout.tsx      # Layout Principal
+├── components/         # Componentes Reutilizáveis
+│   ├── ui/             # Componentes de UI Base (Buttons, Inputs, etc)
+│   └── sections/       # Seções da Landing Page
+├── lib/                # Funções Utilitárias e Configurações
+│   ├── schema.ts       # Schema do Banco de Dados (Drizzle)
+│   ├── stripe.ts       # Configuração do Stripe
+│   └── auth.ts         # Configuração do Better Auth
+├── public/             # Arquivos Estáticos
+└── drizzle/            # Migrações do Banco de Dados
+```
 
 ## 🗺️ Roadmap
 
@@ -105,6 +126,12 @@ npm install
 
 2. **Prepare o banco de dados:**
 ```bash
+# Gere os arquivos de migração
+npx drizzle-kit generate
+
+# Envie as alterações para o banco
+npx drizzle-kit migrate
+# ou para prototipagem rápida:
 npx drizzle-kit push
 ```
 
@@ -113,6 +140,28 @@ npx drizzle-kit push
 npm run dev
 ```
 
+### Scripts Disponíveis
+
+- `npm run dev`: Inicia o servidor de desenvolvimento.
+- `npm run build`: Cria a build de produção.
+- `npm run start`: Inicia o servidor de produção.
+- `npm run lint`: Verifica erros de linting.
+
+## 🤝 Contribuindo
+
+Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests.
+
+1. Faça um Fork do projeto
+2. Crie uma Branch para sua Feature (`git checkout -b feature/MinhaFeature`)
+3. Faça o Commit de suas mudanças (`git commit -m 'Adiciona MinhaFeature'`)
+4. Faça o Push para a Branch (`git push origin feature/MinhaFeature`)
+5. Abra um Pull Request
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
 ---
 
 Desenvolvido por **Leonardo Bozola**.
+
