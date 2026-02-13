@@ -31,7 +31,7 @@ O Workly surge para profissionalizar essa gestão, automatizando cobranças e or
 - **Autenticação Segura**: Fluxo robusto utilizando Better Auth.
 - **Design Premium**: Interface moderna, pensada na experiência do usuário e 100% responsiva.
 
-## 🛠️ Stack Tecnológica
+## 🛠️ Stack
 
 - **Framework**: [Next.js 15+](https://nextjs.org/) (App Router)
 - **Pagamentos**: [Stripe](https://stripe.com/) (Checkout & Portais)
