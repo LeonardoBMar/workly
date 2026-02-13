@@ -8,7 +8,7 @@ O Workly foi desenhado para ser simples, rápido e focado no que realmente impor
 
 ## ❓ Por que o Workly existe?
 
-A maioria dos profissionais hoje ainda depende de uma mistura caótica de mensagens no WhatsApp, planilhas manuais e a própria memória para gerir seus clientes. 
+A maioria dos profissionais hoje ainda depende de uma mistura caótica de mensagens no WhatsApp, planilhas manuais e a própria memória para gerir seus clientes.
 
 O Workly surge para profissionalizar essa gestão, automatizando cobranças e organizando o fluxo de trabalho desde o primeiro contato até o pagamento final.
 
@@ -68,6 +68,7 @@ O Workly surge para profissionalizar essa gestão, automatizando cobranças e or
 ## 🗺️ Roadmap
 
 ### Já Implementado ✅
+
 - [x] **Autenticação Completa**: Login, Registro e Proteção de rotas com Better Auth.
 - [x] **Gestão de Clientes (CRM)**: Cadastro e organização de clientes.
 - [x] **Gestão de Serviços (CRUD)**: Criação e controle de catálogo de serviços.
@@ -77,6 +78,7 @@ O Workly surge para profissionalizar essa gestão, automatizando cobranças e or
 - [x] **Dashboard Administrativo**: Visão geral e estatísticas básicas.
 
 ### Em Desenvolvimento / Futuro 🚀
+
 - [ ] **Sistema de Agendamentos**: Calendário interativo para clientes (em andamento).
 - [ ] **Lembretes Automáticos**: Notificações via WhatsApp e E-mail.
 - [ ] **Relatórios Financeiros Avançados**: Gráficos de lucro e performance de serviços.
@@ -120,11 +122,13 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 ### Instalação
 
 1. **Clone e Instale:**
+
 ```bash
 npm install
 ```
 
 2. **Prepare o banco de dados:**
+
 ```bash
 # Gere os arquivos de migração
 npx drizzle-kit generate
@@ -136,6 +140,7 @@ npx drizzle-kit push
 ```
 
 3. **Inicie o servidor:**
+
 ```bash
 npm run dev
 ```
@@ -146,7 +151,6 @@ npm run dev
 - `npm run build`: Cria a build de produção.
 - `npm run start`: Inicia o servidor de produção.
 - `npm run lint`: Verifica erros de linting.
-
 
 ## 📄 Licença
 

@@ -1,5 +1,5 @@
-import { Development } from "@/app/dashboard/_components/Development";
+import { Development } from '@/app/dashboard/_components/Development';
 
 export default function DashboardCatchAllPage() {
-    return <Development />;
+  return <Development />;
 }

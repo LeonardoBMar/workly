@@ -1,10 +1,10 @@
-import { DashboardLayoutClient } from "./_components/DashboardLayoutClient";
-import "./dashboard.css";
+import { DashboardLayoutClient } from './_components/DashboardLayoutClient';
+import './dashboard.css';
 
 export default function DashboardLayout({
-    children,
+  children,
 }: {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-    return <DashboardLayoutClient>{children}</DashboardLayoutClient>;
+  return <DashboardLayoutClient>{children}</DashboardLayoutClient>;
 }

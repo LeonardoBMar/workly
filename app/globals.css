@@ -1,6 +1,6 @@
-@import "tailwindcss";
-@import "uploadthing/tw/v4";
-@source "../node_modules/@uploadthing/react/dist";
+@import 'tailwindcss';
+@import 'uploadthing/tw/v4';
+@source '../node_modules/@uploadthing/react/dist';
 
 :root {
   --background: oklch(0.99 0 0);
@@ -85,7 +85,6 @@
   --color-sidebar-ring: var(--sidebar-ring);
 
   @keyframes float {
-
     0%,
     100% {
       transform: translateY(0);
@@ -96,7 +95,6 @@
     }
   }
 }
-
 
 html {
   scroll-behavior: smooth;
@@ -117,7 +115,7 @@ body {
 }
 
 .text-gradient {
-  @apply bg-clip-text text-transparent bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500;
+  @apply bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent;
 }
 
 @keyframes blob {
@@ -173,9 +171,6 @@ body {
 .slide-in-from-bottom-4 {
   transform: translateY(1rem);
 }
-
-
-
 
 /* Calendar */
 .calendar-wrapper {
@@ -247,7 +242,9 @@ body {
   font-weight: 500;
   cursor: pointer;
   box-shadow: 0 1px 4px rgba(100, 50, 150, 0.2);
-  transition: transform 0.1s, box-shadow 0.1s;
+  transition:
+    transform 0.1s,
+    box-shadow 0.1s;
 }
 
 .calendar-wrapper .fc-event:hover {
@@ -324,7 +321,7 @@ body {
   background-color: var(--fc-event-bg-color);
 }
 
-.calendar-wrapper .fc-scrollgrid-section-header>* {
+.calendar-wrapper .fc-scrollgrid-section-header > * {
   border-bottom: none;
 }
 
