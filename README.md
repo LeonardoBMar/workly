@@ -147,15 +147,6 @@ npm run dev
 - `npm run start`: Inicia o servidor de produção.
 - `npm run lint`: Verifica erros de linting.
 
-## 🤝 Contribuindo
-
-Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests.
-
-1. Faça um Fork do projeto
-2. Crie uma Branch para sua Feature (`git checkout -b feature/MinhaFeature`)
-3. Faça o Commit de suas mudanças (`git commit -m 'Adiciona MinhaFeature'`)
-4. Faça o Push para a Branch (`git push origin feature/MinhaFeature`)
-5. Abra um Pull Request
 
 ## 📄 Licença
 
@@ -164,4 +155,3 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 ---
 
 Desenvolvido por **Leonardo Bozola**.
-
