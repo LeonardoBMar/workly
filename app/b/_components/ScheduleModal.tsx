@@ -1,11 +1,17 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { ptBR } from 'date-fns/locale';
-import { X, CalendarDays } from 'lucide-react';
+import { useEscapeKey } from '../_hooks/useEscapeKey';
+import { useLockBodyScroll } from '../_hooks/useLockBodyScroll';
+import ModalHeader from './ModalHeader';
+import AvailableHours from './AvailableHours';
+import StepIndicator from './StepIndicator';
+import CustomerInfoStep from './CustomerInfoStep';
+import { ArrowRight } from 'lucide-react';
 
 type ScheduleModalProps = {
   isOpen: boolean;
@@ -14,6 +20,26 @@ type ScheduleModalProps = {
   serviceId: string;
 };
 
+const horarios = [
+  '08:00',
+  '09:00',
+  '10:00',
+  '11:00',
+  '12:00',
+  '13:00',
+  '14:00',
+  '15:00',
+  '16:00',
+  '17:00',
+  '18:00',
+  '19:00',
+  '20:00',
+  '21:00',
+  '22:00',
+];
+
+const STEPS = [{ label: 'Data e Horário' }, { label: 'Seus Dados' }];
+
 export default function ScheduleModal({
   isOpen,
   onClose,
@@ -21,25 +47,42 @@ export default function ScheduleModal({
   serviceId,
 }: ScheduleModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [customerName, setCustomerName] = useState('');
+  const [customerPhone, setCustomerPhone] = useState('');
 
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    document.addEventListener('keydown', handleEsc);
-    return () => document.removeEventListener('keydown', handleEsc);
-  }, [isOpen, onClose]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isOpen]);
+  useEscapeKey(onClose, isOpen);
+  useLockBodyScroll(isOpen);
 
   if (!isOpen) return null;
+
+  const canGoNext = selectedDate !== null && selectedTime !== null;
+
+  const handleNext = () => {
+    if (canGoNext) setCurrentStep(2);
+  };
+
+  const handleBack = () => {
+    setCurrentStep(1);
+  };
+
+  const handleConfirm = () => {
+    // TODO: hook up to server action
+    onClose();
+    // reset state
+    setCurrentStep(1);
+    setSelectedDate(null);
+    setSelectedTime(null);
+    setCustomerName('');
+    setCustomerPhone('');
+  };
+
+  const subtitle =
+    currentStep === 1
+      ? 'Selecione uma data e horário'
+      : 'Informe seus dados para confirmar';
 
   return (
     <div
@@ -50,58 +93,81 @@ export default function ScheduleModal({
       }}
     >
       <div className="schedule-modal flex w-full flex-col md:max-w-4xl">
-        <div className="flex items-center justify-between border-b border-gray-100 pb-4 md:pb-5">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-500 text-white shadow-md shadow-indigo-200 md:h-10 md:w-10">
-              <CalendarDays className="h-[18px] w-[18px] md:h-5 md:w-5" />
-            </div>
-            <div>
-              <h2 className="text-base font-semibold tracking-tight text-gray-900 md:text-lg">
-                Agendar serviço
-              </h2>
-              <p className="text-xs text-gray-400 md:text-sm">
-                Selecione uma data disponível
-              </p>
-            </div>
-          </div>
-          <button
-            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl text-gray-400 transition-all hover:bg-gray-100 hover:text-gray-600 md:h-8 md:w-8 md:rounded-lg"
-            onClick={onClose}
-          >
-            <X className="h-5 w-5 md:h-[18px] md:w-[18px]" />
-          </button>
+        <ModalHeader onClose={onClose} subtitle={subtitle} />
+
+        <div className="mt-3 md:mt-4">
+          <StepIndicator currentStep={currentStep} steps={STEPS} />
         </div>
 
-        <div className="schedule-modal-content mt-4 flex flex-col gap-5 overflow-y-auto md:mt-6 md:grid md:h-[420px] md:grid-cols-[380px_1fr] md:gap-8 md:overflow-visible">
-          <div className="schedule-calendar">
-            <FullCalendar
-              plugins={[dayGridPlugin, interactionPlugin]}
-              initialView="dayGridMonth"
-              locale={ptBR}
-              fixedWeekCount={false}
-              showNonCurrentDates={false}
-              height="auto"
-              headerToolbar={{
-                left: 'prev',
-                center: 'title',
-                right: 'next',
-              }}
-              selectable
-              events={[]}
-              dateClick={(info) => {
-                document
-                  .querySelectorAll('.fc-day-selected')
-                  .forEach((el) => el.classList.remove('fc-day-selected'));
+        {/* Step 1: Date & Time */}
+        {currentStep === 1 && (
+          <div className="step-slide-in schedule-modal-content mt-4 flex flex-col gap-5 overflow-y-auto md:mt-6 md:grid md:h-[420px] md:grid-cols-[380px_1fr] md:gap-8 md:overflow-visible">
+            <div className="schedule-calendar">
+              <FullCalendar
+                plugins={[dayGridPlugin, interactionPlugin]}
+                initialView="dayGridMonth"
+                locale={ptBR}
+                fixedWeekCount={false}
+                showNonCurrentDates={false}
+                height="auto"
+                headerToolbar={{
+                  left: 'prev',
+                  center: 'title',
+                  right: 'next',
+                }}
+                selectable
+                events={[]}
+                dayCellClassNames={(arg) =>
+                  arg.date.toDateString() === selectedDate
+                    ? 'fc-day-selected'
+                    : ''
+                }
+                dateClick={(info) => {
+                  setSelectedDate(info.date.toDateString());
+                }}
+              />
+            </div>
 
-                info.dayEl.classList.add('fc-day-selected');
-              }}
+            <div className="flex min-h-[140px] w-full flex-col rounded-xl border border-gray-200/80 bg-gray-50/30 md:h-full md:min-h-0">
+              <div className="flex-1 overflow-y-auto">
+                <AvailableHours
+                  selectedDate={selectedDate}
+                  horarios={horarios}
+                  selectedTime={selectedTime}
+                  onSelectTime={setSelectedTime}
+                />
+              </div>
+
+              {/* Next button */}
+              {canGoNext && (
+                <div className="border-t border-gray-100 p-3 md:p-4">
+                  <button
+                    type="button"
+                    onClick={handleNext}
+                    className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-200 transition-all duration-200 hover:shadow-xl hover:shadow-blue-300"
+                  >
+                    Próximo
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Step 2: Customer Info */}
+        {currentStep === 2 && (
+          <div className="mt-4 md:mt-6">
+            <CustomerInfoStep
+              customerName={customerName}
+              customerPhone={customerPhone}
+              onChangeName={setCustomerName}
+              onChangePhone={setCustomerPhone}
+              onBack={handleBack}
+              onConfirm={handleConfirm}
             />
           </div>
-
-          <div className="flex min-h-[140px] w-full items-center justify-center rounded-xl border border-dashed border-gray-200 bg-gray-50/50 md:h-full md:min-h-0">
-            <p className="text-sm text-gray-300">Horários disponíveis</p>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

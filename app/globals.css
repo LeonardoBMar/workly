@@ -11,7 +11,7 @@
   --card-foreground: oklch(0.15 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.15 0 0);
-  --primary: oklch(0.55 0.25 285);
+  --primary: oklch(0.6 0.2 260);
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.96 0.01 285);
   --secondary-foreground: oklch(0.35 0.15 285);
@@ -32,7 +32,7 @@
   --radius: 0.5rem;
   --sidebar: oklch(0.98 0.01 285);
   --sidebar-foreground: oklch(0.15 0 0);
-  --sidebar-primary: oklch(0.55 0.25 285);
+  --sidebar-primary: oklch(0.6 0.2 260);
   --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(0.93 0.02 285);
   --sidebar-accent-foreground: oklch(0.15 0 0);
@@ -182,15 +182,15 @@ body {
   --fc-button-hover-border-color: oklch(0.85 0.02 285);
   --fc-button-active-bg-color: oklch(0.55 0.25 285);
   --fc-button-active-border-color: oklch(0.55 0.25 285);
-  --fc-event-bg-color: oklch(0.55 0.25 285);
-  --fc-event-border-color: oklch(0.55 0.25 285);
-  --fc-event-text-color: oklch(1 0 0);
-  --fc-today-bg-color: oklch(0.55 0.25 285 / 0.08);
+  --fc-event-bg-color: #2563eb;
+  --fc-event-border-color: #2563eb;
+  --fc-event-text-color: #ffffff;
+  --fc-today-bg-color: rgba(37, 99, 235, 0.08);
   --fc-page-bg-color: oklch(0.99 0 0);
   --fc-neutral-bg-color: oklch(0.98 0.01 285);
   --fc-list-event-hover-bg-color: oklch(0.96 0.01 285);
-  --fc-highlight-color: oklch(0.55 0.25 285 / 0.15);
-  --fc-now-indicator-color: oklch(0.55 0.25 285);
+  --fc-highlight-color: rgba(37, 99, 235, 0.15);
+  --fc-now-indicator-color: #2563eb;
 }
 
 .calendar-wrapper .fc {
@@ -272,7 +272,7 @@ body {
 }
 
 .calendar-wrapper .fc-day-today .fc-daygrid-day-number {
-  background-color: oklch(0.55 0.25 285);
+  background-color: #2563eb;
   color: oklch(1 0 0);
   border-radius: 50%;
   width: 28px;
@@ -309,7 +309,7 @@ body {
   top: -5px;
   width: 10px;
   height: 10px;
-  background-color: oklch(0.55 0.25 285);
+  background-color: #2563eb;
   border-radius: 50%;
 }
 
@@ -391,8 +391,8 @@ body {
   padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
   max-height: 95dvh;
   box-shadow:
-    0 -8px 40px rgba(99, 102, 241, 0.1),
-    0 0 0 1px rgba(99, 102, 241, 0.06);
+    0 -8px 40px rgba(37, 99, 235, 0.1),
+    0 0 0 1px rgba(37, 99, 235, 0.06);
   animation: schedule-slide-up-mobile 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -407,9 +407,9 @@ body {
     padding: 28px 32px;
     max-height: none;
     box-shadow:
-      0 24px 80px rgba(99, 102, 241, 0.12),
+      0 24px 80px rgba(37, 99, 235, 0.12),
       0 8px 32px rgba(0, 0, 0, 0.08),
-      0 0 0 1px rgba(99, 102, 241, 0.06);
+      0 0 0 1px rgba(37, 99, 235, 0.06);
     animation: schedule-slide-up 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
@@ -560,11 +560,15 @@ body {
 }
 
 .schedule-calendar .fc-day-today .fc-daygrid-day-number {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: #0052a5;
   color: #fff !important;
-  font-weight: 700;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+  font-weight: bold;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.schedule-calendar .fc-day-today .fc-daygrid-day-number:hover {
+  background-color: #0071e2;
 }
 
 .schedule-calendar .fc-day-selected {
@@ -572,17 +576,17 @@ body {
 }
 
 .schedule-calendar .fc-day-selected .fc-daygrid-day-number {
-  background: linear-gradient(135deg, #4f46e5, #7c3aed) !important;
+  background: #2563eb !important;
   color: #fff !important;
   font-weight: 700;
   border-radius: 10px;
-  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
   transform: scale(1.05);
 }
 
 .schedule-calendar .fc-day-today.fc-day-selected .fc-daygrid-day-number {
-  background: linear-gradient(135deg, #4f46e5, #7c3aed) !important;
-  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
+  background: #2563eb !important;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
 }
 
 .schedule-calendar .fc-daygrid-day-events {
@@ -599,4 +603,29 @@ body {
 
 .schedule-calendar .fc-scroller-harness {
   padding-top: 0;
+}
+
+/* ─── Step Transitions ─── */
+
+@keyframes step-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.step-slide-in {
+  animation: step-slide-in 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.schedule-input {
+  font-family: inherit;
+}
+
+.schedule-input::placeholder {
+  font-family: inherit;
 }
