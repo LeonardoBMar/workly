@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, useTransition } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -11,7 +11,12 @@ import ModalHeader from './ModalHeader';
 import AvailableHours from './AvailableHours';
 import StepIndicator from './StepIndicator';
 import CustomerInfoStep from './CustomerInfoStep';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Loader2 } from 'lucide-react';
+import {
+  getAvailableTimes,
+  type AvailableTimeSlot,
+} from '../_actions/get-available-times';
+import { createBooking } from '../_actions/create-booking';
 
 type ScheduleModalProps = {
   isOpen: boolean;
@@ -20,25 +25,15 @@ type ScheduleModalProps = {
   serviceId: string;
 };
 
-const horarios = [
-  '08:00',
-  '09:00',
-  '10:00',
-  '11:00',
-  '12:00',
-  '13:00',
-  '14:00',
-  '15:00',
-  '16:00',
-  '17:00',
-  '18:00',
-  '19:00',
-  '20:00',
-  '21:00',
-  '22:00',
-];
-
 const STEPS = [{ label: 'Data e Horário' }, { label: 'Seus Dados' }];
+
+function formatYYYYMMDD(dateStr: string) {
+  const date = new Date(dateStr);
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
 
 export default function ScheduleModal({
   isOpen,
@@ -53,8 +48,48 @@ export default function ScheduleModal({
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
 
+  const [horarios, setHorarios] = useState<
+    (string | AvailableTimeSlot)[] | null
+  >(null);
+  const [isPendingTimes, startTransitionTimes] = useTransition();
+  const [isPendingBooking, startTransitionBooking] = useTransition();
+
   useEscapeKey(onClose, isOpen);
   useLockBodyScroll(isOpen);
+
+  useEffect(() => {
+    if (selectedDate && isOpen) {
+      setHorarios(null);
+      setSelectedTime(null);
+
+      const formattedDate = formatYYYYMMDD(selectedDate);
+
+      const now = new Date();
+      // Resetar minutos e horas do selectedDate e now pra checar se é passado
+      const resetTime = (d: Date) =>
+        new Date(d.getFullYear(), d.getMonth(), d.getDate());
+      const selectedAsDate = resetTime(new Date(selectedDate));
+      const todayAsDate = resetTime(now);
+
+      if (selectedAsDate < todayAsDate) {
+        setHorarios([]); // sem horários disponíveis no passado
+        return;
+      }
+
+      startTransitionTimes(async () => {
+        try {
+          const available = await getAvailableTimes(
+            shopperId,
+            serviceId,
+            formattedDate,
+          );
+          setHorarios(available);
+        } catch (error) {
+          console.error('Erro ao carregar horários', error);
+        }
+      });
+    }
+  }, [selectedDate, shopperId, serviceId, isOpen]);
 
   if (!isOpen) return null;
 
@@ -69,14 +104,35 @@ export default function ScheduleModal({
   };
 
   const handleConfirm = () => {
-    // TODO: hook up to server action
-    onClose();
-    // reset state
-    setCurrentStep(1);
-    setSelectedDate(null);
-    setSelectedTime(null);
-    setCustomerName('');
-    setCustomerPhone('');
+    if (!selectedDate || !selectedTime) return;
+
+    startTransitionBooking(async () => {
+      try {
+        await createBooking(
+          shopperId,
+          serviceId,
+          formatYYYYMMDD(selectedDate),
+          selectedTime,
+          customerName,
+          customerPhone,
+        );
+        onClose();
+
+        setCurrentStep(1);
+        setSelectedDate(null);
+        setSelectedTime(null);
+        setCustomerName('');
+        setCustomerPhone('');
+
+        alert('Agendamento realizado! Aguardando confirmação do profissional.');
+      } catch (error) {
+        if (error instanceof Error) {
+          alert(error.message);
+        } else {
+          alert('Erro ao realizar agendamento.');
+        }
+      }
+    });
   };
 
   const subtitle =
@@ -99,7 +155,6 @@ export default function ScheduleModal({
           <StepIndicator currentStep={currentStep} steps={STEPS} />
         </div>
 
-        {/* Step 1: Date & Time */}
         {currentStep === 1 && (
           <div className="step-slide-in schedule-modal-content mt-4 flex flex-col gap-5 overflow-y-auto md:mt-6 md:grid md:h-[420px] md:grid-cols-[380px_1fr] md:gap-8 md:overflow-visible">
             <div className="schedule-calendar">
@@ -117,6 +172,9 @@ export default function ScheduleModal({
                 }}
                 selectable
                 events={[]}
+                validRange={{
+                  start: new Date().toISOString().split('T')[0], // disable past days entirely on calendar
+                }}
                 dayCellClassNames={(arg) =>
                   arg.date.toDateString() === selectedDate
                     ? 'fc-day-selected'
@@ -129,16 +187,24 @@ export default function ScheduleModal({
             </div>
 
             <div className="flex min-h-[140px] w-full flex-col rounded-xl border border-gray-200/80 bg-gray-50/30 md:h-full md:min-h-0">
-              <div className="flex-1 overflow-y-auto">
-                <AvailableHours
-                  selectedDate={selectedDate}
-                  horarios={horarios}
-                  selectedTime={selectedTime}
-                  onSelectTime={setSelectedTime}
-                />
+              <div className="relative flex-1 overflow-y-auto">
+                {isPendingTimes ? (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+                    <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
+                    <p className="text-sm text-gray-500">
+                      Carregando horários...
+                    </p>
+                  </div>
+                ) : (
+                  <AvailableHours
+                    selectedDate={selectedDate}
+                    horarios={horarios as any}
+                    selectedTime={selectedTime}
+                    onSelectTime={setSelectedTime}
+                  />
+                )}
               </div>
 
-              {/* Next button */}
               {canGoNext && (
                 <div className="border-t border-gray-100 p-3 md:p-4">
                   <button
@@ -155,9 +221,18 @@ export default function ScheduleModal({
           </div>
         )}
 
-        {/* Step 2: Customer Info */}
         {currentStep === 2 && (
-          <div className="mt-4 md:mt-6">
+          <div className="relative mt-4 md:mt-6">
+            {isPendingBooking && (
+              <div className="absolute inset-0 z-10 flex min-h-[300px] items-center justify-center rounded-xl bg-white/70 backdrop-blur-sm">
+                <div className="flex flex-col items-center gap-3">
+                  <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+                  <p className="text-sm font-medium text-gray-800">
+                    Finalizando agendamento...
+                  </p>
+                </div>
+              </div>
+            )}
             <CustomerInfoStep
               customerName={customerName}
               customerPhone={customerPhone}

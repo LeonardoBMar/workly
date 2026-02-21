@@ -9,68 +9,80 @@ export const useHeroAnimations = (
     () => {
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-      tl.from('.hero-badge', {
-        y: -20,
+      tl.from('.hero-title', {
+        y: 40,
         opacity: 0,
-        duration: 0.6,
+        duration: 1,
       })
         .from(
-          '.hero-title',
+          '.hero-desc',
           {
             y: 30,
             opacity: 0,
             duration: 0.8,
-            stagger: 0.1,
           },
-          '-=0.3',
+          '-=0.6',
         )
         .from(
-          '.hero-desc',
+          '.hero-cta',
+          {
+            y: 20,
+            opacity: 0,
+            duration: 0.7,
+          },
+          '-=0.5',
+        )
+        .from(
+          '.hero-trust',
           {
             y: 20,
             opacity: 0,
             duration: 0.8,
           },
-          '-=0.6',
+          '-=0.4',
         )
-        .from(
-          '.hero-buttons',
+        .to(
+          '.hero-shape',
           {
-            y: 20,
-            opacity: 0,
-            duration: 0.8,
-          },
-          '-=0.6',
-        )
-        .from(
-          '.hero-features',
-          {
-            opacity: 0,
-            y: 20,
-            duration: 0.8,
-          },
-          '-=0.6',
-        )
-        .from(
-          '.hero-visual',
-          {
-            opacity: 0,
-            y: 50,
-            scale: 0.95,
-            duration: 1,
-            ease: 'power4.out',
-          },
-          '-=0.6',
-        )
-        .from(
-          '.hero-used-by',
-          {
-            opacity: 0,
-            y: 20,
-            duration: 0.8,
-            delay: 0.2,
+            opacity: 1,
+            scale: 1,
+            duration: 1.2,
+            stagger: 0.15,
+            ease: 'elastic.out(1, 0.5)',
           },
           '-=0.8',
+        )
+        .from(
+          '.svg-base-line',
+          {
+            scaleX: 0,
+            opacity: 0,
+            transformOrigin: 'center',
+            duration: 0.8,
+          },
+          '-=0.6',
+        )
+        .from(
+          '.svg-step',
+          {
+            y: 50,
+            opacity: 0,
+            stagger: 0.15,
+            duration: 0.8,
+            ease: 'back.out(1.2)',
+          },
+          '-=0.8',
+        )
+        .from(
+          '.svg-character',
+          {
+            y: -30,
+            x: -30,
+            opacity: 0,
+            duration: 0.8,
+            ease: 'back.out(1.5)',
+          },
+          '-=0.4',
         );
     },
     { scope: containerRef },

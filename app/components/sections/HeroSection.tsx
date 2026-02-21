@@ -1,16 +1,10 @@
 'use client';
 
 import { useRef } from 'react';
-import { DashboardMockup } from './DashboardMockup';
-import {
-  Check,
-  ArrowRight,
-  PlayCircle,
-  ShieldCheck,
-  Users,
-} from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useHeroAnimations } from '@/app/animations/heroAnimations';
+import SvgSteppingUp from '@/app/components/svg/SteppingUp';
 
 export default function HeroSection() {
   const containerRef = useRef(null);
@@ -19,129 +13,53 @@ export default function HeroSection() {
   return (
     <section
       ref={containerRef}
-      className="relative overflow-hidden pt-32 pb-20 lg:pt-48 lg:pb-32"
+      className="relative min-h-dvh overflow-hidden bg-white"
     >
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-indigo-50/50 via-white to-white"></div>
-
-      <div className="absolute inset-0 -z-10 h-full w-full bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-size-[14px_24px]"></div>
-
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute -top-24 left-1/2 h-[600px] w-full max-w-7xl -translate-x-1/2 rounded-full bg-indigo-100/50 opacity-50 blur-3xl"></div>
-        <div className="animate-blob absolute top-1/4 -right-1/4 h-[400px] w-[400px] rounded-full bg-purple-200/40 blur-3xl filter"></div>
-        <div className="animation-delay-4000 animate-blob absolute bottom-0 -left-1/4 h-[400px] w-[400px] rounded-full bg-pink-100/30 blur-3xl filter"></div>
-      </div>
-
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="relative z-10 text-center">
-          <div className="hero-badge mb-10 inline-flex items-center gap-3 rounded-full border border-indigo-200/50 bg-white/50 px-4 py-2 text-sm font-medium shadow-sm backdrop-blur-md">
-            <span className="flex h-2 w-2 items-center justify-center">
-              <span className="absolute h-2 w-2 animate-ping rounded-full bg-indigo-400 opacity-75"></span>
-              <span className="relative h-1.5 w-1.5 rounded-full bg-indigo-600"></span>
-            </span>
-            <span className="text-slate-600">
-              Nova versão 2.0 disponível para profissionais brasileiros
-            </span>
-            <ArrowRight className="h-3.5 w-3.5 text-indigo-400" />
-          </div>
-
-          <h1 className="hero-title mx-auto max-w-5xl text-5xl font-extrabold tracking-tight text-slate-900 sm:text-7xl lg:text-8xl">
-            Gerencie seu negócio{' '}
-            <span className="text-gradient">com inteligência</span>
+      <div className="relative z-20 mx-auto flex min-h-dvh max-w-7xl flex-col justify-center px-6 pt-24 pb-32 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:px-12 lg:pt-0 lg:pb-0">
+        <div className="max-w-2xl pt-8 lg:w-1/2 lg:pt-0">
+          <h1 className="hero-title text-5xl leading-[1.05] font-extrabold tracking-tight text-slate-900 sm:text-6xl lg:text-8xl">
+            Gerencie seu negócio.
           </h1>
 
-          <p className="hero-desc mx-auto mt-10 max-w-2xl text-lg leading-relaxed text-slate-600 sm:text-xl lg:text-2xl">
+          <p className="hero-desc mt-8 max-w-xl text-lg leading-relaxed text-slate-700/80 sm:text-xl lg:text-2xl">
             Organize agendamentos, automatize cobranças e encante seus clientes
             com uma experiência premium pensada para o seu crescimento.
           </p>
 
-          <div className="hero-buttons mt-12 flex flex-col items-center justify-center gap-5 sm:flex-row">
+          <div className="hero-cta mt-12">
             <Button
               size="lg"
-              className="group h-14 px-10 text-lg shadow-xl shadow-indigo-500/20"
+              className="group h-14 rounded-full border-2 border-slate-900 bg-slate-900 px-10 text-base font-bold text-white shadow-lg transition-all hover:bg-slate-800 hover:shadow-xl"
               href="/register"
             >
-              Começar agora gratuito
+              Começar agora
               <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="group h-14 bg-white/50 px-10 text-lg backdrop-blur-sm hover:border-indigo-200 hover:bg-white"
-            >
-              <PlayCircle className="mr-2 h-6 w-6 text-indigo-600" />
-              Ver demonstração
-            </Button>
-          </div>
-
-          <div className="hero-features mt-12 flex flex-wrap items-center justify-center gap-8 text-sm font-semibold text-slate-500">
-            <HeroCheck label="14 dias grátis" />
-            <HeroCheck label="Configuração em 2 min" />
-            <HeroCheck label="Sem cartão necessário" />
           </div>
         </div>
 
-        <div className="hero-visual relative mt-24 lg:mt-32">
-          <div className="animate-float relative mx-auto max-w-6xl">
-            <div className="absolute -top-12 -right-12 z-20 hidden lg:block">
-              <div className="glass rounded-2xl border border-white/50 p-4 shadow-2xl">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 text-green-600">
-                    <ShieldCheck className="h-6 w-6" />
-                  </div>
-                  <div className="text-left">
-                    <p className="text-xs font-bold tracking-wider text-slate-400 uppercase">
-                      Status do Pagamento
-                    </p>
-                    <p className="text-sm font-bold text-slate-900">
-                      Recebido: R$ 1.250,00
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <div className="relative mt-16 flex w-full items-center justify-center lg:mt-0 lg:w-1/2">
+          <div className="hero-shape hero-shape--1 absolute -top-10 right-10 z-10 hidden translate-x-1/4 -translate-y-1/4 opacity-0 lg:block" />
+          <div className="hero-shape hero-shape--2 absolute top-full right-10 z-10 hidden opacity-0 lg:block" />
+          <div className="hero-shape hero-shape--3 absolute top-[15%] right-[80%] z-10 hidden opacity-0 lg:block" />
+          <div className="hero-shape hero-shape--4 absolute -right-[25%] bottom-[10%] z-10 hidden opacity-0 lg:block" />
 
-            <div className="animation-delay-2000 absolute -bottom-8 -left-12 z-20 hidden lg:block">
-              <div className="glass rounded-2xl border border-white/50 p-4 shadow-2xl">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 text-indigo-600">
-                    <Users className="h-6 w-6" />
-                  </div>
-                  <div className="text-left">
-                    <p className="text-xs font-bold tracking-wider text-slate-400 uppercase">
-                      Novo Cliente
-                    </p>
-                    <p className="text-sm font-bold text-slate-900">
-                      Mariana Silva agendou 14:30
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="absolute -inset-1 rounded-[2.5rem] bg-linear-to-r from-indigo-500 to-purple-400 opacity-20 blur-3xl"></div>
-
-            <div className="relative overflow-hidden rounded-4xl border border-slate-200 bg-white shadow-[0_0_100px_-20px_rgba(0,0,0,0.1)] transition-all hover:border-indigo-200 hover:shadow-[0_0_120px_-20px_rgba(99,102,241,0.15)]">
-              <div className="flex items-center gap-1.5 border-b border-slate-100 bg-slate-50/50 px-6 py-4">
-                <div className="h-3 w-3 rounded-full bg-slate-200"></div>
-                <div className="h-3 w-3 rounded-full bg-slate-200"></div>
-                <div className="h-3 w-3 rounded-full bg-slate-200"></div>
-                <div className="ml-4 h-4 w-1/3 rounded bg-slate-100"></div>
-              </div>
-
-              <DashboardMockup />
-            </div>
+          <div className="relative z-20 w-full max-w-[500px] lg:max-w-[600px]">
+            <SvgSteppingUp className="animate-float h-auto w-full drop-shadow-2xl" />
           </div>
+        </div>
 
-          <div className="hero-used-by mt-20 text-center lg:mt-24">
-            <p className="mb-8 text-sm font-semibold tracking-[0.2em] text-slate-400 uppercase">
+        <div className="hero-trust absolute right-6 bottom-6 left-6 sm:right-8 sm:bottom-8 sm:left-8 lg:right-12 lg:bottom-12 lg:left-12">
+          <div className="flex flex-col items-start gap-6 border-t border-slate-900/10 pt-8 sm:flex-row sm:items-center sm:gap-12">
+            <p className="shrink-0 text-xs font-semibold tracking-[0.2em] text-slate-500/70 uppercase">
               Utilizado por profissionais de
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-8 opacity-40 grayscale transition-all hover:opacity-100 hover:grayscale-0 md:gap-16">
-              <TrustLogo name="Gestão" />
-              <TrustLogo name="Design" />
-              <TrustLogo name="Saúde" />
-              <TrustLogo name="Educação" />
-              <TrustLogo name="Beleza" />
+            <div className="flex flex-wrap items-center gap-6 md:gap-10">
+              <TrustLabel name="Gestão" />
+              <TrustLabel name="Design" />
+              <TrustLabel name="Saúde" />
+              <TrustLabel name="Educação" />
+              <TrustLabel name="Beleza" />
             </div>
           </div>
         </div>
@@ -150,20 +68,9 @@ export default function HeroSection() {
   );
 }
 
-function HeroCheck({ label }: { label: string }) {
+function TrustLabel({ name }: { name: string }) {
   return (
-    <div className="flex items-center gap-2.5">
-      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-green-50 text-green-600">
-        <Check className="h-3.5 w-3.5" strokeWidth={3} />
-      </div>
-      <span className="text-slate-600">{label}</span>
-    </div>
-  );
-}
-
-function TrustLogo({ name }: { name: string }) {
-  return (
-    <span className="rounded border-2 border-slate-900 px-3 py-1 text-xl font-bold tracking-tighter text-slate-900">
+    <span className="text-sm font-bold tracking-tight text-slate-900/40 transition-colors hover:text-slate-900/70">
       {name}
     </span>
   );

@@ -32,7 +32,9 @@ export function useAppointments(options: UseAppointmentsOptions = {}) {
     return {
       id: appointment.id,
       serviceId: appointment.serviceId,
-      title: `${appointment.clientName || 'Cliente'}`,
+      title: appointment.clientName?.trim()
+        ? appointment.clientName
+        : 'Cliente',
       start: new Date(appointment.startTime),
       end: new Date(appointment.endTime),
       clientName: appointment.clientName,
@@ -98,7 +100,11 @@ export function useAppointments(options: UseAppointmentsOptions = {}) {
         }
 
         const newAppointment: AppointmentData = await response.json();
-        const newBooking = transformAppointmentToBooking(newAppointment);
+        const newBooking = transformAppointmentToBooking({
+          ...newAppointment,
+          clientName: bookingData.clientName,
+          clientPhone: bookingData.clientPhone,
+        });
         setBookings((prev) => [...prev, newBooking]);
         return newBooking;
       } catch (err) {

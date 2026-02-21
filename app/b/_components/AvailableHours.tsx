@@ -47,19 +47,35 @@ export default function AvailableHours({
       </div>
 
       <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4">
-        {horarios?.map((hora) => {
+        {horarios?.map((item) => {
+          // If the get-available-times action was updated to return objects like { time: '08:00', available: true }
+          // This allows us to handle both simple string arrays (backwards compatible) or object arrays.
+          const hora = typeof item === 'string' ? item : (item as any).time;
           const isSelected = hora === selectedTime;
+          const isPast = typeof item === 'object' && (item as any).isPast;
+          const isAvailable =
+            typeof item === 'string'
+              ? true
+              : (item as any).available && !isPast;
+
           return (
             <button
               key={hora}
-              onClick={() => onSelectTime(hora)}
+              onClick={() => {
+                if (isAvailable) onSelectTime(hora);
+              }}
+              disabled={!isAvailable}
               className={`group relative rounded-lg border px-3 py-2.5 text-sm font-medium transition-all duration-200 focus:outline-none ${
-                isSelected
-                  ? 'border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-200'
-                  : 'border-gray-200 bg-white text-gray-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600 hover:shadow-sm'
+                !isAvailable
+                  ? 'cursor-not-allowed border-gray-100 bg-gray-50 text-gray-300'
+                  : isSelected
+                    ? 'border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-200'
+                    : 'cursor-pointer border-gray-200 bg-white text-gray-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600 hover:shadow-sm'
               }`}
             >
-              {hora}
+              <span className={!isAvailable ? 'line-through opacity-60' : ''}>
+                {hora}
+              </span>
             </button>
           );
         })}
