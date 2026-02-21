@@ -1,6 +1,8 @@
 'use client';
 
 import Link from 'next/link';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import {
   MoreHorizontal,
   Calendar,
@@ -15,38 +17,41 @@ import {
   Check,
 } from 'lucide-react';
 
-const AvisoPaginaEmDesenvolvimento = () => {
-  return (
-    <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 shadow-sm">
-      <div className="flex items-start gap-3">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-100">
-          <Info className="h-4 w-4 text-amber-600" />
-        </div>
+export function DashboardHome({ data }: { data: any }) {
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(value);
+  };
 
-        <div>
-          <p className="text-sm font-semibold text-amber-900">
-            Página em desenvolvimento
-          </p>
+  const configSteps = [
+    { id: 1, name: 'Criar conta', completed: data.configStatus.hasAccount },
+    {
+      id: 2,
+      name: 'Configurar perfil',
+      completed: data.configStatus.hasProfile,
+    },
+    {
+      id: 3,
+      name: 'Cadastrar primeiro serviço',
+      completed: data.configStatus.hasServices,
+    },
+    {
+      id: 4,
+      name: 'Acessar agenda',
+      completed: data.configStatus.hasConnectedCalendar,
+    },
+  ];
+  const completedSteps = configSteps.filter((s) => s.completed).length;
 
-          <p className="mt-1 text-xs text-amber-700">
-            As funcionalidades dessa página ainda não estão disponíveis.
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export function DashboardHome() {
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 space-y-8 duration-700">
       <header className="flex items-center justify-between">
         <h1 className="text-xl font-semibold text-slate-900 sm:text-2xl">
-          Hoje
+          Dashboard
         </h1>
       </header>
-
-      <AvisoPaginaEmDesenvolvimento />
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2">
@@ -57,19 +62,17 @@ export function DashboardHome() {
                 <MoreHorizontal className="h-3 w-3" />
               </div>
               <div className="text-2xl font-bold text-slate-900 sm:text-3xl">
-                R$ 0,00
+                {formatCurrency(data.currentMonthRevenue)}
               </div>
-              <div className="text-xs text-slate-400">
-                Última atualização: agora mesmo
-              </div>
+              <div className="text-xs text-slate-400">Este mês</div>
             </div>
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-sm font-medium text-slate-500">
-                Ontem
+                Mês passado
                 <MoreHorizontal className="h-3 w-3" />
               </div>
               <div className="text-2xl font-bold text-slate-900/30 sm:text-3xl">
-                R$ 0,00
+                {formatCurrency(data.lastMonthRevenue)}
               </div>
             </div>
           </div>
@@ -107,29 +110,23 @@ export function DashboardHome() {
             </div>
           </div>
 
-          <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold tracking-wider text-slate-900 uppercase">
-                  Saldo disponível
-                </h3>
-                <button className="text-xs font-medium text-indigo-600 hover:underline">
-                  Ver tudo
-                </button>
-              </div>
-              <div className="text-2xl font-bold text-slate-900">R$ 0,00</div>
-            </div>
-            <div className="space-y-4 border-t border-slate-100 pt-8 sm:border-t-0 sm:border-l sm:pt-0 sm:pl-8">
+          <div className="mt-12 grid grid-cols-1 gap-8">
+            <div className="space-y-4 border-t border-slate-100 pt-8 sm:border-t-0 sm:pt-0">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-semibold tracking-wider text-slate-900 uppercase">
                   Agendamentos
                 </h3>
-                <button className="text-xs font-medium text-indigo-600 hover:underline">
+                <Link
+                  href="/dashboard/agenda"
+                  className="text-xs font-medium text-indigo-600 hover:underline"
+                >
                   Ver agenda
-                </button>
+                </Link>
               </div>
               <div className="flex flex-col gap-1">
-                <div className="text-2xl font-bold text-slate-900">0</div>
+                <div className="text-2xl font-bold text-slate-900">
+                  {data.currentMonthAppointments}
+                </div>
                 <div className="h-1 w-8 rounded-full bg-slate-100"></div>
               </div>
             </div>
@@ -143,38 +140,32 @@ export function DashboardHome() {
                 Configuração
               </h3>
               <span className="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-50 text-[10px] font-bold text-indigo-600">
-                2/4
+                {completedSteps}/4
               </span>
             </div>
             <div className="mt-4 space-y-3">
-              <div className="flex items-center gap-3">
-                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
-                  <Check className="h-3 w-3" />
+              {configSteps.map((step) => (
+                <div key={step.id} className="flex items-center gap-3">
+                  {step.completed ? (
+                    <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+                      <Check className="h-3 w-3" />
+                    </div>
+                  ) : (
+                    <div className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+                      <div className="h-1.5 w-1.5 rounded-full bg-slate-400" />
+                    </div>
+                  )}
+                  <span
+                    className={`text-sm ${
+                      step.completed
+                        ? 'text-slate-600'
+                        : 'font-medium text-slate-500'
+                    }`}
+                  >
+                    {step.name}
+                  </span>
                 </div>
-                <span className="text-sm text-slate-600">Criar conta</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
-                  <Check className="h-3 w-3" />
-                </div>
-                <span className="text-sm text-slate-600">
-                  Configurar perfil
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 text-slate-400">
-                  <div className="h-1.5 w-1.5 rounded-full bg-slate-400" />
-                </div>
-                <span className="text-sm font-medium text-slate-500">
-                  Cadastrar primeiro serviço
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 text-slate-400">
-                  <div className="h-1.5 w-1.5 rounded-full bg-slate-400" />
-                </div>
-                <span className="text-sm text-slate-500">Conectar agenda</span>
-              </div>
+              ))}
             </div>
           </div>
 
@@ -183,33 +174,42 @@ export function DashboardHome() {
               Ações Rápidas
             </h3>
             <div className="mt-4 grid grid-cols-2 gap-2">
-              <button className="flex flex-col items-center justify-center rounded-lg border border-slate-100 bg-slate-50/50 p-3 transition-colors hover:bg-slate-100">
+              <Link
+                href="/dashboard/agenda"
+                className="flex flex-col items-center justify-center rounded-lg border border-slate-100 bg-slate-50/50 p-3 transition-colors hover:bg-slate-100"
+              >
                 <CalendarClock className="mb-2 h-5 w-5 text-indigo-600" />
                 <span className="text-center text-[10px] font-medium text-slate-600">
-                  Novo Agendamento
+                  Agenda
                 </span>
-              </button>
+              </Link>
               <Link
                 href="/dashboard/clientes"
                 className="flex flex-col items-center justify-center rounded-lg border border-slate-100 bg-slate-50/50 p-3 transition-colors hover:bg-slate-100"
               >
                 <UserPlus className="mb-2 h-5 w-5 text-indigo-600" />
                 <span className="text-center text-[10px] font-medium text-slate-600">
-                  Novo Cliente
+                  Clientes
                 </span>
               </Link>
-              <button className="flex flex-col items-center justify-center rounded-lg border border-slate-100 bg-slate-50/50 p-3 transition-colors hover:bg-slate-100">
+              <Link
+                href="/dashboard/servicos"
+                className="flex flex-col items-center justify-center rounded-lg border border-slate-100 bg-slate-50/50 p-3 transition-colors hover:bg-slate-100"
+              >
                 <PlusCircle className="mb-2 h-5 w-5 text-indigo-600" />
                 <span className="text-center text-[10px] font-medium text-slate-600">
-                  Novo Serviço
+                  Serviços
                 </span>
-              </button>
-              <button className="flex flex-col items-center justify-center rounded-lg border border-slate-100 bg-slate-50/50 p-3 transition-colors hover:bg-slate-100">
+              </Link>
+              <Link
+                href="/dashboard/link"
+                className="flex flex-col items-center justify-center rounded-lg border border-slate-100 bg-slate-50/50 p-3 transition-colors hover:bg-slate-100"
+              >
                 <Settings className="mb-2 h-5 w-5 text-indigo-600" />
                 <span className="text-center text-[10px] font-medium text-slate-600">
-                  Configurações
+                  Página Pública
                 </span>
-              </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -249,12 +249,39 @@ export function DashboardHome() {
               <MoreHorizontal className="h-4 w-4 text-slate-400" />
             </div>
             <div className="mt-8 space-y-4">
-              {[1, 2, 3].map((i) => (
-                <div
-                  key={i}
-                  className="flex h-4 w-full animate-pulse rounded bg-slate-50"
-                ></div>
-              ))}
+              {data.upcomingAppointments?.length > 0 ? (
+                data.upcomingAppointments.map((apt: any) => (
+                  <div
+                    key={apt.id}
+                    className="flex items-center justify-between text-sm"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="rounded-full bg-indigo-50 p-2 text-indigo-600">
+                        <CalendarClock className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-slate-900">
+                          {apt.client?.name || 'Cliente'}
+                        </p>
+                        <p className="text-xs text-slate-500">
+                          {apt.service?.name}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right font-medium whitespace-nowrap text-slate-700">
+                      {format(new Date(apt.startTime), "d 'de' MMM, HH:mm", {
+                        locale: ptBR,
+                      })}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="rounded-lg border border-dashed border-slate-200 p-4 text-center">
+                  <p className="text-sm text-slate-500">
+                    Nenhum agendamento futuro.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -268,14 +295,16 @@ export function DashboardHome() {
               </button>
             </div>
             <div className="mt-6">
-              <div className="text-2xl font-bold text-slate-900">R$ 0,00</div>
+              <div className="text-2xl font-bold text-slate-900">
+                {formatCurrency(data.currentMonthRevenue)}
+              </div>
               <div className="mt-1 text-xs text-slate-500">
-                R$ 0,00 período anterior
+                {formatCurrency(data.lastMonthRevenue)} período anterior
               </div>
             </div>
             <div className="mt-auto pt-6">
               <div className="flex items-center justify-between border-t border-slate-50 pt-4 text-[10px] font-medium text-slate-400">
-                <span>R$ 0,00</span>
+                <span>Total Estimado</span>
               </div>
             </div>
           </div>
@@ -287,14 +316,16 @@ export function DashboardHome() {
               </div>
             </div>
             <div className="mt-6">
-              <div className="text-2xl font-bold text-slate-900">0</div>
+              <div className="text-2xl font-bold text-slate-900">
+                {data.currentMonthClients}
+              </div>
               <div className="mt-1 text-xs text-slate-500">
-                0 período anterior
+                {data.lastMonthClients} período anterior
               </div>
             </div>
             <div className="mt-auto pt-6">
               <div className="flex items-center justify-between border-t border-slate-50 pt-4 text-[10px] font-medium text-slate-400">
-                <span>0</span>
+                <span>Este Mês</span>
               </div>
             </div>
           </div>
