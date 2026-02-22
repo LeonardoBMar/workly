@@ -1,5 +1,6 @@
 'use server';
 import { db } from '@/lib/db';
+import { ApplicationError } from '@/lib/custom-error';
 import { services } from '@/lib/schema';
 import { eq, and } from 'drizzle-orm';
 import { getRequiredSession } from '@/lib/get-session';
@@ -23,7 +24,10 @@ export async function getServices() {
   } catch (error) {
     console.error('Error fetching services:', error);
     return {
-      error: error instanceof Error ? error.message : 'Erro ao buscar serviços',
+      error:
+        error instanceof ApplicationError
+          ? error.message
+          : 'Erro ao buscar serviços',
     };
   }
 }
@@ -61,7 +65,10 @@ export async function createService(formData: {
   } catch (error) {
     console.error('Error creating service:', error);
     return {
-      error: error instanceof Error ? error.message : 'Erro ao criar serviço',
+      error:
+        error instanceof ApplicationError
+          ? error.message
+          : 'Erro ao criar serviço',
     };
   }
 }
@@ -97,7 +104,9 @@ export async function updateService(
     console.error('Error updating service:', error);
     return {
       error:
-        error instanceof Error ? error.message : 'Erro ao atualizar serviço',
+        error instanceof ApplicationError
+          ? error.message
+          : 'Erro ao atualizar serviço',
     };
   }
 }
@@ -115,7 +124,10 @@ export async function deleteService(id: string) {
   } catch (error) {
     console.error('Error deleting service:', error);
     return {
-      error: error instanceof Error ? error.message : 'Erro ao deletar serviço',
+      error:
+        error instanceof ApplicationError
+          ? error.message
+          : 'Erro ao deletar serviço',
     };
   }
 }

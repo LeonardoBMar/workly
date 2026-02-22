@@ -1,6 +1,7 @@
 import { auth } from './auth';
 import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { ApplicationError } from '@/lib/custom-error';
 
 export async function getSession() {
   const session = await auth.api.getSession({
@@ -16,7 +17,7 @@ export async function getRequiredSession() {
   });
 
   if (!session?.user) {
-    throw new Error('Não autorizado');
+    throw new ApplicationError('Não autorizado');
   }
 
   return session.user;

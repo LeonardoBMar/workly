@@ -1,4 +1,5 @@
 import { headers } from 'next/headers';
+import { ApplicationError } from '@/lib/custom-error';
 
 type RateLimitRecord = {
   count: number;
@@ -33,7 +34,9 @@ export async function rateLimit(
   const currentRecord = store.get(ip) ?? { count: 0, resetAt: now + windowMs };
 
   if (currentRecord.count >= limit) {
-    throw new Error('Muitas requisições. Tente novamente mais tarde.');
+    throw new ApplicationError(
+      'Muitas requisições. Tente novamente mais tarde.',
+    );
   }
 
   currentRecord.count += 1;

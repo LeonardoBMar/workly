@@ -1,5 +1,6 @@
 'use server';
 import { db } from '@/lib/db';
+import { ApplicationError } from '@/lib/custom-error';
 import { appointments, clients, services } from '@/lib/schema';
 import { eq, and } from 'drizzle-orm';
 import { getRequiredSession } from '@/lib/get-session';
@@ -38,7 +39,9 @@ export async function getAppointments(date: Date) {
     console.error('Error fetching appointments:', error);
     return {
       error:
-        error instanceof Error ? error.message : 'Erro ao buscar agendamentos',
+        error instanceof ApplicationError
+          ? error.message
+          : 'Erro ao buscar agendamentos',
     };
   }
 }
@@ -106,7 +109,9 @@ export async function createAppointment(formData: {
     console.error('Error creating appointment:', error);
     return {
       error:
-        error instanceof Error ? error.message : 'Erro ao criar agendamento',
+        error instanceof ApplicationError
+          ? error.message
+          : 'Erro ao criar agendamento',
     };
   }
 }
@@ -130,7 +135,7 @@ export async function updateAppointmentStatus(id: string, status: string) {
     console.error('Error updating appointment status:', error);
     return {
       error:
-        error instanceof Error
+        error instanceof ApplicationError
           ? error.message
           : 'Erro ao atualizar status do agendamento',
     };
@@ -151,7 +156,9 @@ export async function deleteAppointment(id: string) {
     console.error('Error deleting appointment:', error);
     return {
       error:
-        error instanceof Error ? error.message : 'Erro ao deletar agendamento',
+        error instanceof ApplicationError
+          ? error.message
+          : 'Erro ao deletar agendamento',
     };
   }
 }

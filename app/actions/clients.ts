@@ -1,5 +1,6 @@
 'use server';
 import { db } from '@/lib/db';
+import { ApplicationError } from '@/lib/custom-error';
 import { clients } from '@/lib/schema';
 import { eq, and, desc } from 'drizzle-orm';
 import { getRequiredSession } from '@/lib/get-session';
@@ -24,7 +25,10 @@ export async function getClients() {
   } catch (error) {
     console.error('Error fetching clients:', error);
     return {
-      error: error instanceof Error ? error.message : 'Erro ao buscar clientes',
+      error:
+        error instanceof ApplicationError
+          ? error.message
+          : 'Erro ao buscar clientes',
     };
   }
 }
@@ -62,7 +66,10 @@ export async function createClient(formData: {
   } catch (error) {
     console.error('Error creating client:', error);
     return {
-      error: error instanceof Error ? error.message : 'Erro ao criar cliente',
+      error:
+        error instanceof ApplicationError
+          ? error.message
+          : 'Erro ao criar cliente',
     };
   }
 }
@@ -98,7 +105,9 @@ export async function updateClient(
     console.error('Error updating client:', error);
     return {
       error:
-        error instanceof Error ? error.message : 'Erro ao atualizar cliente',
+        error instanceof ApplicationError
+          ? error.message
+          : 'Erro ao atualizar cliente',
     };
   }
 }
@@ -116,7 +125,10 @@ export async function deleteClient(id: string) {
   } catch (error) {
     console.error('Error deleting client:', error);
     return {
-      error: error instanceof Error ? error.message : 'Erro ao deletar cliente',
+      error:
+        error instanceof ApplicationError
+          ? error.message
+          : 'Erro ao deletar cliente',
     };
   }
 }
