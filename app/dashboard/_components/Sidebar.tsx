@@ -2,30 +2,26 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-  Home,
-  CreditCard,
-  Users,
-  Package,
-  BarChart3,
-  FileText,
-  Settings,
-  HelpCircle,
-  ChevronDown,
-  Calendar,
-  Link as LinkIcon,
-} from 'lucide-react';
+import { Settings, HelpCircle, ChevronDown } from 'lucide-react';
+import { HomeIcon } from '@/app/components/icons/Home';
+import { CalendarDaysIcon } from '@/app/components/icons/Calendar';
+import { UsersIcon } from '@/app/components/icons/Users';
+import { BoxIcon } from '@/app/components/icons/Package';
+import { LinkIcon } from '@/app/components/icons/Link';
+import { CreditCardIcon } from '@/app/components/icons/CreditCard';
+import { FileTextIcon } from '@/app/components/icons/FileText';
+import { BarChart3Icon } from '@/app/components/icons/BarChart3';
 import { cn } from '@/lib/utils';
 import { X } from 'lucide-react';
 
 const menuItems = [
-  { icon: Home, label: 'Início', href: '/dashboard' },
-  { icon: Calendar, label: 'Agenda', href: '/dashboard/agenda' },
-  { icon: Users, label: 'Clientes', href: '/dashboard/clientes' },
-  { icon: Package, label: 'Serviços', href: '/dashboard/servicos' },
+  { icon: HomeIcon, label: 'Início', href: '/dashboard' },
+  { icon: CalendarDaysIcon, label: 'Agenda', href: '/dashboard/agenda' },
+  { icon: UsersIcon, label: 'Clientes', href: '/dashboard/clientes' },
+  { icon: BoxIcon, label: 'Serviços', href: '/dashboard/servicos' },
   { icon: LinkIcon, label: 'Sua Pagina', href: '/dashboard/link' },
   {
-    icon: CreditCard,
+    icon: CreditCardIcon,
     label: 'Plano e Faturamento',
     href: '/dashboard/billing',
   },
@@ -33,19 +29,19 @@ const menuItems = [
 
 const productItems = [
   {
-    icon: CreditCard,
+    icon: CreditCardIcon,
     label: 'Financeiro',
     href: '/dashboard/financeiro',
     hasMore: true,
   },
   {
-    icon: FileText,
+    icon: FileTextIcon,
     label: 'Faturas',
     href: '/dashboard/faturas',
     hasMore: true,
   },
   {
-    icon: BarChart3,
+    icon: BarChart3Icon,
     label: 'Relatórios',
     href: '/dashboard/relatorios',
     hasMore: true,
