@@ -9,6 +9,7 @@ import { authClient } from '@/lib/auth-client';
 import { createCheckoutSession } from '@/app/actions/stripe';
 import { notifyError } from '@/lib/toast';
 import { useScrollAnimation } from '@/app/animations/scrollAnimations';
+import SvgConnections from '../svg/SvgConnections';
 
 const plans = [
   {
@@ -97,20 +98,28 @@ export default function PricingSection() {
     <section
       ref={containerRef}
       id="pricing"
-      className="overflow-hidden bg-white py-24 sm:py-32"
+      className="relative overflow-hidden bg-white py-24 sm:py-32"
     >
+      <div className="absolute top-1/2 left-1/2 -z-10 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(circle_at_center,var(--tw-gradient-stops))] from-indigo-50/50 via-transparent to-transparent opacity-80" />
+
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="reveal-on-scroll text-center">
-          <h2 className="text-base font-semibold tracking-wider text-indigo-600 uppercase">
-            Preços e Planos
-          </h2>
-          <p className="mt-4 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
-            O investimento que se paga sozinho
-          </p>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600">
-            Escolha o plano ideal para a fase do seu negócio. Comece grátis e
-            evolua conforme cresce.
-          </p>
+        <div className="reveal-on-scroll relative mb-20">
+          <div className="absolute top-0 right-0 left-0 hidden h-full lg:block">
+            <SvgConnections className="absolute top-1/2 left-1/2 w-[800px] -translate-x-1/2 -translate-y-1/2 opacity-60" />
+          </div>
+
+          <div className="relative z-10 mx-auto max-w-3xl text-center">
+            <h2 className="text-base font-semibold tracking-wider text-indigo-600 uppercase">
+              Preços e Planos
+            </h2>
+            <p className="mt-4 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+              O investimento que se paga sozinho
+            </p>
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600">
+              Escolha o plano ideal para a fase do seu negócio. Comece grátis e
+              evolua conforme cresce.
+            </p>
+          </div>
         </div>
 
         <div className="reveal-on-scroll mt-20 grid grid-cols-1 gap-8 lg:grid-cols-3">

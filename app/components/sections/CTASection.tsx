@@ -11,6 +11,7 @@ import {
   Users2,
 } from 'lucide-react';
 import { useScrollAnimation } from '@/app/animations/scrollAnimations';
+import SvgGrowth from '../svg/SvgGrowth';
 
 export default function CTASection() {
   const containerRef = useRef(null);
@@ -50,6 +51,10 @@ export default function CTASection() {
                 className="text-slate-900"
               />
             </svg>
+          </div>
+
+          <div className="absolute top-12 left-8 hidden w-64 opacity-20 lg:block xl:w-80">
+            <SvgGrowth className="h-auto w-full -rotate-12 transform" />
           </div>
 
           <div className="relative z-10 text-center">

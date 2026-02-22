@@ -12,6 +12,7 @@ import {
 import { Button } from '../ui/button';
 import { useRef } from 'react';
 import { useScrollAnimation } from '@/app/animations/scrollAnimations';
+import { DashboardMockup } from './DashboardMockup';
 
 const features = [
   {
@@ -75,17 +76,24 @@ export default function FeaturesSection() {
       className="bg-slate-50 py-24 sm:py-32"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="reveal-on-scroll text-center">
-          <h2 className="text-base font-semibold tracking-wider text-indigo-600 uppercase">
-            Poder de Execução
-          </h2>
-          <p className="mt-4 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
-            Tudo que seu negócio precisa
-          </p>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600 outline-none">
-            Ferramentas profissionais projetadas para simplificar sua gestão e
-            impulsionar seu crescimento.
-          </p>
+        <div className="grid items-center gap-12 lg:grid-cols-2">
+          <div className="reveal-on-scroll">
+            <h2 className="text-base font-semibold tracking-wider text-indigo-600 uppercase">
+              Poder de Execução
+            </h2>
+            <p className="mt-4 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+              Tudo que seu negócio precisa
+            </p>
+            <p className="mt-6 max-w-2xl text-lg text-slate-600 outline-none">
+              Ferramentas profissionais projetadas para simplificar sua gestão e
+              impulsionar seu crescimento.
+            </p>
+          </div>
+          <div className="reveal-on-scroll flex w-full justify-center lg:justify-end">
+            <div className="relative w-full lg:max-w-[600px]">
+              <DashboardMockup />
+            </div>
+          </div>
         </div>
 
         <div className="reveal-on-scroll mt-20 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
