@@ -60,6 +60,9 @@ export async function createAppointment(formData: {
       return { error: 'Status de agendamento inválido.' };
     }
 
+    const { rateLimit } = await import('@/lib/rate-limit');
+    await rateLimit(15, 60 * 1000);
+
     const [ownedClient, ownedService] = await Promise.all([
       db
         .select({ id: clients.id })

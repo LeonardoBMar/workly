@@ -40,6 +40,9 @@ export async function createService(formData: {
       return { error: getValidationErrorMessage(parsed.error) };
     }
 
+    const { rateLimit } = await import('@/lib/rate-limit');
+    await rateLimit(10, 60 * 1000);
+
     const user = await getRequiredSession();
 
     const id = crypto.randomUUID();
