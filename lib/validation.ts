@@ -165,3 +165,48 @@ export type AppointmentStatus = z.infer<typeof appointmentStatusSchema>;
 export function getValidationErrorMessage(error: z.ZodError): string {
   return error.issues[0]?.message ?? 'Dados inválidos';
 }
+
+export const updateProfileSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(1, 'Nome é obrigatório')
+    .max(120, 'Nome deve ter no máximo 120 caracteres'),
+  email: z
+    .string()
+    .trim()
+    .email('E-mail inválido')
+    .max(160, 'E-mail muito longo'),
+});
+
+export const updatePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, 'Senha atual é obrigatória'),
+    newPassword: z
+      .string()
+      .min(8, 'A nova senha deve ter no mínimo 8 caracteres'),
+    confirmPassword: z.string().min(1, 'Confirmação de senha é obrigatória'),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: 'As senhas não coincidem',
+    path: ['confirmPassword'],
+  });
+
+const dayScheduleSchema = z.object({
+  enabled: z.boolean(),
+  start: z.string().regex(/^\d{2}:\d{2}$/, 'Horário inválido'),
+  end: z.string().regex(/^\d{2}:\d{2}$/, 'Horário inválido'),
+});
+
+export const updateBusinessHoursSchema = z.object({
+  businessHours: z.object({
+    monday: dayScheduleSchema,
+    tuesday: dayScheduleSchema,
+    wednesday: dayScheduleSchema,
+    thursday: dayScheduleSchema,
+    friday: dayScheduleSchema,
+    saturday: dayScheduleSchema,
+    sunday: dayScheduleSchema,
+  }),
+  timezone: z.string().min(1, 'Timezone é obrigatório'),
+});

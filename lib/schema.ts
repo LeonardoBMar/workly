@@ -10,6 +10,32 @@ import {
 import { relations } from 'drizzle-orm';
 import { InferSelectModel } from 'drizzle-orm';
 
+export type DaySchedule = {
+  enabled: boolean;
+  start: string;
+  end: string;
+};
+
+export type BusinessHours = {
+  monday: DaySchedule;
+  tuesday: DaySchedule;
+  wednesday: DaySchedule;
+  thursday: DaySchedule;
+  friday: DaySchedule;
+  saturday: DaySchedule;
+  sunday: DaySchedule;
+};
+
+export const DEFAULT_BUSINESS_HOURS: BusinessHours = {
+  monday: { enabled: true, start: '08:00', end: '18:00' },
+  tuesday: { enabled: true, start: '08:00', end: '18:00' },
+  wednesday: { enabled: true, start: '08:00', end: '18:00' },
+  thursday: { enabled: true, start: '08:00', end: '18:00' },
+  friday: { enabled: true, start: '08:00', end: '18:00' },
+  saturday: { enabled: false, start: '08:00', end: '12:00' },
+  sunday: { enabled: false, start: '08:00', end: '12:00' },
+};
+
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
@@ -21,9 +47,13 @@ export const user = pgTable('user', {
   stripePriceId: text('stripePriceId'),
   subscriptionStatus: text('subscriptionStatus'),
   subscriptionEndsAt: timestamp('subscriptionEndsAt'),
+  businessHours: json('businessHours').$type<BusinessHours>(),
+  timezone: text('timezone').default('America/Sao_Paulo'),
   createdAt: timestamp('createdAt').notNull(),
   updatedAt: timestamp('updatedAt').notNull(),
 });
+
+export type User = InferSelectModel<typeof user>;
 
 export const session = pgTable('session', {
   id: text('id').primaryKey(),

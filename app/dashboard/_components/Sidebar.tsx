@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Settings, HelpCircle, ChevronDown } from 'lucide-react';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { Settings, HelpCircle, ChevronDown, Clock } from 'lucide-react';
 import { HomeIcon } from '@/app/components/icons/Home';
 import { CalendarDaysIcon } from '@/app/components/icons/Calendar';
 import { UsersIcon } from '@/app/components/icons/Users';
@@ -20,6 +20,7 @@ const menuItems = [
   { icon: UsersIcon, label: 'Clientes', href: '/dashboard/clientes' },
   { icon: BoxIcon, label: 'Serviços', href: '/dashboard/servicos' },
   { icon: LinkIcon, label: 'Sua Pagina', href: '/dashboard/link' },
+  { icon: Clock, label: 'Horários', href: '/dashboard/settings?tab=hours' },
   {
     icon: CreditCardIcon,
     label: 'Plano e Faturamento',
@@ -55,6 +56,10 @@ interface SidebarProps {
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const currentUrl = searchParams.toString()
+    ? `${pathname}?${searchParams.toString()}`
+    : pathname;
 
   return (
     <aside
@@ -91,7 +96,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 href={item.href}
                 className={cn(
                   'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-                  pathname === item.href
+                  currentUrl === item.href
                     ? 'bg-indigo-50 text-indigo-700'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900',
                 )}
@@ -99,7 +104,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 <item.icon
                   className={cn(
                     'h-4 w-4',
-                    pathname === item.href
+                    currentUrl === item.href
                       ? 'text-indigo-600'
                       : 'text-slate-400',
                   )}

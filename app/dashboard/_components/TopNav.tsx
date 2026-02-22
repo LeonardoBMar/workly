@@ -86,7 +86,10 @@ export function TopNav({ onMenuClick }: TopNavProps) {
             <Bell className="h-5 w-5" />
             <span className="absolute top-2 right-2 h-2 w-2 rounded-full border-2 border-white bg-indigo-600"></span>
           </button>
-          <button className="rounded-md p-2 text-slate-500 hover:bg-slate-50 hover:text-slate-900">
+          <button
+            onClick={() => router.push('/dashboard/settings')}
+            className="rounded-md p-2 text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+          >
             <Settings className="h-5 w-5" />
           </button>
         </div>
@@ -127,11 +130,23 @@ export function TopNav({ onMenuClick }: TopNavProps) {
               </div>
 
               <div className="py-1">
-                <button className="group flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-slate-600 transition-colors hover:bg-slate-50 hover:text-indigo-600">
+                <button
+                  onClick={() => {
+                    setIsOpen(false);
+                    router.push('/dashboard/settings');
+                  }}
+                  className="group flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-slate-600 transition-colors hover:bg-slate-50 hover:text-indigo-600"
+                >
                   <User className="h-4 w-4 text-slate-400 group-hover:text-indigo-500" />
                   <span>Meu Perfil</span>
                 </button>
-                <button className="group flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-slate-600 transition-colors hover:bg-slate-50 hover:text-indigo-600">
+                <button
+                  onClick={() => {
+                    setIsOpen(false);
+                    router.push('/dashboard/settings');
+                  }}
+                  className="group flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-slate-600 transition-colors hover:bg-slate-50 hover:text-indigo-600"
+                >
                   <Settings className="h-4 w-4 text-slate-400 group-hover:text-indigo-500" />
                   <span>Configurações</span>
                 </button>
