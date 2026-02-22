@@ -77,11 +77,11 @@ O Workly surge para profissionalizar essa gestão, automatizando cobranças e or
 - [x] **Gestão de Imagens**: Upload de logo e banner via UploadThing.
 - [x] **Dashboard Administrativo**: Visão geral e estatísticas básicas.
 - [x] **Sistema de Agendamentos**: Calendário interativo para clientes (em andamento).
+- [x] **Relatórios Financeiros**: Gráficos de lucro, clientes e performance de serviços.
 
 ### Em Desenvolvimento / Futuro 🚀
 
 - [ ] **Lembretes Automáticos**: Notificações via WhatsApp e E-mail.
-- [ ] **Relatórios Financeiros Avançados**: Gráficos de lucro e performance de serviços.
 - [ ] **App Mobile (PWA)**: Atalho para acesso rápido.
 - [ ] **Multi-profissionais**: Suporte para equipes e salões.
 
