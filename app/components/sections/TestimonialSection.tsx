@@ -113,22 +113,6 @@ export default function TestimonialSection() {
                 <p className="text-slate-500">{currentTestimonial.role}</p>
               </div>
             </div>
-
-            <div className="mt-12 flex flex-wrap items-center justify-between gap-6">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600 shadow-lg shadow-indigo-200">
-                  <span className="text-sm font-bold text-white">W</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="leading-none font-bold tracking-tight text-slate-900">
-                    WORKLY
-                  </span>
-                  <span className="text-[10px] font-medium tracking-widest text-slate-400 uppercase">
-                    Premium SaaS
-                  </span>
-                </div>
-              </div>
-            </div>
           </div>
 
           <div className="relative flex w-full flex-col justify-between overflow-hidden bg-indigo-600 p-8 text-white md:w-[40%] md:p-16">
