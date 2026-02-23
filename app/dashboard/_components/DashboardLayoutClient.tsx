@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { Sidebar } from './Sidebar';
 import { TopNav } from './TopNav';
 
@@ -22,10 +22,12 @@ export function DashboardLayoutClient({
         />
       )}
 
-      <Sidebar
-        isOpen={isMobileMenuOpen}
-        onClose={() => setIsMobileMenuOpen(false)}
-      />
+      <Suspense>
+        <Sidebar
+          isOpen={isMobileMenuOpen}
+          onClose={() => setIsMobileMenuOpen(false)}
+        />
+      </Suspense>
 
       <div className="flex flex-1 flex-col lg:pl-12">
         <TopNav onMenuClick={() => setIsMobileMenuOpen(true)} />

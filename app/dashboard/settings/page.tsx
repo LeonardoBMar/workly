@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { getSettings } from '@/app/actions/settings';
 import { SettingsClient } from './_components/SettingsClient';
 import { redirect } from 'next/navigation';
@@ -9,5 +10,9 @@ export default async function SettingsPage() {
     redirect('/login');
   }
 
-  return <SettingsClient settings={result.data} />;
+  return (
+    <Suspense>
+      <SettingsClient settings={result.data} />
+    </Suspense>
+  );
 }
