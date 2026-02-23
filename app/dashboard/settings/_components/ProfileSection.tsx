@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { User, Save, Loader2 } from 'lucide-react';
-import { updateProfile } from '@/app/actions/settings';
+import { User, Save, Loader2, Camera } from 'lucide-react';
+import { updateProfile, updateProfileImage } from '@/app/actions/settings';
 import { toast } from 'sonner';
 import type { SettingsData } from './SettingsClient';
+import { UploadButton } from '@/lib/uploadthing';
 
 export function ProfileSection({ settings }: { settings: SettingsData }) {
   const [name, setName] = useState(settings.name);
@@ -42,21 +43,65 @@ export function ProfileSection({ settings }: { settings: SettingsData }) {
       </div>
 
       <div className="space-y-5">
-        <div className="flex items-center gap-4">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-xl font-bold text-indigo-700 ring-4 ring-indigo-50">
-            {settings.image ? (
-              <img
-                src={settings.image}
-                alt={name}
-                className="h-full w-full rounded-full object-cover"
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
+          <div className="group relative h-20 w-20 shrink-0">
+            <div className="flex h-full w-full items-center justify-center rounded-full bg-indigo-100 text-2xl font-bold text-indigo-700 ring-4 ring-indigo-50 transition-all group-hover:opacity-75">
+              {settings.image ? (
+                <img
+                  src={settings.image}
+                  alt={name}
+                  className="h-full w-full rounded-full object-cover"
+                />
+              ) : (
+                <span className="uppercase">{name?.[0] || 'U'}</span>
+              )}
+            </div>
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
+              <UploadButton
+                endpoint="imageUploader"
+                onClientUploadComplete={async (res) => {
+                  if (res?.[0]) {
+                    const result = await updateProfileImage(res[0].url);
+                    if (result.error) {
+                      toast.error(result.error);
+                    } else {
+                      toast.success('Foto de perfil atualizada!');
+                    }
+                  }
+                }}
+                onUploadError={(error: Error) => {
+                  toast.error(`Erro: ${error.message}`);
+                }}
+                appearance={{
+                  button: ({ isUploading }) => ({
+                    position: 'absolute',
+                    inset: 0,
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: '9999px',
+                    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                    border: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    color: 'white',
+                    fontSize: '0', // Hide text
+                  }),
+                  allowedContent: { display: 'none' }, // Hide text
+                }}
+                content={{
+                  button: <Camera className="h-5 w-5" />,
+                }}
               />
-            ) : (
-              <span className="uppercase">{name?.[0] || 'U'}</span>
-            )}
+            </div>
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-700">{name}</p>
-            <p className="text-xs text-slate-400">{email}</p>
+            <p className="text-sm font-medium text-slate-900">{name}</p>
+            <p className="text-xs text-slate-500">{email}</p>
+            <p className="mt-1 text-[10px] text-slate-400">
+              Clique na foto para alterar (PNG, JPG até 4MB)
+            </p>
           </div>
         </div>
 

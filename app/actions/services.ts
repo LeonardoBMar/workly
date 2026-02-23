@@ -88,6 +88,9 @@ export async function updateService(
       return { error: getValidationErrorMessage(parsed.error) };
     }
 
+    const { rateLimit } = await import('@/lib/rate-limit');
+    await rateLimit(20, 60 * 1000); // 20 per minute
+
     const user = await getRequiredSession();
 
     await db
@@ -113,6 +116,9 @@ export async function updateService(
 
 export async function deleteService(id: string) {
   try {
+    const { rateLimit } = await import('@/lib/rate-limit');
+    await rateLimit(10, 60 * 1000); // 10 per minute
+
     const user = await getRequiredSession();
 
     await db

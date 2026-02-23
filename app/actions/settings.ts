@@ -63,6 +63,9 @@ export async function updateProfile(formData: { name: string; email: string }) {
       return { error: getValidationErrorMessage(parsed.error) };
     }
 
+    const { rateLimit } = await import('@/lib/rate-limit');
+    await rateLimit(5, 60 * 1000);
+
     const sessionUser = await getRequiredSession();
 
     await db
@@ -98,6 +101,9 @@ export async function updatePassword(formData: {
       return { error: getValidationErrorMessage(parsed.error) };
     }
 
+    const { rateLimit } = await import('@/lib/rate-limit');
+    await rateLimit(3, 60 * 1000);
+
     await auth.api.changePassword({
       headers: await headers(),
       body: {
@@ -111,9 +117,12 @@ export async function updatePassword(formData: {
     console.error('Error updating password:', error);
 
     const message =
-      error instanceof Error && error.message.includes('credential')
+      error instanceof Error &&
+      error.message.toLowerCase().includes('credential')
         ? 'Senha atual incorreta'
-        : 'Erro ao alterar senha';
+        : error instanceof ApplicationError
+          ? error.message
+          : 'Erro ao alterar senha';
 
     return { error: message };
   }
@@ -128,6 +137,9 @@ export async function updateBusinessHours(formData: {
     if (!parsed.success) {
       return { error: getValidationErrorMessage(parsed.error) };
     }
+
+    const { rateLimit } = await import('@/lib/rate-limit');
+    await rateLimit(10, 60 * 1000);
 
     const sessionUser = await getRequiredSession();
 
@@ -149,6 +161,34 @@ export async function updateBusinessHours(formData: {
         error instanceof ApplicationError
           ? error.message
           : 'Erro ao atualizar horários',
+    };
+  }
+}
+
+export async function updateProfileImage(imageUrl: string) {
+  try {
+    const { rateLimit } = await import('@/lib/rate-limit');
+    await rateLimit(10, 60 * 1000);
+
+    const sessionUser = await getRequiredSession();
+
+    await db
+      .update(user)
+      .set({
+        image: imageUrl,
+        updatedAt: new Date(),
+      })
+      .where(eq(user.id, sessionUser.id));
+
+    revalidatePath('/dashboard/settings');
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating profile image:', error);
+    return {
+      error:
+        error instanceof ApplicationError
+          ? error.message
+          : 'Erro ao atualizar foto de perfil',
     };
   }
 }

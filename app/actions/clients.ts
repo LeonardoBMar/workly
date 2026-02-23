@@ -89,6 +89,9 @@ export async function updateClient(
       return { error: getValidationErrorMessage(parsed.error) };
     }
 
+    const { rateLimit } = await import('@/lib/rate-limit');
+    await rateLimit(20, 60 * 1000); // 20 per minute for updates
+
     const user = await getRequiredSession();
 
     await db
@@ -114,6 +117,9 @@ export async function updateClient(
 
 export async function deleteClient(id: string) {
   try {
+    const { rateLimit } = await import('@/lib/rate-limit');
+    await rateLimit(10, 60 * 1000);
+
     const user = await getRequiredSession();
 
     await db

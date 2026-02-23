@@ -118,15 +118,19 @@ export async function createAppointment(formData: {
 
 export async function updateAppointmentStatus(id: string, status: string) {
   try {
-    const user = await getRequiredSession();
-    const parsedStatus = appointmentStatusSchema.safeParse(status);
-    if (!parsedStatus.success) {
+    const parsed = appointmentStatusSchema.safeParse(status);
+    if (!parsed.success) {
       return { error: 'Status de agendamento inválido.' };
     }
 
+    const { rateLimit } = await import('@/lib/rate-limit');
+    await rateLimit(30, 60 * 1000); // 30 per minute for status updates
+
+    const user = await getRequiredSession();
+
     await db
       .update(appointments)
-      .set({ status: parsedStatus.data })
+      .set({ status: parsed.data })
       .where(and(eq(appointments.id, id), eq(appointments.userId, user.id)));
 
     revalidatePath('/dashboard/agenda');
@@ -144,6 +148,9 @@ export async function updateAppointmentStatus(id: string, status: string) {
 
 export async function deleteAppointment(id: string) {
   try {
+    const { rateLimit } = await import('@/lib/rate-limit');
+    await rateLimit(20, 60 * 1000);
+
     const user = await getRequiredSession();
 
     await db

@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { shopper } from '@/lib/schema';
 import { eq } from 'drizzle-orm';
 import { getRequiredSession } from '@/lib/get-session';
+import { ApplicationError } from '@/lib/custom-error';
 import {
   getValidationErrorMessage,
   upsertShopperInputSchema,
@@ -23,7 +24,10 @@ export async function getMyShopper() {
   } catch (error) {
     console.error('Error fetching shopper:', error);
     return {
-      error: error instanceof Error ? error.message : 'Erro ao buscar dados',
+      error:
+        error instanceof ApplicationError
+          ? error.message
+          : 'Erro ao buscar dados do link',
     };
   }
 }
@@ -40,6 +44,9 @@ export async function upsertShopper(formData: {
     if (!parsed.success) {
       return { error: getValidationErrorMessage(parsed.error) };
     }
+
+    const { rateLimit } = await import('@/lib/rate-limit');
+    await rateLimit(5, 60 * 1000);
 
     const data = parsed.data;
     const user = await getRequiredSession();
@@ -103,7 +110,9 @@ export async function upsertShopper(formData: {
     console.error('Error saving shopper:', error);
     return {
       error:
-        error instanceof Error ? error.message : 'Erro ao salvar informações',
+        error instanceof ApplicationError
+          ? error.message
+          : 'Erro ao salvar informações do link',
     };
   }
 }
