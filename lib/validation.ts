@@ -159,6 +159,8 @@ export const appointmentStatusSchema = z.enum([
   'pending',
   'confirmed',
   'cancelled',
+  'completed',
+  'no_show',
 ]);
 export type AppointmentStatus = z.infer<typeof appointmentStatusSchema>;
 

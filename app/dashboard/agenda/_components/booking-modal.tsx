@@ -261,6 +261,8 @@ export function BookingModal({
               <option value="pending">Pendente</option>
               <option value="confirmed">Confirmado</option>
               <option value="cancelled">Cancelado</option>
+              <option value="completed">Finalizado</option>
+              <option value="no_show">Não Compareceu</option>
             </select>
           </div>
 

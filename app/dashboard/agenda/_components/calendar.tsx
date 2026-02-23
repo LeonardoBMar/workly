@@ -55,8 +55,15 @@ export function Calendar({
     return SERVICE_COLORS[index % SERVICE_COLORS.length];
   };
 
+  const STATUS_COLORS: Record<string, string> = {
+    completed: '#6b7280',
+    no_show: '#ef4444',
+    cancelled: '#9ca3af',
+  };
+
   const events = bookings.map((booking) => {
-    const color = getServiceColor(booking.serviceId);
+    const statusColor = booking.status ? STATUS_COLORS[booking.status] : null;
+    const color = statusColor || getServiceColor(booking.serviceId);
     return {
       id: booking.id,
       title: booking.title,
