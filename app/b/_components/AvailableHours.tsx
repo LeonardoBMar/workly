@@ -73,9 +73,7 @@ export default function AvailableHours({
                     : 'cursor-pointer border-gray-200 bg-white text-gray-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600 hover:shadow-sm'
               }`}
             >
-              <span className={!isAvailable ? 'line-through opacity-60' : ''}>
-                {hora}
-              </span>
+              <span className={!isAvailable ? 'opacity-50' : ''}>{hora}</span>
             </button>
           );
         })}

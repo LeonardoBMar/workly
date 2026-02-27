@@ -30,7 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
         <div className="flex min-h-screen flex-col">
           <main className="grow">{children}</main>

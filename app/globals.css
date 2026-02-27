@@ -681,18 +681,27 @@ body {
   background: transparent !important;
 }
 
+.schedule-calendar .fc-day-past-disabled {
+  cursor: default !important;
+  opacity: 0.35;
+  pointer-events: none !important;
+}
+
+.schedule-calendar .fc-day-past-disabled .fc-daygrid-day-number {
+  color: #000000 !important;
+}
+
 .schedule-calendar .fc-day-selected .fc-daygrid-day-number {
   background: #2563eb !important;
   color: #fff !important;
   font-weight: 700;
   border-radius: 10px;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
-  transform: scale(1.05);
+  box-shadow: none !important;
 }
 
 .schedule-calendar .fc-day-today.fc-day-selected .fc-daygrid-day-number {
   background: #2563eb !important;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+  box-shadow: none !important;
 }
 
 .schedule-calendar .fc-daygrid-day-events {
@@ -704,11 +713,20 @@ body {
 }
 
 .schedule-calendar .fc-scroller {
-  overflow: hidden !important;
+  overflow: visible !important;
 }
 
 .schedule-calendar .fc-scroller-harness {
+  overflow: visible !important;
   padding-top: 0;
+}
+
+.schedule-calendar .fc-scrollgrid-section-body > td {
+  overflow: visible !important;
+}
+
+.schedule-calendar .fc .fc-scrollgrid-section-body table {
+  margin: 8px 0;
 }
 
 /* ─── Step Transitions ─── */

@@ -71,11 +71,6 @@ export default function ScheduleModal({
       const selectedAsDate = resetTime(new Date(selectedDate));
       const todayAsDate = resetTime(now);
 
-      if (selectedAsDate < todayAsDate) {
-        setHorarios([]); // sem horários disponíveis no passado
-        return;
-      }
-
       startTransitionTimes(async () => {
         try {
           const available = await getAvailableTimes(
@@ -172,16 +167,22 @@ export default function ScheduleModal({
                 }}
                 selectable
                 events={[]}
-                validRange={{
-                  start: new Date().toISOString().split('T')[0], // disable past days entirely on calendar
-                }}
-                dayCellClassNames={(arg) =>
-                  arg.date.toDateString() === selectedDate
-                    ? 'fc-day-selected'
-                    : ''
-                }
                 dateClick={(info) => {
+                  const now = new Date();
+                  now.setHours(0, 0, 0, 0);
+                  if (info.date < now) return;
                   setSelectedDate(info.date.toDateString());
+                }}
+                dayCellClassNames={(arg) => {
+                  const classes = [];
+                  if (arg.date.toDateString() === selectedDate)
+                    classes.push('fc-day-selected');
+
+                  const now = new Date();
+                  now.setHours(0, 0, 0, 0);
+                  if (arg.date < now) classes.push('fc-day-past-disabled');
+
+                  return classes.join(' ');
                 }}
               />
             </div>
