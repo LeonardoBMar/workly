@@ -2,7 +2,7 @@
 
 import { Calendar } from './calendar';
 import { BookingModal } from './booking-modal';
-import { Sidebar } from './sidebar';
+import { AgendaHeader, UpcomingPanel } from './sidebar';
 import {
   useAppointments,
   useAgendaUI,
@@ -65,29 +65,34 @@ export function AgendaClient() {
   }
 
   return (
-    <div className="bg-background flex h-screen">
-      <div
-        className={`fixed inset-y-0 left-0 z-40 transform transition-transform duration-300 ease-in-out lg:static ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} `}
-      >
-        <Sidebar
-          bookings={bookings}
-          services={services}
-          onNewBooking={handleNewBooking}
-          isLoading={isLoading}
-        />
+    <div className="bg-background agenda-layout flex h-[calc(100vh-4rem)]">
+      <div className="flex min-w-0 flex-1 flex-col p-4">
+        <div className="mb-3">
+          <AgendaHeader
+            bookings={bookings}
+            onNewBooking={handleNewBooking}
+            isLoading={isLoading}
+          />
+        </div>
+
+        <div className="min-h-0 flex-1">
+          <Calendar
+            bookings={bookings}
+            services={services}
+            onSelectSlot={handleSelectSlot}
+            onEventClick={handleEventClick}
+            onEventDrop={handleEventDrop}
+            onEventResize={handleEventResize}
+            isLoading={isLoading}
+          />
+        </div>
       </div>
 
-      <main className="flex-1 overflow-hidden p-4 pt-16 lg:p-6 lg:pt-6">
-        <Calendar
-          bookings={bookings}
-          services={services}
-          onSelectSlot={handleSelectSlot}
-          onEventClick={handleEventClick}
-          onEventDrop={handleEventDrop}
-          onEventResize={handleEventResize}
-          isLoading={isLoading}
-        />
-      </main>
+      <UpcomingPanel
+        bookings={bookings}
+        services={services}
+        isLoading={isLoading}
+      />
 
       <BookingModal
         isOpen={isModalOpen}

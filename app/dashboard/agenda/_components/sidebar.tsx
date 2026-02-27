@@ -1,20 +1,84 @@
-import { CalendarDays, Clock, Users, Plus } from 'lucide-react';
+import { Clock, Users, Plus, CalendarDays } from 'lucide-react';
 import type { Booking } from '../types';
 import type { Service } from '../_actions';
 
-interface SidebarProps {
+interface AgendaHeaderProps {
   bookings: Booking[];
-  services: Service[];
   onNewBooking: () => void;
   isLoading?: boolean;
 }
 
-export function Sidebar({
+const SERVICE_COLORS = [
+  '#10b981',
+  '#3b82f6',
+  '#8b5cf6',
+  '#f59e0b',
+  '#ec4899',
+  '#06b6d4',
+  '#84cc16',
+];
+
+export function AgendaHeader({
   bookings,
-  services,
   onNewBooking,
   isLoading,
-}: SidebarProps) {
+}: AgendaHeaderProps) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const todayCount = bookings.filter((b) => {
+    const d = new Date(b.start);
+    d.setHours(0, 0, 0, 0);
+    return d.getTime() === today.getTime();
+  }).length;
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center gap-3">
+        <div className="bg-secondary h-10 w-48 animate-pulse rounded-lg"></div>
+        <div className="bg-secondary h-10 w-24 animate-pulse rounded-lg"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-3">
+      <button
+        onClick={onNewBooking}
+        className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors"
+      >
+        <Plus className="h-4 w-4" />
+        Novo Agendamento
+      </button>
+      <div className="bg-secondary/50 flex items-center gap-2 rounded-lg px-3 py-2">
+        <CalendarDays className="text-primary h-4 w-4" />
+        <span className="text-foreground text-sm font-semibold">
+          {todayCount}
+        </span>
+        <span className="text-muted-foreground text-xs">hoje</span>
+      </div>
+      <div className="bg-secondary/50 flex items-center gap-2 rounded-lg px-3 py-2">
+        <Users className="text-primary h-4 w-4" />
+        <span className="text-foreground text-sm font-semibold">
+          {bookings.length}
+        </span>
+        <span className="text-muted-foreground text-xs">total</span>
+      </div>
+    </div>
+  );
+}
+
+interface UpcomingPanelProps {
+  bookings: Booking[];
+  services: Service[];
+  isLoading?: boolean;
+}
+
+export function UpcomingPanel({
+  bookings,
+  services,
+  isLoading,
+}: UpcomingPanelProps) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -27,7 +91,7 @@ export function Sidebar({
   const upcomingBookings = bookings
     .filter((b) => new Date(b.start) > new Date())
     .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
-    .slice(0, 5);
+    .slice(0, 8);
 
   const formatTime = (date: Date) => {
     return new Date(date).toLocaleTimeString('pt-BR', {
@@ -44,16 +108,6 @@ export function Sidebar({
     });
   };
 
-  const SERVICE_COLORS = [
-    '#10b981', // Emerald
-    '#3b82f6', // Blue
-    '#8b5cf6', // Violet
-    '#f59e0b', // Amber
-    '#ec4899', // Pink
-    '#06b6d4', // Cyan
-    '#84cc16', // Lime
-  ];
-
   const getServiceColor = (serviceId: string) => {
     const index = services.findIndex((s) => s.id === serviceId);
     if (index === -1) return '#10b981';
@@ -66,58 +120,37 @@ export function Sidebar({
 
   if (isLoading) {
     return (
-      <aside className="bg-card border-border flex h-full w-72 flex-col border-r p-4">
-        <div className="animate-pulse space-y-4">
-          <div className="bg-secondary h-8 w-1/2 rounded"></div>
-          <div className="bg-secondary h-10 w-full rounded"></div>
-          <div className="space-y-2">
-            <div className="bg-secondary h-24 w-full rounded"></div>
-            <div className="bg-secondary h-24 w-full rounded"></div>
-          </div>
+      <aside className="bg-card border-border flex h-full w-72 flex-col border-l p-4">
+        <div className="animate-pulse space-y-3">
+          <div className="bg-secondary h-6 w-2/3 rounded"></div>
+          <div className="bg-secondary h-16 w-full rounded"></div>
+          <div className="bg-secondary h-16 w-full rounded"></div>
+          <div className="bg-secondary h-16 w-full rounded"></div>
         </div>
       </aside>
     );
   }
 
   return (
-    <aside className="bg-card border-border flex h-full w-72 flex-col border-r p-4">
-      <div className="mb-6">
-        <h1 className="text-foreground flex items-center gap-2 text-xl font-bold">
-          <CalendarDays className="text-primary h-6 w-6" />
-          Agenda
-        </h1>
-        <p className="text-muted-foreground mt-1 text-sm">
-          Gerencie seus agendamentos
-        </p>
-      </div>
-
-      <button
-        onClick={onNewBooking}
-        className="bg-primary text-primary-foreground hover:bg-primary/90 mb-6 flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 font-medium transition-colors"
-      >
-        <Plus className="h-5 w-5" />
-        Novo Agendamento
-      </button>
-
-      <div className="mb-6">
-        <h2 className="text-muted-foreground mb-3 flex items-center gap-2 text-sm font-semibold tracking-wider uppercase">
-          <Clock className="h-4 w-4" />
+    <aside className="bg-card border-border flex h-full w-72 min-w-[288px] flex-col border-l">
+      <div className="border-border border-b p-4">
+        <h2 className="text-muted-foreground mb-3 flex items-center gap-2 text-xs font-semibold tracking-wider uppercase">
+          <Clock className="h-3.5 w-3.5" />
           Hoje ({todayBookings.length})
         </h2>
         {todayBookings.length > 0 ? (
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {todayBookings.map((booking) => {
               const service = getServiceInfo(booking.serviceId);
               const color = getServiceColor(booking.serviceId);
-
               return (
                 <div
                   key={booking.id}
-                  className="border-border bg-secondary/30 rounded-lg border p-3"
+                  className="border-border bg-secondary/30 rounded-lg border p-2"
                 >
                   <div className="flex items-start gap-2">
                     <div
-                      className="h-full min-h-[40px] w-1 rounded-full"
+                      className="mt-0.5 h-8 w-1 rounded-full"
                       style={{ backgroundColor: color }}
                     />
                     <div className="min-w-0 flex-1">
@@ -125,10 +158,8 @@ export function Sidebar({
                         {booking.clientName || 'Cliente'}
                       </p>
                       <p className="text-muted-foreground text-xs">
-                        {formatTime(booking.start)} - {formatTime(booking.end)}
-                      </p>
-                      <p className="text-muted-foreground text-xs">
-                        {service.name}
+                        {formatTime(booking.start)} - {formatTime(booking.end)}{' '}
+                        · {service.name}
                       </p>
                     </div>
                   </div>
@@ -137,23 +168,21 @@ export function Sidebar({
             })}
           </div>
         ) : (
-          <p className="text-muted-foreground text-sm">
+          <p className="text-muted-foreground text-xs">
             Nenhum agendamento hoje
           </p>
         )}
       </div>
 
-      <div className="min-h-0 flex-1">
-        <h2 className="text-muted-foreground mb-3 flex items-center gap-2 text-sm font-semibold tracking-wider uppercase">
-          <Users className="h-4 w-4" />
+      <div className="flex min-h-0 flex-1 flex-col p-4">
+        <h2 className="text-muted-foreground mb-3 flex items-center gap-2 text-xs font-semibold tracking-wider uppercase">
+          <Users className="h-3.5 w-3.5" />
           Próximos
         </h2>
         {upcomingBookings.length > 0 ? (
-          <div className="max-h-[200px] space-y-2 overflow-y-auto">
+          <div className="min-h-0 flex-1 space-y-1.5 overflow-y-auto">
             {upcomingBookings.map((booking) => {
-              const service = getServiceInfo(booking.serviceId);
               const color = getServiceColor(booking.serviceId);
-
               return (
                 <div
                   key={booking.id}
@@ -171,7 +200,7 @@ export function Sidebar({
                       {formatTime(booking.start)}
                     </span>
                   </div>
-                  <p className="text-foreground mt-1 truncate text-sm">
+                  <p className="text-foreground mt-0.5 truncate text-sm">
                     {booking.clientName || 'Cliente'}
                   </p>
                 </div>
@@ -179,27 +208,10 @@ export function Sidebar({
             })}
           </div>
         ) : (
-          <p className="text-muted-foreground text-sm">
+          <p className="text-muted-foreground text-xs">
             Nenhum agendamento futuro
           </p>
         )}
-      </div>
-
-      <div className="border-border mt-auto border-t pt-4">
-        <div className="grid grid-cols-2 gap-3 text-center">
-          <div className="bg-secondary/50 rounded-lg p-3">
-            <p className="text-foreground text-2xl font-bold">
-              {todayBookings.length}
-            </p>
-            <p className="text-muted-foreground text-xs">Hoje</p>
-          </div>
-          <div className="bg-secondary/50 rounded-lg p-3">
-            <p className="text-foreground text-2xl font-bold">
-              {bookings.length}
-            </p>
-            <p className="text-muted-foreground text-xs">Total</p>
-          </div>
-        </div>
       </div>
     </aside>
   );
