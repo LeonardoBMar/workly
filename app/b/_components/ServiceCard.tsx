@@ -19,7 +19,7 @@ export default function ServiceCard({ service, shopperId }: ServiceCardProps) {
 
   return (
     <>
-      <div className="w-full max-w-sm overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm transition hover:shadow-md">
+      <div className="flex h-full w-full flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm transition hover:shadow-md">
         {service.imageUrl && (
           <div className="relative h-40 w-full overflow-hidden bg-neutral-100">
             <Image
@@ -31,7 +31,7 @@ export default function ServiceCard({ service, shopperId }: ServiceCardProps) {
           </div>
         )}
 
-        <div className="p-4">
+        <div className="flex flex-1 flex-col p-4">
           <div className="flex items-start gap-3">
             {!service.imageUrl && (
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
@@ -51,7 +51,7 @@ export default function ServiceCard({ service, shopperId }: ServiceCardProps) {
             </div>
           </div>
 
-          <div className="mt-4 flex items-center justify-between">
+          <div className="mt-auto flex items-center justify-between pt-4">
             <span className="text-lg font-bold text-neutral-900">
               R$ {service.price}
             </span>

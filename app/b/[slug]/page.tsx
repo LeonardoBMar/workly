@@ -88,7 +88,7 @@ export default async function Page(props: {
             <h2 className="mb-4 text-lg font-semibold text-neutral-900">
               Serviços
             </h2>
-            <div className="flex flex-col gap-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
               {shopperServices.map((service) => (
                 <ServiceCard
                   key={service.id}
