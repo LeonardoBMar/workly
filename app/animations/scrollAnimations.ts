@@ -28,7 +28,7 @@ export const useScrollAnimation = (
             ease: 'power3.out',
             scrollTrigger: {
               trigger: element,
-              start: 'top 85%',
+              start: 'top 95%',
               toggleActions: 'play none none reverse',
             },
           },

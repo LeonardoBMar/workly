@@ -3,15 +3,18 @@
 import {
   Search,
   Bell,
-  Settings,
   HelpCircle,
-  Plus,
   LayoutGrid,
   User,
   LogOut,
-  UserCircle,
   Menu,
+  Settings,
 } from 'lucide-react';
+import { SettingsIcon } from '@/app/components/icons/SettingsIcon';
+import { CircleHelpIcon } from '@/app/components/icons/CircleHelpIcon';
+import { UserIcon } from '@/app/components/icons/UserIcon';
+import { LogoutIcon } from '@/app/components/icons/LogoutIcon';
+import { BellIcon } from '@/app/components/icons/BellIcon';
 import { authClient } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
@@ -60,7 +63,7 @@ export function TopNav({ onMenuClick }: TopNavProps) {
       <div className="flex flex-1 items-center gap-4">
         <button
           onClick={onMenuClick}
-          className="-ml-2 rounded-md p-2 text-slate-500 hover:bg-slate-50 lg:hidden"
+          className="-ml-2 cursor-pointer rounded-md p-2 text-slate-500 hover:bg-slate-50 lg:hidden"
         >
           <Menu className="h-5 w-5" />
         </button>
@@ -76,21 +79,18 @@ export function TopNav({ onMenuClick }: TopNavProps) {
 
       <div className="flex items-center gap-2 md:gap-4">
         <div className="hidden items-center gap-1 border-l border-slate-100 pl-4 sm:flex">
-          <button className="rounded-md p-2 text-slate-500 hover:bg-slate-50 hover:text-slate-900">
-            <LayoutGrid className="h-5 w-5" />
+          <button className="cursor-pointer rounded-md p-2 text-slate-500 hover:bg-slate-50 hover:text-slate-900">
+            <CircleHelpIcon size={20} />
           </button>
-          <button className="rounded-md p-2 text-slate-500 hover:bg-slate-50 hover:text-slate-900">
-            <HelpCircle className="h-5 w-5" />
-          </button>
-          <button className="relative rounded-md p-2 text-slate-500 hover:bg-slate-50 hover:text-slate-900">
-            <Bell className="h-5 w-5" />
+          <button className="relative cursor-pointer rounded-md p-2 text-slate-500 hover:bg-slate-50 hover:text-slate-900">
+            <BellIcon size={20} />
             <span className="absolute top-2 right-2 h-2 w-2 rounded-full border-2 border-white bg-indigo-600"></span>
           </button>
           <button
             onClick={() => router.push('/dashboard/settings')}
-            className="rounded-md p-2 text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+            className="cursor-pointer rounded-md p-2 text-slate-500 hover:bg-slate-50 hover:text-slate-900"
           >
-            <Settings className="h-5 w-5" />
+            <SettingsIcon size={20} />
           </button>
         </div>
 
@@ -99,7 +99,7 @@ export function TopNav({ onMenuClick }: TopNavProps) {
             onClick={() => setIsOpen(!isOpen)}
             aria-expanded={isOpen}
             aria-haspopup="true"
-            className={`flex h-9 w-9 items-center justify-center rounded-full bg-indigo-50 font-medium text-indigo-700 ring-2 transition-all ${
+            className={`flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-indigo-50 font-medium text-indigo-700 ring-2 transition-all ${
               isOpen
                 ? 'bg-indigo-100 shadow-inner ring-indigo-500/30'
                 : 'ring-slate-100 hover:ring-indigo-200'
@@ -109,7 +109,7 @@ export function TopNav({ onMenuClick }: TopNavProps) {
               <img
                 src={session.user.image}
                 alt={session.user.name}
-                className="h-full w-full rounded-full object-cover"
+                className="h-full w-full cursor-pointer rounded-full object-cover"
               />
             ) : (
               <span className="text-sm uppercase">
@@ -135,9 +135,12 @@ export function TopNav({ onMenuClick }: TopNavProps) {
                     setIsOpen(false);
                     router.push('/dashboard/settings');
                   }}
-                  className="group flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-slate-600 transition-colors hover:bg-slate-50 hover:text-indigo-600"
+                  className="group flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-slate-600 transition-colors hover:bg-slate-50 hover:text-indigo-600"
                 >
-                  <User className="h-4 w-4 text-slate-400 group-hover:text-indigo-500" />
+                  <UserIcon
+                    size={16}
+                    className="text-slate-400 group-hover:text-indigo-500"
+                  />
                   <span>Meu Perfil</span>
                 </button>
                 <button
@@ -145,9 +148,12 @@ export function TopNav({ onMenuClick }: TopNavProps) {
                     setIsOpen(false);
                     router.push('/dashboard/settings');
                   }}
-                  className="group flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-slate-600 transition-colors hover:bg-slate-50 hover:text-indigo-600"
+                  className="group flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-slate-600 transition-colors hover:bg-slate-50 hover:text-indigo-600"
                 >
-                  <Settings className="h-4 w-4 text-slate-400 group-hover:text-indigo-500" />
+                  <SettingsIcon
+                    size={16}
+                    className="text-slate-400 group-hover:text-indigo-500"
+                  />
                   <span>Configurações</span>
                 </button>
               </div>
@@ -155,9 +161,12 @@ export function TopNav({ onMenuClick }: TopNavProps) {
               <div className="mt-1 border-t border-slate-50 pt-1">
                 <button
                   onClick={handleLogout}
-                  className="group flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-rose-600 transition-colors hover:bg-rose-50"
+                  className="group flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-rose-600 transition-colors hover:bg-rose-50"
                 >
-                  <LogOut className="h-4 w-4 text-rose-400 transition-all group-hover:text-rose-600" />
+                  <LogoutIcon
+                    size={16}
+                    className="h-4 w-4 text-rose-400 transition-all group-hover:text-rose-600"
+                  />
                   <span>Sair da conta</span>
                 </button>
               </div>

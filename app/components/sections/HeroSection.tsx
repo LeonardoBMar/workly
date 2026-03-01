@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useHeroAnimations } from '@/app/animations/heroAnimations';
-import SvgSteppingUp from '@/app/components/svg/SteppingUp';
+import DashboardMockup from '@/app/components/sections/DashboardMockup';
 
 export default function HeroSection() {
   const containerRef = useRef(null);
@@ -13,7 +13,7 @@ export default function HeroSection() {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-dvh overflow-hidden bg-white"
+      className="relative min-h-dvh overflow-x-clip bg-white"
     >
       <div className="relative z-20 mx-auto flex min-h-dvh max-w-7xl flex-col justify-center px-6 pt-24 pb-32 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:px-12 lg:pt-0 lg:pb-0">
         <div className="max-w-2xl pt-8 lg:w-1/2 lg:pt-0">
@@ -44,8 +44,8 @@ export default function HeroSection() {
           <div className="hero-shape hero-shape--3 absolute top-[15%] right-[80%] z-10 hidden opacity-0 lg:block" />
           <div className="hero-shape hero-shape--4 absolute -right-[25%] bottom-[10%] z-10 hidden opacity-0 lg:block" />
 
-          <div className="relative z-20 w-full max-w-[500px] lg:max-w-[600px]">
-            <SvgSteppingUp className="animate-float h-auto w-full drop-shadow-2xl" />
+          <div className="hero-mockup relative z-20 w-full max-w-[500px] lg:max-w-[600px]">
+            <DashboardMockup />
           </div>
         </div>
 

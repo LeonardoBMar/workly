@@ -2,7 +2,11 @@
 
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { Settings, HelpCircle, ChevronDown, Clock } from 'lucide-react';
+import { useRef } from 'react';
+import { ChevronDown } from 'lucide-react';
+import { CircleHelpIcon } from '@/app/components/icons/CircleHelpIcon';
+import { SettingsIcon } from '@/app/components/icons/SettingsIcon';
+import { ClockIcon } from '@/app/components/icons/ClockIcon';
 import { HomeIcon } from '@/app/components/icons/Home';
 import { CalendarDaysIcon } from '@/app/components/icons/Calendar';
 import { UsersIcon } from '@/app/components/icons/Users';
@@ -11,6 +15,8 @@ import { LinkIcon } from '@/app/components/icons/Link';
 import { CreditCardIcon } from '@/app/components/icons/CreditCard';
 import { FileTextIcon } from '@/app/components/icons/FileText';
 import { BarChart3Icon } from '@/app/components/icons/BarChart3';
+import { PanelLeftCloseIcon } from '@/app/components/icons/PanelLeftCloseIcon';
+import { PanelLeftOpenIcon } from '@/app/components/icons/PanelLeftOpenIcon';
 import { cn } from '@/lib/utils';
 import { X } from 'lucide-react';
 
@@ -20,7 +26,7 @@ const menuItems = [
   { icon: UsersIcon, label: 'Clientes', href: '/dashboard/clientes' },
   { icon: BoxIcon, label: 'Serviços', href: '/dashboard/servicos' },
   { icon: LinkIcon, label: 'Sua Pagina', href: '/dashboard/link' },
-  { icon: Clock, label: 'Horários', href: '/dashboard/settings?tab=hours' },
+  { icon: ClockIcon, label: 'Horários', href: '/dashboard/settings?tab=hours' },
   {
     icon: CreditCardIcon,
     label: 'Plano e Faturamento',
@@ -52,112 +58,228 @@ const productItems = [
 interface SidebarProps {
   isOpen?: boolean;
   onClose?: () => void;
+  isCollapsed?: boolean;
+  onCollapseToggle?: () => void;
 }
 
-export function Sidebar({ isOpen, onClose }: SidebarProps) {
+function NavItem({
+  item,
+  isCollapsed,
+  isActive,
+}: {
+  item: (typeof menuItems)[0];
+  isCollapsed: boolean;
+  isActive: boolean;
+}) {
+  const iconRef = useRef<any>(null);
+
+  return (
+    <li>
+      <Link
+        href={item.href}
+        title={isCollapsed ? item.label : undefined}
+        onMouseEnter={() => iconRef.current?.startAnimation?.()}
+        onMouseLeave={() => iconRef.current?.stopAnimation?.()}
+        className={cn(
+          'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+          isCollapsed && 'justify-center px-2',
+          isActive
+            ? 'bg-indigo-50 text-indigo-700'
+            : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900',
+        )}
+      >
+        <item.icon
+          ref={iconRef}
+          size={isCollapsed ? 18 : undefined}
+          className={cn(
+            'shrink-0 transition-transform duration-200 hover:scale-110',
+            isActive ? 'text-indigo-600' : 'text-slate-400',
+          )}
+        />
+        {!isCollapsed && <span className="truncate">{item.label}</span>}
+      </Link>
+    </li>
+  );
+}
+
+function ProductItem({
+  item,
+  isCollapsed,
+}: {
+  item: (typeof productItems)[0];
+  isCollapsed: boolean;
+}) {
+  const iconRef = useRef<any>(null);
+
+  return (
+    <li>
+      <Link
+        href={item.href}
+        title={isCollapsed ? item.label : undefined}
+        onMouseEnter={() => iconRef.current?.startAnimation?.()}
+        onMouseLeave={() => iconRef.current?.stopAnimation?.()}
+        className={cn(
+          'group flex items-center rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900',
+          isCollapsed ? 'justify-center px-2' : 'justify-between',
+        )}
+      >
+        <div className={cn('flex items-center gap-3', isCollapsed && 'gap-0')}>
+          <item.icon
+            ref={iconRef}
+            size={isCollapsed ? 18 : undefined}
+            className="shrink-0 text-slate-400 group-hover:text-slate-600"
+          />
+          {!isCollapsed && item.label}
+        </div>
+        {!isCollapsed && item.hasMore && (
+          <ChevronDown className="h-3 w-3 text-slate-300" />
+        )}
+      </Link>
+    </li>
+  );
+}
+
+export function Sidebar({
+  isOpen,
+  onClose,
+  isCollapsed = false,
+  onCollapseToggle,
+}: SidebarProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const currentUrl = searchParams.toString()
     ? `${pathname}?${searchParams.toString()}`
     : pathname;
 
+  const settingsIconRef = useRef<any>(null);
+  const helpIconRef = useRef<any>(null);
+
   return (
     <aside
       className={cn(
-        'fixed inset-y-0 left-0 z-50 w-64 flex-col border-r border-slate-200/60 bg-white transition-transform duration-300 lg:static lg:flex lg:translate-x-0',
-        isOpen
-          ? 'flex translate-x-0'
-          : 'hidden -translate-x-full lg:flex lg:translate-x-0',
+        'fixed inset-y-0 left-0 z-50 flex-col border-r border-slate-200/60 bg-white transition-all duration-300 lg:static lg:flex lg:translate-x-0',
+        isCollapsed ? 'lg:w-[68px]' : 'lg:w-64',
+        isOpen ? 'flex w-64 translate-x-0' : 'hidden -translate-x-full lg:flex',
       )}
     >
-      <div className="flex h-16 items-center justify-between px-6">
+      <div
+        className={cn(
+          'flex border-b border-slate-100 transition-all duration-300',
+          isCollapsed
+            ? 'flex-col items-center justify-center gap-4 py-4'
+            : 'h-16 flex-row items-center justify-between px-6',
+        )}
+      >
         <div className="flex items-center gap-2">
-          <div className="flex h-6 w-6 items-center justify-center rounded bg-indigo-600">
+          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-indigo-600">
             <span className="text-[10px] font-bold text-white">W</span>
           </div>
-          <span className="font-semibold tracking-tight text-slate-900">
-            workly
-          </span>
-          <ChevronDown className="h-4 w-4 text-slate-400" />
+          {!isCollapsed && (
+            <>
+              <span className="font-semibold tracking-tight text-slate-900">
+                workly
+              </span>
+              <ChevronDown className="h-4 w-4 text-slate-400" />
+            </>
+          )}
         </div>
+
         <button
-          onClick={onClose}
-          className="rounded-md p-1 text-slate-400 hover:bg-slate-50 hover:text-slate-600 lg:hidden"
+          onClick={onCollapseToggle}
+          className={cn(
+            'hidden cursor-pointer rounded-md p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700 lg:block',
+            isCollapsed && 'order-first',
+          )}
+          title={isCollapsed ? 'Expandir menu' : 'Recolher menu'}
         >
-          <X className="h-5 w-5" />
+          {isCollapsed ? (
+            <PanelLeftOpenIcon size={18} />
+          ) : (
+            <PanelLeftCloseIcon size={18} />
+          )}
         </button>
+
+        {!isCollapsed && (
+          <button
+            onClick={onClose}
+            className="rounded-md p-1 text-slate-400 hover:bg-slate-50 hover:text-slate-600 lg:hidden"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        )}
       </div>
 
-      <nav className="flex-1 overflow-y-auto px-3 py-4">
+      <nav className="flex-1 overflow-x-hidden overflow-y-auto px-2 py-4">
         <ul className="space-y-1">
           {menuItems.map((item) => (
-            <li key={item.label}>
-              <Link
-                href={item.href}
-                className={cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-                  currentUrl === item.href
-                    ? 'bg-indigo-50 text-indigo-700'
-                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900',
-                )}
-              >
-                <item.icon
-                  className={cn(
-                    'h-4 w-4',
-                    currentUrl === item.href
-                      ? 'text-indigo-600'
-                      : 'text-slate-400',
-                  )}
-                />
-                {item.label}
-              </Link>
-            </li>
+            <NavItem
+              key={item.label}
+              item={item}
+              isCollapsed={isCollapsed}
+              isActive={currentUrl === item.href}
+            />
           ))}
         </ul>
 
-        <div className="mt-8 px-3">
-          <h3 className="mb-2 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
-            Products
-          </h3>
-          <ul className="space-y-1">
-            {productItems.map((item) => (
-              <li key={item.label}>
-                <Link
-                  href={item.href}
-                  className="group flex items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
-                >
-                  <div className="flex items-center gap-3">
-                    <item.icon className="h-4 w-4 text-slate-400 group-hover:text-slate-600" />
-                    {item.label}
-                  </div>
-                  {item.hasMore && (
-                    <ChevronDown className="h-3 w-3 text-slate-300" />
-                  )}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+        {!isCollapsed && (
+          <div className="mt-8 px-3">
+            <h3 className="mb-2 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+              Products
+            </h3>
+          </div>
+        )}
+
+        {isCollapsed && <div className="mt-6 border-t border-slate-100 pt-4" />}
+
+        <ul className={cn('space-y-1', !isCollapsed && 'px-0')}>
+          {productItems.map((item) => (
+            <ProductItem
+              key={item.label}
+              item={item}
+              isCollapsed={isCollapsed}
+            />
+          ))}
+        </ul>
       </nav>
 
-      <div className="border-t border-slate-100 p-4">
+      <div className="border-t border-slate-100 p-2">
         <ul className="space-y-1">
           <li>
             <Link
               href="/dashboard/settings"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+              title={isCollapsed ? 'Settings' : undefined}
+              onMouseEnter={() => settingsIconRef.current?.startAnimation?.()}
+              onMouseLeave={() => settingsIconRef.current?.stopAnimation?.()}
+              className={cn(
+                'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50',
+                isCollapsed && 'justify-center px-2',
+              )}
             >
-              <Settings className="h-4 w-4 text-slate-400" />
-              Settings
+              <SettingsIcon
+                ref={settingsIconRef}
+                size={isCollapsed ? 18 : undefined}
+                className="shrink-0 text-slate-400"
+              />
+              {!isCollapsed && 'Settings'}
             </Link>
           </li>
           <li>
             <Link
               href="/help"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+              title={isCollapsed ? 'Help & Support' : undefined}
+              onMouseEnter={() => helpIconRef.current?.startAnimation?.()}
+              onMouseLeave={() => helpIconRef.current?.stopAnimation?.()}
+              className={cn(
+                'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50',
+                isCollapsed && 'justify-center px-2',
+              )}
             >
-              <HelpCircle className="h-4 w-4 text-slate-400" />
-              Help & Support
+              <CircleHelpIcon
+                ref={helpIconRef}
+                size={isCollapsed ? 18 : undefined}
+                className="shrink-0 text-slate-400"
+              />
+              {!isCollapsed && 'Help & Support'}
             </Link>
           </li>
         </ul>

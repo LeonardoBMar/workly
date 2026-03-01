@@ -53,36 +53,23 @@ export const useHeroAnimations = (
           '-=0.8',
         )
         .from(
-          '.svg-base-line',
+          '.hero-mockup',
           {
-            scaleX: 0,
             opacity: 0,
-            transformOrigin: 'center',
-            duration: 0.8,
+            duration: 1.2,
+            ease: 'power2.out',
           },
-          '-=0.6',
+          0.3,
         )
         .from(
-          '.svg-step',
+          '.mockup-card',
           {
-            y: 50,
             opacity: 0,
             stagger: 0.15,
-            duration: 0.8,
-            ease: 'back.out(1.2)',
+            duration: 0.6,
+            ease: 'power2.out',
           },
-          '-=0.8',
-        )
-        .from(
-          '.svg-character',
-          {
-            y: -30,
-            x: -30,
-            opacity: 0,
-            duration: 0.8,
-            ease: 'back.out(1.5)',
-          },
-          '-=0.4',
+          0.5,
         );
     },
     { scope: containerRef },

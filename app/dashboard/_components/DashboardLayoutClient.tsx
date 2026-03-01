@@ -12,6 +12,7 @@ export function DashboardLayoutClient({
   children,
 }: DashboardLayoutClientProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
     <div className="flex min-h-screen bg-white">
@@ -26,13 +27,15 @@ export function DashboardLayoutClient({
         <Sidebar
           isOpen={isMobileMenuOpen}
           onClose={() => setIsMobileMenuOpen(false)}
+          isCollapsed={isCollapsed}
+          onCollapseToggle={() => setIsCollapsed((prev) => !prev)}
         />
       </Suspense>
 
-      <div className="flex flex-1 flex-col lg:pl-12">
+      <div className="flex min-w-0 flex-1 flex-col">
         <TopNav onMenuClick={() => setIsMobileMenuOpen(true)} />
         <main className="flex-1 overflow-y-auto bg-[#fcfcfd] p-4 sm:p-8">
-          <div className="mx-auto max-w-6xl">{children}</div>
+          <div className="mx-auto max-w-7xl">{children}</div>
         </main>
       </div>
     </div>

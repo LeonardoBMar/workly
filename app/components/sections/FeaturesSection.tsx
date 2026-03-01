@@ -12,7 +12,9 @@ import {
 import { Button } from '../ui/button';
 import { useRef } from 'react';
 import { useScrollAnimation } from '@/app/animations/scrollAnimations';
-import { DashboardMockup } from './DashboardMockup';
+import DashboardMockup from '@/app/components/sections/DashboardMockup';
+import Image from 'next/image';
+import worker from '@/public/worker.png';
 
 const features = [
   {
@@ -90,8 +92,8 @@ export default function FeaturesSection() {
             </p>
           </div>
           <div className="reveal-on-scroll flex w-full justify-center lg:justify-end">
-            <div className="relative w-full lg:max-w-[600px]">
-              <DashboardMockup />
+            <div className="relative flex w-full justify-center lg:max-w-[600px] lg:justify-start">
+              <Image src={worker} alt="Dashboard" width={900} height={900} />
             </div>
           </div>
         </div>
