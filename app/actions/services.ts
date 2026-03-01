@@ -35,6 +35,8 @@ export async function getServices() {
 export async function createService(formData: {
   name: string;
   description?: string;
+  imageUrl?: string;
+  iconName?: string;
   price: string | number;
   duration: number | string;
 }) {
@@ -56,6 +58,8 @@ export async function createService(formData: {
       userId: user.id,
       name: parsed.data.name,
       description: parsed.data.description,
+      imageUrl: parsed.data.imageUrl,
+      iconName: parsed.data.iconName,
       price: parsed.data.price,
       duration: parsed.data.duration,
     });
@@ -78,6 +82,8 @@ export async function updateService(
   formData: {
     name?: string;
     description?: string;
+    imageUrl?: string | null;
+    iconName?: string | null;
     price?: string | number;
     duration?: number | string;
   },

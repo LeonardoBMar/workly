@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { getServices, deleteService } from '@/app/actions/services';
 import { Package, Clock, Trash2, Edit2, Search, Loader2 } from 'lucide-react';
 import { Input } from '@/app/components/ui/input';
 import { Service } from '@/lib/schema';
+import { getServiceIcon } from '@/lib/service-icons';
 
 export function ServicesList({
   onEdit,
@@ -71,9 +73,24 @@ export function ServicesList({
             className="group relative rounded-3xl border border-slate-200/60 bg-white p-6 shadow-sm transition-all hover:border-indigo-100 hover:shadow-md"
           >
             <div className="flex items-start justify-between">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-50 text-lg font-bold text-indigo-600">
-                <Package className="h-6 w-6" />
-              </div>
+              {service.imageUrl ? (
+                <div className="h-12 w-12 overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
+                  <Image
+                    src={service.imageUrl}
+                    alt={service.name}
+                    width={48}
+                    height={48}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-50 text-lg font-bold text-indigo-600">
+                  {(() => {
+                    const Icon = getServiceIcon(service.iconName);
+                    return <Icon className="h-6 w-6" />;
+                  })()}
+                </div>
+              )}
               <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
                 <button
                   onClick={() => onEdit?.(service)}

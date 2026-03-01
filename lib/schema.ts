@@ -121,6 +121,8 @@ export const services = pgTable('services', {
     .references(() => user.id, { onDelete: 'cascade' }),
   name: text('name').notNull(),
   description: text('description'),
+  imageUrl: text('imageUrl'),
+  iconName: text('iconName'),
   price: decimal('price', { precision: 10, scale: 2 }).notNull(),
   duration: integer('duration').notNull(),
   createdAt: timestamp('createdAt').notNull().defaultNow(),

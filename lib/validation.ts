@@ -41,6 +41,11 @@ const durationSchema = z.preprocess(
 export const createServiceInputSchema = z.object({
   name: requiredTrimmedString('Nome do serviço'),
   description: optionalTrimmedString(500),
+  imageUrl: z.preprocess(
+    emptyStringToUndefined,
+    z.string().trim().url('URL inválida').optional(),
+  ),
+  iconName: optionalTrimmedString(60),
   price: priceSchema,
   duration: durationSchema,
 });
@@ -52,6 +57,13 @@ export const updateServiceInputSchema = z
       requiredTrimmedString('Nome do serviço').optional(),
     ),
     description: optionalTrimmedString(500),
+    imageUrl: z
+      .preprocess(
+        emptyStringToUndefined,
+        z.string().trim().url('URL inválida').optional(),
+      )
+      .optional(),
+    iconName: optionalTrimmedString(60).optional(),
     price: z.preprocess(emptyStringToUndefined, priceSchema.optional()),
     duration: z.preprocess(
       emptyStringToUndefined,
@@ -69,6 +81,8 @@ export const updateServiceInputSchema = z
     (data) =>
       data.name !== undefined ||
       data.description !== undefined ||
+      data.imageUrl !== undefined ||
+      data.iconName !== undefined ||
       data.price !== undefined ||
       data.duration !== undefined,
     { message: 'Informe ao menos um campo para atualização' },
