@@ -101,6 +101,8 @@ export const createClientInputSchema = z.object({
   ),
   phone: optionalTrimmedString(30),
   notes: optionalTrimmedString(1000),
+  birthday: optionalTrimmedString(10),
+  tags: z.array(z.string().trim().max(50)).max(20).optional(),
 });
 
 export const updateClientInputSchema = z
@@ -120,13 +122,17 @@ export const updateClientInputSchema = z
     ),
     phone: optionalTrimmedString(30),
     notes: optionalTrimmedString(1000),
+    birthday: optionalTrimmedString(10),
+    tags: z.array(z.string().trim().max(50)).max(20).optional(),
   })
   .refine(
     (data) =>
       data.name !== undefined ||
       data.email !== undefined ||
       data.phone !== undefined ||
-      data.notes !== undefined,
+      data.notes !== undefined ||
+      data.birthday !== undefined ||
+      data.tags !== undefined,
     { message: 'Informe ao menos um campo para atualização' },
   );
 

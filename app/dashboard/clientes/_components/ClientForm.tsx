@@ -1,7 +1,18 @@
 'use client';
 
 import { useState } from 'react';
-import { User, Mail, Phone, FileText, ArrowRight, Loader2 } from 'lucide-react';
+import {
+  User,
+  Mail,
+  Phone,
+  FileText,
+  ArrowRight,
+  Loader2,
+  Cake,
+  Tag,
+  X,
+  Plus,
+} from 'lucide-react';
 import { Input } from '@/app/components/ui/input';
 import { Textarea } from '@/app/components/ui/textarea';
 import { Button } from '@/app/components/ui/button';
@@ -18,6 +29,11 @@ interface ClientFormProps {
 export function ClientForm({ onSuccess, initialData }: ClientFormProps) {
   const isEditing = !!initialData;
   const [isLoading, setIsLoading] = useState(false);
+  const [tags, setTags] = useState<string[]>(() => {
+    const t = (initialData as any)?.tags;
+    return Array.isArray(t) ? t : [];
+  });
+  const [newTag, setNewTag] = useState('');
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -29,6 +45,7 @@ export function ClientForm({ onSuccess, initialData }: ClientFormProps) {
     const email = formData.get('email') as string;
     const phone = formData.get('phone') as string;
     const notes = formData.get('notes') as string;
+    const birthday = formData.get('birthday') as string;
 
     try {
       const data = {
@@ -36,6 +53,8 @@ export function ClientForm({ onSuccess, initialData }: ClientFormProps) {
         email: email || undefined,
         phone: phone || undefined,
         notes: notes || undefined,
+        birthday: birthday || undefined,
+        tags,
       };
 
       const result = isEditing
@@ -130,6 +149,56 @@ export function ClientForm({ onSuccess, initialData }: ClientFormProps) {
                 defaultValue={initialData?.notes || ''}
                 icon={<FileText className="h-4 w-4 text-slate-400" />}
               />
+            </div>
+
+            <Input
+              name="birthday"
+              label="Aniversário"
+              type="date"
+              defaultValue={(initialData as any)?.birthday || ''}
+              icon={<Cake className="h-4 w-4 text-slate-400" />}
+            />
+
+            <div className="space-y-1.5">
+              <label className="ml-1 text-sm font-semibold text-slate-700">
+                Tags
+              </label>
+              <div className="flex flex-wrap items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5">
+                {tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="inline-flex items-center gap-1 rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-semibold text-indigo-700"
+                  >
+                    {tag}
+                    <button
+                      type="button"
+                      onClick={() => setTags(tags.filter((t) => t !== tag))}
+                      className="rounded-full p-0.5 transition-colors hover:bg-indigo-200"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
+                ))}
+                <input
+                  type="text"
+                  value={newTag}
+                  onChange={(e) => setNewTag(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && newTag.trim()) {
+                      e.preventDefault();
+                      if (!tags.includes(newTag.trim())) {
+                        setTags([...tags, newTag.trim()]);
+                      }
+                      setNewTag('');
+                    }
+                  }}
+                  placeholder="Adicionar tag..."
+                  className="min-w-[100px] flex-1 border-none bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none"
+                />
+              </div>
+              <p className="ml-1 text-[11px] text-slate-400">
+                Pressione Enter para adicionar
+              </p>
             </div>
           </div>
 

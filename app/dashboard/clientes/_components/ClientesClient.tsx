@@ -1,19 +1,29 @@
 'use client';
 
 import { ClientForm } from './ClientForm';
-import { ClientList } from './ClientList';
+import { ClientTable } from './ClientTable';
+import { ClientProfile } from './ClientProfile';
 import { ArrowLeft, Plus, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Button } from '@/app/components/ui/button';
 import { Client } from '@/lib/schema';
+import { ClientWithStats } from '@/app/actions/clients';
+
+type View = 'list' | 'profile' | 'create';
 
 export function ClientesClient() {
-  const [view, setView] = useState<'list' | 'create'>('list');
+  const [view, setView] = useState<View>('list');
   const [editingClient, setEditingClient] = useState<Client | null>(null);
+  const [profileClientId, setProfileClientId] = useState<string | null>(null);
 
-  const handleEdit = (client: Client) => {
-    setEditingClient(client);
+  const handleViewProfile = (client: ClientWithStats) => {
+    setProfileClientId(client.id);
+    setView('profile');
+  };
+
+  const handleEdit = (client: ClientWithStats | Client) => {
+    setEditingClient(client as Client);
     setView('create');
   };
 
@@ -27,22 +37,25 @@ export function ClientesClient() {
     setView('list');
   };
 
+  const handleBackToList = () => {
+    setProfileClientId(null);
+    setEditingClient(null);
+    setView('list');
+  };
+
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 space-y-6 duration-700">
       <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
           {view === 'create' ? (
             <button
-              onClick={() => {
-                setView('list');
-                setEditingClient(null);
-              }}
+              onClick={handleBackToList}
               className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-500 transition-colors hover:text-indigo-600"
             >
               <ArrowLeft className="h-4 w-4" />
               Voltar para a lista
             </button>
-          ) : (
+          ) : view === 'profile' ? null : (
             <Link
               href="/dashboard"
               className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-500 transition-colors hover:text-indigo-600"
@@ -54,42 +67,45 @@ export function ClientesClient() {
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
             {view === 'list'
               ? 'Clientes'
-              : editingClient
-                ? 'Editar Cliente'
-                : 'Novo Cliente'}
+              : view === 'profile'
+                ? ''
+                : editingClient
+                  ? 'Editar Cliente'
+                  : 'Novo Cliente'}
           </h1>
         </div>
 
-        <div className="flex items-center gap-2">
-          <Button
-            variant={view === 'list' ? 'primary' : 'outline'}
-            onClick={() => {
-              setView('list');
-              setEditingClient(null);
-            }}
-            className="gap-2"
-            size="sm"
-          >
-            <Users className="h-4 w-4" />
-            Ver Todos
-          </Button>
-          <Button
-            variant={
-              view === 'create' && !editingClient ? 'primary' : 'outline'
-            }
-            onClick={handleCreateNew}
-            className="gap-2"
-            size="sm"
-          >
-            <Plus className="h-4 w-4" />
-            Novo Cliente
-          </Button>
-        </div>
+        {view !== 'profile' && (
+          <div className="flex items-center gap-2">
+            <Button
+              variant={view === 'list' ? 'primary' : 'outline'}
+              onClick={handleBackToList}
+              className="gap-2"
+              size="sm"
+            >
+              <Users className="h-4 w-4" />
+              Ver Todos
+            </Button>
+            <Button
+              variant={
+                view === 'create' && !editingClient ? 'primary' : 'outline'
+              }
+              onClick={handleCreateNew}
+              className="gap-2"
+              size="sm"
+            >
+              <Plus className="h-4 w-4" />
+              Novo Cliente
+            </Button>
+          </div>
+        )}
       </header>
 
       <div className="pt-4">
         {view === 'list' ? (
-          <ClientList onEdit={handleEdit} />
+          <ClientTable onViewProfile={handleViewProfile} onEdit={handleEdit} />
+        ) : view === 'profile' && profileClientId ? (
+          <ClientProfile clientId={profileClientId} onBack={handleBackToList} />
         ) : (
           <ClientForm initialData={editingClient} onSuccess={handleSuccess} />
         )}

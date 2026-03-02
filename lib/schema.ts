@@ -104,6 +104,8 @@ export const clients = pgTable('clients', {
   email: text('email'),
   phone: text('phone'),
   notes: text('notes'),
+  birthday: text('birthday'),
+  tags: json('tags').$type<string[]>().default([]),
   createdAt: timestamp('createdAt').notNull().defaultNow(),
   updatedAt: timestamp('updatedAt').notNull().defaultNow(),
 });
