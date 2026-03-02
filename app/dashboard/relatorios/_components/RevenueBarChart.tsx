@@ -20,7 +20,7 @@ export function RevenueBarChart({ data }: RevenueBarChartProps) {
   const maxRevenue = Math.max(...data.map((d) => d.revenue), 1);
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+    <div className="rounded-xl border border-slate-200 bg-white p-4 sm:p-6">
       <div className="mb-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 className="text-sm font-semibold text-slate-900">
@@ -31,7 +31,7 @@ export function RevenueBarChart({ data }: RevenueBarChartProps) {
           </p>
         </div>
         <div className="flex items-center gap-2 self-end text-xs text-slate-400 sm:self-auto">
-          <div className="h-2 w-2 rounded-full bg-indigo-500" />
+          <div className="h-2 w-2 rounded-full bg-blue-600" />
           Receita
         </div>
       </div>
@@ -43,12 +43,6 @@ export function RevenueBarChart({ data }: RevenueBarChartProps) {
               data={data}
               margin={{ top: 5, right: 0, left: -15, bottom: 5 }}
             >
-              <defs>
-                <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#6366f1" stopOpacity={1} />
-                  <stop offset="100%" stopColor="#818cf8" stopOpacity={0.8} />
-                </linearGradient>
-              </defs>
               <CartesianGrid
                 strokeDasharray="3 3"
                 stroke="#f1f5f9"
@@ -74,11 +68,11 @@ export function RevenueBarChart({ data }: RevenueBarChartProps) {
                 content={({ active, payload, label }) => {
                   if (active && payload && payload.length) {
                     return (
-                      <div className="rounded-lg border border-slate-100 bg-white p-3 shadow-xl ring-1 ring-slate-900/5">
+                      <div className="rounded-lg border border-slate-100 bg-white p-3 ring-1 ring-slate-900/5">
                         <p className="mb-1 text-[10px] font-semibold tracking-wider text-slate-500 uppercase">
                           {label}
                         </p>
-                        <p className="text-sm font-bold text-indigo-600">
+                        <p className="text-sm font-bold text-blue-600">
                           {formatCurrency(Number(payload[0].value))}
                         </p>
                         <p className="mt-1 text-[10px] text-slate-400">
@@ -91,15 +85,12 @@ export function RevenueBarChart({ data }: RevenueBarChartProps) {
                 }}
                 cursor={{ fill: '#f1f5f9', radius: 4 }}
               />
-              <Bar dataKey="revenue" radius={[6, 6, 0, 0]} maxBarSize={40}>
-                {data.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill="url(#barGradient)"
-                    opacity={0.4 + (entry.revenue / maxRevenue) * 0.6}
-                  />
-                ))}
-              </Bar>
+              <Bar
+                dataKey="revenue"
+                fill="#2563eb"
+                radius={[6, 6, 0, 0]}
+                maxBarSize={40}
+              />
             </BarChart>
           </ResponsiveContainer>
         ) : (

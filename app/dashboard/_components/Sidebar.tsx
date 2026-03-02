@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { CircleHelpIcon } from '@/app/components/icons/CircleHelpIcon';
 import { SettingsIcon } from '@/app/components/icons/SettingsIcon';
@@ -34,26 +34,68 @@ const menuItems = [
   },
 ];
 
-const productItems = [
+type ProductItemType = {
+  icon: any;
+  label: string;
+  href: string;
+  hasMore?: boolean;
+  subItems?: { icon: any; label: string; href: string }[];
+};
+
+const productItems: ProductItemType[] = [
   {
     icon: CreditCardIcon,
     label: 'Financeiro',
-    href: '/dashboard/financeiro',
+    href: '#',
     hasMore: true,
-  },
-  {
-    icon: FileTextIcon,
-    label: 'Faturas',
-    href: '/dashboard/faturas',
-    hasMore: true,
-  },
-  {
-    icon: BarChart3Icon,
-    label: 'Relatórios',
-    href: '/dashboard/relatorios',
-    hasMore: true,
+    subItems: [
+      { icon: FileTextIcon, label: 'Faturas', href: '/dashboard/faturas' },
+      {
+        icon: BarChart3Icon,
+        label: 'Relatórios',
+        href: '/dashboard/relatorios',
+      },
+    ],
   },
 ];
+
+function SubItem({
+  sub,
+  isActive,
+}: {
+  sub: { icon: any; label: string; href: string };
+  isActive: boolean;
+}) {
+  const iconRef = useRef<any>(null);
+
+  return (
+    <li>
+      <Link
+        href={sub.href}
+        onMouseEnter={() => iconRef.current?.startAnimation?.()}
+        onMouseLeave={() => iconRef.current?.stopAnimation?.()}
+        className={cn(
+          'group flex items-center gap-3 rounded-lg py-2 pr-3 pl-11 text-sm font-medium transition-colors',
+          isActive
+            ? 'bg-indigo-50/50 font-semibold text-indigo-700'
+            : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900',
+        )}
+      >
+        <sub.icon
+          ref={iconRef}
+          size={16}
+          className={cn(
+            'shrink-0 transition-transform duration-200 group-hover:scale-110',
+            isActive
+              ? 'text-indigo-600'
+              : 'text-slate-400 group-hover:text-slate-600',
+          )}
+        />
+        {sub.label}
+      </Link>
+    </li>
+  );
+}
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -106,35 +148,78 @@ function ProductItem({
   item,
   isCollapsed,
 }: {
-  item: (typeof productItems)[0];
+  item: ProductItemType;
   isCollapsed: boolean;
 }) {
   const iconRef = useRef<any>(null);
+  const pathname = usePathname();
+
+  const hasSubItems = item.subItems && item.subItems.length > 0;
+  const isSubItemActive = !!(
+    hasSubItems && item.subItems?.some((sub) => pathname?.startsWith(sub.href))
+  );
+  const isItemActive =
+    (item.href !== '#' && pathname?.startsWith(item.href)) || isSubItemActive;
+
+  const [isOpen, setIsOpen] = useState(isSubItemActive || false);
+
+  const handleClick = (e: React.MouseEvent) => {
+    if (hasSubItems) {
+      e.preventDefault();
+      setIsOpen(!isOpen);
+    }
+  };
 
   return (
     <li>
       <Link
         href={item.href}
+        onClick={handleClick}
         title={isCollapsed ? item.label : undefined}
         onMouseEnter={() => iconRef.current?.startAnimation?.()}
         onMouseLeave={() => iconRef.current?.stopAnimation?.()}
         className={cn(
-          'group flex items-center rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900',
+          'group flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors',
           isCollapsed ? 'justify-center px-2' : 'justify-between',
+          isItemActive || (isOpen && !isCollapsed)
+            ? 'bg-indigo-50 text-indigo-700'
+            : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900',
         )}
       >
         <div className={cn('flex items-center gap-3', isCollapsed && 'gap-0')}>
           <item.icon
             ref={iconRef}
             size={isCollapsed ? 18 : undefined}
-            className="shrink-0 text-slate-400 group-hover:text-slate-600"
+            className={cn(
+              'shrink-0 transition-transform duration-200 group-hover:scale-110',
+              isItemActive || (isOpen && !isCollapsed)
+                ? 'text-indigo-600'
+                : 'text-slate-400 group-hover:text-slate-600',
+            )}
           />
           {!isCollapsed && item.label}
         </div>
         {!isCollapsed && item.hasMore && (
-          <ChevronDown className="h-3 w-3 text-slate-300" />
+          <ChevronDown
+            className={cn(
+              'h-3 w-3 transition-transform duration-200',
+              isOpen ? 'rotate-180 text-indigo-600' : 'text-slate-300',
+            )}
+          />
         )}
       </Link>
+
+      {!isCollapsed && hasSubItems && isOpen && (
+        <ul className="mt-1 space-y-1 pb-2">
+          {item.subItems!.map((sub) => (
+            <SubItem
+              key={sub.href}
+              sub={sub}
+              isActive={!!pathname?.startsWith(sub.href)}
+            />
+          ))}
+        </ul>
+      )}
     </li>
   );
 }
