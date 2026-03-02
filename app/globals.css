@@ -393,7 +393,6 @@ body {
 }
 
 .calendar-wrapper .fc-event:hover {
-  transform: scale(1.02);
   box-shadow: 0 4px 12px rgba(100, 50, 150, 0.3);
 }
 
@@ -472,6 +471,8 @@ body {
 
 .calendar-wrapper .fc-timegrid-event-harness-inset .fc-timegrid-event {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  margin-left: 3px;
+  margin-right: 3px;
 }
 
 @media (max-width: 768px) {

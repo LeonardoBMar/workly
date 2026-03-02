@@ -11,7 +11,9 @@ export const SERVICE_COLORS = [
 ] as const;
 
 export const STATUS_COLORS: Record<string, string> = {
-  completed: '#6b7280',
-  no_show: '#ef4444',
-  cancelled: '#9ca3af',
+  cancelled: '#ef4444', // Vermelho
+  completed: '#3b82f6', // Azul
+  pending: '#eab308', // Amarelo
+  confirmed: '#22c55e', // Verde
+  no_show: '#374151', // Cinza Escuro
 };

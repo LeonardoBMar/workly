@@ -247,7 +247,7 @@ export function Sidebar({
           <li>
             <Link
               href="/dashboard/settings"
-              title={isCollapsed ? 'Settings' : undefined}
+              title={isCollapsed ? 'Configurações' : undefined}
               onMouseEnter={() => settingsIconRef.current?.startAnimation?.()}
               onMouseLeave={() => settingsIconRef.current?.stopAnimation?.()}
               className={cn(
@@ -260,13 +260,13 @@ export function Sidebar({
                 size={isCollapsed ? 18 : undefined}
                 className="shrink-0 text-slate-400"
               />
-              {!isCollapsed && 'Settings'}
+              {!isCollapsed && 'Configurações'}
             </Link>
           </li>
           <li>
             <Link
               href="/help"
-              title={isCollapsed ? 'Help & Support' : undefined}
+              title={isCollapsed ? 'Ajuda e Suporte' : undefined}
               onMouseEnter={() => helpIconRef.current?.startAnimation?.()}
               onMouseLeave={() => helpIconRef.current?.stopAnimation?.()}
               className={cn(
@@ -279,7 +279,7 @@ export function Sidebar({
                 size={isCollapsed ? 18 : undefined}
                 className="shrink-0 text-slate-400"
               />
-              {!isCollapsed && 'Help & Support'}
+              {!isCollapsed && 'Ajuda e Suporte'}
             </Link>
           </li>
         </ul>

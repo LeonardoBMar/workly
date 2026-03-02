@@ -100,6 +100,7 @@ export function Calendar({
             .toString()
             .padStart(2, '0')}:00:00`}
           slotDuration="00:30:00"
+          slotEventOverlap={false}
           allDaySlot={false}
           height="100%"
           nowIndicator={true}

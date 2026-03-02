@@ -1,4 +1,5 @@
-import { Clock, Users, Plus, CalendarDays } from 'lucide-react';
+import { Clock, Users, Plus, CalendarDays, Check, X } from 'lucide-react';
+import { useState } from 'react';
 import type { Booking } from '../types';
 import type { Service } from '../_actions';
 
@@ -29,7 +30,7 @@ export function AgendaHeader({
   const todayCount = bookings.filter((b) => {
     const d = new Date(b.start);
     d.setHours(0, 0, 0, 0);
-    return d.getTime() === today.getTime();
+    return d.getTime() === today.getTime() && b.status !== 'pending';
   }).length;
 
   if (isLoading) {
@@ -60,7 +61,7 @@ export function AgendaHeader({
       <div className="bg-secondary/50 flex items-center gap-2 rounded-lg px-3 py-2">
         <Users className="text-primary h-4 w-4" />
         <span className="text-foreground text-sm font-semibold">
-          {bookings.length}
+          {bookings.filter((b) => b.status !== 'pending').length}
         </span>
         <span className="text-muted-foreground text-xs">total</span>
       </div>
@@ -68,30 +69,26 @@ export function AgendaHeader({
   );
 }
 
-interface UpcomingPanelProps {
+interface PendingPanelProps {
   bookings: Booking[];
   services: Service[];
   isLoading?: boolean;
+  onConfirm: (bookingId: string) => Promise<void>;
+  onDiscard: (bookingId: string) => Promise<void>;
 }
 
-export function UpcomingPanel({
+export function PendingPanel({
   bookings,
   services,
   isLoading,
-}: UpcomingPanelProps) {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  onConfirm,
+  onDiscard,
+}: PendingPanelProps) {
+  const [loadingAction, setLoadingAction] = useState<string | null>(null);
 
-  const todayBookings = bookings.filter((b) => {
-    const bookingDate = new Date(b.start);
-    bookingDate.setHours(0, 0, 0, 0);
-    return bookingDate.getTime() === today.getTime();
-  });
-
-  const upcomingBookings = bookings
-    .filter((b) => new Date(b.start) > new Date())
-    .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
-    .slice(0, 8);
+  const pendingBookings = bookings
+    .filter((b) => b.status === 'pending')
+    .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
 
   const formatTime = (date: Date) => {
     return new Date(date).toLocaleTimeString('pt-BR', {
@@ -118,6 +115,24 @@ export function UpcomingPanel({
     return services.find((s) => s.id === serviceId) || { name: 'Serviço' };
   };
 
+  const handleConfirm = async (bookingId: string) => {
+    setLoadingAction(`confirm-${bookingId}`);
+    try {
+      await onConfirm(bookingId);
+    } finally {
+      setLoadingAction(null);
+    }
+  };
+
+  const handleDiscard = async (bookingId: string) => {
+    setLoadingAction(`discard-${bookingId}`);
+    try {
+      await onDiscard(bookingId);
+    } finally {
+      setLoadingAction(null);
+    }
+  };
+
   if (isLoading) {
     return (
       <aside className="bg-card border-border flex h-full w-72 flex-col border-l p-4">
@@ -133,24 +148,28 @@ export function UpcomingPanel({
 
   return (
     <aside className="bg-card border-border flex h-full w-72 min-w-[288px] flex-col border-l">
-      <div className="border-border border-b p-4">
+      <div className="flex min-h-0 flex-1 flex-col p-4">
         <h2 className="text-muted-foreground mb-3 flex items-center gap-2 text-xs font-semibold tracking-wider uppercase">
           <Clock className="h-3.5 w-3.5" />
-          Hoje ({todayBookings.length})
+          Pendentes ({pendingBookings.length})
         </h2>
-        {todayBookings.length > 0 ? (
-          <div className="space-y-1.5">
-            {todayBookings.map((booking) => {
+        {pendingBookings.length > 0 ? (
+          <div className="min-h-0 flex-1 space-y-2 overflow-y-auto">
+            {pendingBookings.map((booking) => {
               const service = getServiceInfo(booking.serviceId);
               const color = getServiceColor(booking.serviceId);
+              const isConfirming = loadingAction === `confirm-${booking.id}`;
+              const isDiscarding = loadingAction === `discard-${booking.id}`;
+              const isDisabled = loadingAction !== null;
+
               return (
                 <div
                   key={booking.id}
-                  className="border-border bg-secondary/30 rounded-lg border p-2"
+                  className="border-border bg-secondary/30 rounded-lg border p-3"
                 >
                   <div className="flex items-start gap-2">
                     <div
-                      className="mt-0.5 h-8 w-1 rounded-full"
+                      className="mt-0.5 h-10 w-1 rounded-full"
                       style={{ backgroundColor: color }}
                     />
                     <div className="min-w-0 flex-1">
@@ -158,9 +177,31 @@ export function UpcomingPanel({
                         {booking.clientName || 'Cliente'}
                       </p>
                       <p className="text-muted-foreground text-xs">
-                        {formatTime(booking.start)} - {formatTime(booking.end)}{' '}
-                        · {service.name}
+                        {formatDate(booking.start)} ·{' '}
+                        {formatTime(booking.start)} - {formatTime(booking.end)}
                       </p>
+                      <p className="text-muted-foreground mt-0.5 truncate text-xs">
+                        {service.name}
+                      </p>
+
+                      <div className="mt-2 flex gap-2">
+                        <button
+                          onClick={() => handleConfirm(booking.id)}
+                          disabled={isDisabled}
+                          className="flex flex-1 items-center justify-center gap-1 rounded-md bg-emerald-600 px-2 py-1.5 text-xs font-medium text-white transition-colors hover:bg-emerald-700 disabled:opacity-50"
+                        >
+                          <Check className="h-3 w-3" />
+                          {isConfirming ? 'Confirmando...' : 'Confirmar'}
+                        </button>
+                        <button
+                          onClick={() => handleDiscard(booking.id)}
+                          disabled={isDisabled}
+                          className="flex flex-1 items-center justify-center gap-1 rounded-md bg-red-600 px-2 py-1.5 text-xs font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-50"
+                        >
+                          <X className="h-3 w-3" />
+                          {isDiscarding ? 'Descartando...' : 'Descartar'}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -168,49 +209,12 @@ export function UpcomingPanel({
             })}
           </div>
         ) : (
-          <p className="text-muted-foreground text-xs">
-            Nenhum agendamento hoje
-          </p>
-        )}
-      </div>
-
-      <div className="flex min-h-0 flex-1 flex-col p-4">
-        <h2 className="text-muted-foreground mb-3 flex items-center gap-2 text-xs font-semibold tracking-wider uppercase">
-          <Users className="h-3.5 w-3.5" />
-          Próximos
-        </h2>
-        {upcomingBookings.length > 0 ? (
-          <div className="min-h-0 flex-1 space-y-1.5 overflow-y-auto">
-            {upcomingBookings.map((booking) => {
-              const color = getServiceColor(booking.serviceId);
-              return (
-                <div
-                  key={booking.id}
-                  className="bg-secondary/30 border-border rounded-lg border p-2"
-                >
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="h-2 w-2 rounded-full"
-                      style={{ backgroundColor: color }}
-                    />
-                    <span className="text-muted-foreground text-xs">
-                      {formatDate(booking.start)}
-                    </span>
-                    <span className="text-muted-foreground text-xs">
-                      {formatTime(booking.start)}
-                    </span>
-                  </div>
-                  <p className="text-foreground mt-0.5 truncate text-sm">
-                    {booking.clientName || 'Cliente'}
-                  </p>
-                </div>
-              );
-            })}
+          <div className="flex flex-1 flex-col items-center justify-center text-center">
+            <Clock className="text-muted-foreground/40 mb-2 h-8 w-8" />
+            <p className="text-muted-foreground text-xs">
+              Nenhuma solicitação pendente
+            </p>
           </div>
-        ) : (
-          <p className="text-muted-foreground text-xs">
-            Nenhum agendamento futuro
-          </p>
         )}
       </div>
     </aside>

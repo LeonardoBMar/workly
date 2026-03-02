@@ -150,8 +150,21 @@ export function useAppointments(options: UseAppointmentsOptions = {}) {
         const updatedAppointment: AppointmentData = await response.json();
         const updatedBooking =
           transformAppointmentToBooking(updatedAppointment);
+
         setBookings((prev) =>
-          prev.map((b) => (b.id === id ? updatedBooking : b)),
+          prev.map((b) => {
+            if (b.id !== id) return b;
+            return {
+              ...b,
+              ...updatedBooking,
+              clientName: updatedBooking.clientName || b.clientName,
+              clientPhone: updatedBooking.clientPhone || b.clientPhone,
+              title:
+                updatedBooking.title !== 'Cliente'
+                  ? updatedBooking.title
+                  : b.title,
+            };
+          }),
         );
         return updatedBooking;
       } catch (err) {

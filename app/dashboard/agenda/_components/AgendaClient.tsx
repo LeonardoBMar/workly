@@ -2,13 +2,15 @@
 
 import { Calendar } from './calendar';
 import { BookingModal } from './booking-modal';
-import { AgendaHeader, UpcomingPanel } from './sidebar';
+import { AgendaHeader, PendingPanel } from './sidebar';
 import {
   useAppointments,
   useAgendaUI,
   useAgendaHandlers,
   useServices,
 } from '../_actions';
+import { notifyError, notifySuccess } from '@/lib/toast';
+import { useCallback } from 'react';
 
 export function AgendaClient() {
   const { services, isLoading: isLoadingServices } = useServices();
@@ -51,6 +53,30 @@ export function AgendaClient() {
     closeModal,
   });
 
+  const handleConfirmBooking = useCallback(
+    async (bookingId: string) => {
+      try {
+        await updateAppointment(bookingId, { status: 'confirmed' });
+        notifySuccess('Agendamento confirmado!');
+      } catch {
+        notifyError('Erro ao confirmar agendamento.');
+      }
+    },
+    [updateAppointment],
+  );
+
+  const handleDiscardBooking = useCallback(
+    async (bookingId: string) => {
+      try {
+        await deleteAppointment(bookingId);
+        notifySuccess('Solicitação descartada.');
+      } catch {
+        notifyError('Erro ao descartar agendamento.');
+      }
+    },
+    [deleteAppointment],
+  );
+
   if (error) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -88,10 +114,12 @@ export function AgendaClient() {
         </div>
       </div>
 
-      <UpcomingPanel
+      <PendingPanel
         bookings={bookings}
         services={services}
         isLoading={isLoading}
+        onConfirm={handleConfirmBooking}
+        onDiscard={handleDiscardBooking}
       />
 
       <BookingModal
