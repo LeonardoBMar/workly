@@ -12,6 +12,7 @@ import { CalendarDaysIcon } from '@/app/components/icons/Calendar';
 import { UsersIcon } from '@/app/components/icons/Users';
 import { BoxIcon } from '@/app/components/icons/Package';
 import { LinkIcon } from '@/app/components/icons/Link';
+import { MessageCircleIcon } from '@/app/components/icons/MessageCircleIcon';
 import { CreditCardIcon } from '@/app/components/icons/CreditCard';
 import { FileTextIcon } from '@/app/components/icons/FileText';
 import { BarChart3Icon } from '@/app/components/icons/BarChart3';
@@ -26,6 +27,7 @@ const menuItems = [
   { icon: UsersIcon, label: 'Clientes', href: '/dashboard/clientes' },
   { icon: BoxIcon, label: 'Serviços', href: '/dashboard/servicos' },
   { icon: LinkIcon, label: 'Sua Pagina', href: '/dashboard/link' },
+  { icon: MessageCircleIcon, label: 'WhatsApp', href: '/dashboard/whatsapp' },
   { icon: ClockIcon, label: 'Horários', href: '/dashboard/settings?tab=hours' },
   {
     icon: CreditCardIcon,
