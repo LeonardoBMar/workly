@@ -119,7 +119,28 @@ STRIPE_BUSINESS_PRICE_ID=price_...
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
-### Instalação
+### 🐳 Rodando com Docker (Recomendado)
+
+A maneira mais fácil de rodar o projeto localmente é usando Docker.
+
+1. Copie o template de variáveis de ambiente:
+
+```bash
+cp .env.example .env
+```
+
+2. Abra o arquivo `.env` gerado e preencha com seus dados (Neon, Stripe, UploadThing, Better Auth).
+3. Suba o container:
+
+```bash
+docker compose up --build
+```
+
+4. Acesse: http://localhost:3000
+
+---
+
+### 💻 Instalação Manual (Sem Docker)
 
 1. **Clone e Instale:**
 
